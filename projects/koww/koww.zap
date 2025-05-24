@@ -30,8 +30,8 @@
 	.WORD 0
 	.WORD 0
 	.WORD 0
-	.INSERT "..\games\koww\koww_freq"
-	.INSERT "..\games\koww\koww_data"
+	.INSERT ".\projects\koww\koww_freq"
+	.INSERT ".\projects\koww\koww_data"
 
 	.FUNCT GO
 START::
@@ -3696,7 +3696,7 @@ START::
 
 	.FUNCT V-TURN-OFF
 	EQUAL? PRSO,WINNER \?L1
-	CALL2 PICK-ONE-R,T?102 >STACK
+	CALL2 PICK-ONE-R,T?103 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
@@ -3989,16 +3989,19 @@ START::
 ?L1:	PRINTR "That's not a spell you know. But perhaps if you could find a scroll -- like the ones owned by the Great Phoenix -- you could do so."
 
 	.FUNCT V-USE
-	PRINTI "That Quest command doesn't work in this port. Be more specific about what you wish to do with "
+	PRINTI "That command doesn't work in this port. Be more specific about what you wish to do with "
 	ICALL2 PRINT-DEF,PRSO
 	PRINTR "."
 
 	.FUNCT V-USE-ON
-	PRINTI "That Quest command doesn't work in this port. Be more specific about what you wish to do with "
+	PRINTI "That command doesn't work in this port. Be more specific about what you wish to do with "
 	ICALL2 PRINT-DEF,PRSO
 	PRINTI " and "
 	ICALL2 PRINT-DEF,PRSI
 	PRINTR "."
+
+	.FUNCT V-SPEAK
+	PRINTR "There is no reply."
 
 	.FUNCT MILK-R
 	EQUAL? PRSA,V?EXAMINE \?L1
@@ -4050,9 +4053,9 @@ START::
 	EQUAL? RARG,M-LOOK \FALSE
 	PRINTI "You stand outside of a small "
 	ICALL2 BOLDIZE,STR?38
-	PRINTI "with a "
+	PRINTI " with a "
 	ICALL2 BOLDIZE,STR?39
-	PRINTI "beside it. There are a "
+	PRINTI " beside it. There are a "
 	ICALL2 BOLDIZE,STR?40
 	PRINTI "and a "
 	ICALL2 BOLDIZE,STR?41
@@ -4061,8 +4064,34 @@ START::
 	CRLF
 	RTRUE
 
+	.FUNCT ZEKES-FARMHOUSE-ENTRANCE-R
+	EQUAL? PRSA,V?ENTER \FALSE
+	ICALL2 GOTO,ZEKES-FARMHOUSE
+	RTRUE
+
+	.FUNCT ZEKES-SILO-ENTRANCE-R
+	EQUAL? PRSA,V?ENTER \FALSE
+	ICALL2 GOTO,ZEKES-SILO
+	RTRUE
+
+	.FUNCT ZEKES-SILO-R,RARG
+	EQUAL? RARG,M-LOOK \FALSE
+	PRINTI "Gee, this place smells just like rotting feed. Standing in the silo, grinning like the idiot that he is, is Farmer "
+	ICALL2 BOLDIZE,STR?42
+	PRINTR "."
+
 	.FUNCT ZEKE-R
-	PRINTR "TODO"
+	EQUAL? PRSA,V?EXAMINE \?L1
+	PRINTR "He's wearing a straw hat and at least one of his teeth is rotting away, but he seems pleased as punch that you've arrived."
+?L1:	EQUAL? PRSA,V?SPEAK \?L3
+	PRINTR """Hey there, good buddy!  Say, bein' a wizard an' all, couldja find it in yer heart to gimme some magic milk?  I'm all out!"""
+?L3:	EQUAL? PRSA,V?GIVE \FALSE
+	EQUAL? PRSO,MILK \FALSE
+	PRINTI """Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk."""
+	CRLF
+	REMOVE MILK
+	MOVE PITCHFORK,PLAYER
+	RTRUE
 
 	.FUNCT FINISH-R
 	CALL2 HELD?,FLY-SCROLL >STACK
@@ -4085,5 +4114,5 @@ START::
 	HLIGHT 0
 	RTRUE
 
-	.INSERT "..\games\koww\koww_str"
+	.INSERT ".\projects\koww\koww_str"
 	.END

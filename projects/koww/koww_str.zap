@@ -1,4 +1,4 @@
-	; Strings to accompany ..\games\koww\koww.zap
+	; Strings to accompany .\projects\koww\koww.zap
 
 	.GSTR STR?8," are"
 	.GSTR STR?28," doesn't"
@@ -6,11 +6,11 @@
 	.GSTR STR?9," is"
 	.GSTR STR?1," Try rephrasing the command."
 	.GSTR STR?5,"*** Find out if the grass is really greener on the other side of the chasm. ***"
-	.GSTR STR?42,"Baseball."
+	.GSTR STR?44,"Baseball."
 	.GSTR STR?35,"chasm"
 	.GSTR STR?30,"climb"
 	.GSTR STR?15,"close"
-	.GSTR STR?43,"Cold showers."
+	.GSTR STR?45,"Cold showers."
 	.GSTR STR?3,"Congratulations, you have found out that you were better off where you started anyway. The grass here is brown and crackly. Too bad!  And... OH NO!  Now you're trapped here, alone with the NecroYaks!  Stay tuned for ""The Adventures of Koww the Magician II -- Escape from the NecroYaks!"""
 	.GSTR STR?38,"farmhouse"
 	.GSTR STR?6,"get inside"
@@ -39,11 +39,13 @@
 	.GSTR STR?23,"that"
 	.GSTR STR?0,"The Adventures of Koww the Magician (ZIL Port)
 An Interactive Fantasy by Brian the Great
-(c) 1999"
+Copyright (c) 1999 Brian the Great. All rights reserved."
 	.GSTR STR?24,"them"
 	.GSTR STR?17,"unlock"
 	.GSTR STR?32,"wake"
 	.GSTR STR?29,"Waving your hands"
 	.GSTR STR?13,"wear"
 	.GSTR STR?2,"You can't go that way."
+	.GSTR STR?43,"You're inside Farmer Zeke's rather cramped home. No one's here at the moment. Perhaps you should go away."
+	.GSTR STR?42,"Zeke"
 	.ENDI

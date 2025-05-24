@@ -1,4 +1,4 @@
-	; Strings to accompany ..\games\bonyking\bonyking.zap
+	; Strings to accompany .\projects\bonyking\bonyking.zap
 
 	.GSTR STR?6," are"
 	.GSTR STR?26," doesn't"
@@ -32,9 +32,9 @@
 	.GSTR STR?17,"switch on and off"
 	.GSTR STR?18,"Taking your frustration out on"
 	.GSTR STR?21,"that"
-	.GSTR STR?0,"The Bony King of Nowhere
-(ZIL Port)
-An Interactive Adventure by Luke A. Jones"
+	.GSTR STR?0,"The Bony King of Nowhere (ZIL Port)
+  An Interactive Adventure by Luke A. Jones
+  Copyright (c) 2017 Luke A. Jones. All rights reserved."
 	.GSTR STR?22,"them"
 	.GSTR STR?15,"unlock"
 	.GSTR STR?30,"wake"

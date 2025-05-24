@@ -4,8 +4,10 @@
 <CONSTANT RELEASEID 1>
 
 <CONSTANT GAME-BANNER
-"The Bony King of Nowhere|(ZIL Port)|
-An Interactive Adventure by Luke A. Jones">
+  "The Bony King of Nowhere (ZIL Port)|
+  An Interactive Adventure by Luke A. Jones|
+  Copyright (c) 2017 Luke A. Jones. All rights reserved."
+>
 
 <ROUTINE GO ()
   <CRLF> <CRLF>
@@ -17,7 +19,7 @@ An Interactive Adventure by Luke A. Jones">
   <CRLF>
   <SETG HERE ,HOVEL>
   <MOVE ,PLAYER ,HERE>
-;  <QUEUE I-DYLAN -1>
+  <QUEUE I-DYLAN -1>
   <V-LOOK>
   <MAIN-LOOP>
 >
@@ -25,7 +27,7 @@ An Interactive Adventure by Luke A. Jones">
 <INSERT-FILE "parser">
 
 ;----------------------------------------------------------------------
-"#################### COMMANDS ####################"
+;"#################### COMMANDS ####################"
 ;----------------------------------------------------------------------
 
 <SYNTAX SHARPEN OBJECT = V-SHARPEN>
@@ -72,7 +74,7 @@ An Interactive Adventure by Luke A. Jones">
 
 
 ;----------------------------------------------------------------------
-"#################### YOUR HOVEL ####################"
+;"#################### YOUR HOVEL ####################"
 ;----------------------------------------------------------------------
 
 <OBJECT HOVEL
@@ -108,26 +110,26 @@ An Interactive Adventure by Luke A. Jones">
     >
 >
 
-<OBJECT DAXE
+<OBJECT BLUNT-AXE
     (DESC "axe")
     (SYNONYM AXE)
     (IN CHEST)
     (FLAGS TAKEBIT VOWELBIT)
-    (ACTION DAXE-R)
+    (ACTION BLUNT-AXE-R)
 >
 
-<ROUTINE DAXE-R ()
+<ROUTINE BLUNT-AXE-R ()
   <COND 
     (<VERB? EXAMINE>
       <TELL "An axe with an arms length wooden haft and a steel head with the letter L and the pattern of a rose embossed on it. It is your prized (and only) possession given to you by your father. It's blade is a sharp as Jack after a busy day." CR>
     )
     (<VERB? SHARPEN>
       <COND
-        (<NOT <IN? ,DAXE ,PLAYER>>
+        (<NOT <IN? ,BLUNT-AXE ,PLAYER>>
           <TELL "You don't have that." CR>
         )
         (<IN? ,PLAYER ,HOVEL>
-          <REMOVE ,DAXE>
+          <REMOVE ,BLUNT-AXE>
           <MOVE , AXE ,PLAYER>
           <THIS-IS-IT ,AXE>
           <TELL "You walk over to the hearthstones and sharpen the axe blade on one of them. After a minute or so, it gleams with a wicked edge. It is now an axe-is of evil." CR>
@@ -292,7 +294,7 @@ An Interactive Adventure by Luke A. Jones">
   (DESC "dog hair")
   (SYNONYM HAIR)
   (ADJECTIVE DOG)
-  (FLAGS TAKEBIT)
+  (FLAGS TAKEBIT NARTICLEBIT)
   (ACTION HAIR-OF-DOG-R)
 >
 
@@ -304,14 +306,14 @@ An Interactive Adventure by Luke A. Jones">
   >
 >
 
-"<ROUTINE I-DYLAN ()
+<ROUTINE I-DYLAN (RARG)
   <MOVE ,DYLAN ,HERE>
   <COND
     (<==? ,PRSA ,V-WALK>
       <TELL "Your dog is here." CR>
     )
   >
->"
+>
 
 <OBJECT FURNITURE
   (IN HOVEL)
@@ -427,13 +429,13 @@ An Interactive Adventure by Luke A. Jones">
 >
 
 ;----------------------------------------------------------------------
-"###################### NORTHERN MEADOW ######################"
+;"###################### NORTHERN MEADOW ######################"
 ;----------------------------------------------------------------------
 
 <OBJECT NMEADOW
   (DESC "Northern Meadow")
   (IN ROOMS)
-  (FLAGS LIGHTBIT)
+  (FLAGS LIGHTBIT OUTSIDEBIT)
   (IN TO HOVEL)
   (ACTION NMEADOW-R)
 >
@@ -448,7 +450,7 @@ An Interactive Adventure by Luke A. Jones">
     (<==? .RARG ,M-LOOK>
       <TELL "You are in the meadow outside your hovel, several acres of wild grassland and wild flowers. You may be dirt poor, but the beauty of the landscape is some consolation." CR>
       <COND
-        (<NOT <FSET? ,HERE, TOUCHBIT>>
+        (<NOT <FSET? ,HERE ,TOUCHBIT>>
           <TELL CR "As you step out of your home there is a beating of wings above your head. Looking up, you see a pigeon rapidly disappearing out of sight, and a letter flutters to your feet. You pick it up." CR CR "On the wind, you can hear a distant shout of what sounds like, \"fuck yooouuuu...\" coming from the pigeon's direction before it disappears from sight." CR>
           <MOVE ,LETTER ,PLAYER>
         )
@@ -488,7 +490,7 @@ An Interactive Adventure by Luke A. Jones">
         (<HELD? AXE>
           <TELL "You consider chopping the letter into pieces, but the King has spies everywhere and you value your life." CR>
         )
-        (<HELD? DAXE>
+        (<HELD? BLUNT-AXE>
           <TELL "Your axe is too blunt (and it's probably not a good idea)." CR>
         )
         (T
@@ -499,10 +501,8 @@ An Interactive Adventure by Luke A. Jones">
   >
 >
 
-
-
 ;----------------------------------------------------------------------
-"###################### TEXT ROUTINES ######################"
+;"###################### TEXT ROUTINES ######################"
 ;----------------------------------------------------------------------
 
 <ROUTINE BOLDIZE (TEXT)

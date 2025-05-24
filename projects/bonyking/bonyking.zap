@@ -30,8 +30,8 @@
 	.WORD 0
 	.WORD 0
 	.WORD 0
-	.INSERT "..\games\bonyking\bonyking_freq"
-	.INSERT "..\games\bonyking\bonyking_data"
+	.INSERT ".\projects\bonyking\bonyking_freq"
+	.INSERT ".\projects\bonyking\bonyking_data"
 
 	.FUNCT GO
 START::
@@ -53,6 +53,7 @@ START::
 	CRLF
 	SET 'HERE,HOVEL
 	MOVE PLAYER,HERE
+	ICALL QUEUE,I-DYLAN,-1
 	ICALL1 V-LOOK
 	ICALL1 MAIN-LOOP
 	QUIT
@@ -4120,6 +4121,11 @@ START::
 	EQUAL? PRSA,V?EXAMINE \FALSE
 	PRINTR "A few strands of Dylan's brown and white hair."
 
+	.FUNCT I-DYLAN,RARG
+	MOVE DYLAN,HERE
+	EQUAL? PRSA,V-WALK \FALSE
+	PRINTR "Your dog is here."
+
 	.FUNCT FURNITURE-R
 	EQUAL? PRSA,V?EXAMINE \FALSE
 	PRINTR "Furniture might be a rather grand term what consists of a filthy straw bed and a battered wooden chest."
@@ -4198,5 +4204,5 @@ Well that's just perfect you think, you've always hated a) the capital, b) the m
 	HLIGHT 0
 	RTRUE
 
-	.INSERT "..\games\bonyking\bonyking_str"
+	.INSERT ".\projects\bonyking\bonyking_str"
 	.END
