@@ -10,7 +10,7 @@
 | `EDIBLEBIT` | Object can be eaten. | 'eat' verb|
 | `FEMALEBIT` | She's a lady. (Yeah, yeah, yeah... She's a lady.) | femalenamed type |
 | `INVISIBLE` | Object is not in play. | `object.visible = false` |
-| `KLUDGEBIT` | ??? | ??? |
+| `KLUDGEBIT` | [???](#kludgebit) | ??? |
 | `LIGHTBIT` | All rooms need either this or `DARKBIT` | `room.dark = false` |
 | `LOCKEDBIT` | Object is locked. | `locked` |
 | `NALLBIT` | DOES NOT SEEM TO WORK [^1] | `notall` |
