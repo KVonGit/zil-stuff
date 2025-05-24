@@ -7,7 +7,7 @@
 "The Adventures of Koww the Magician (ZIL Port)|
 An Interactive Fantasy by Brian the Great|
 Copyright (c) 1999 Brian the Great. All rights reserved.|
-v0.0.1-alpha">
+v0.1.0 alpha">
 
 <ROUTINE GO ()
   <CRLF>
@@ -89,9 +89,11 @@ the ones owned by the Great Phoenix -- you could do so." CR>
 ; ************************* ITEMS **********************************************
 
 <ROUTINE QUEST-TWO-R ()
+  <CRLF>
   <TELL
-"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. WE COULD NOT INTERACT
-WITH QUEST 2 'ITEMS', EXCEPT FOR 'USE OBJECT' AND 'GIVE OBJECT TO OBJECT'." CR>
+"*** TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. WE COULD NOT
+INTERACT WITH QUEST 2 'ITEMS', EXCEPT FOR 'USE OBJECT' AND 'GIVE OBJECT TO
+OBJECT'. ***" CR>
 >
 
 <OBJECT MILK
@@ -354,7 +356,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
 "You spread the purple paint on yourself.  Suddenly Farmer Zeke bursts into
 song!" CR>
   <TELL "\"">
-  <ITALICIZE "I never saw a purple cow, and I never hope to see one; but I can tell you anyhow, I'd rather see than be one!">
+  <ITALICIZE 
+"I never saw a purple cow, and I never hope to see one; but I can tell you
+anyhow, I'd rather see than be one!">
   <TELL "\"" CR>
   <TELL
 "Wonderful!  You have just activated the scenario's secret feature!  That's it. 
@@ -1137,7 +1141,8 @@ enough to try it." CR CR>
   <COND
     (<VERB? EXAMINE>
       <TELL 
-"They tower up almost as high as the Great Auk Mountains far, far to the north." CR>
+"They tower up almost as high as the Great Auk Mountains far, far to the
+north." CR>
     )
     (<VERB? TAKE>
       <TELL 
@@ -1179,14 +1184,12 @@ After descending again, you ditch your grappling hook." CR>
 
 <ROUTINE PHOENIX-PEAK-R (RARG)
   <COND
-    (<==? .RARG ,M-LOOK>
+    (<==? .RARG ,M-FLASH>
       <TELL
 "After hard hours of climbing, you finally reach the summit of Phoenix Peak. 
 Here, in all its glory, sits the ">
       <BOLDIZE "Resplendent Magnificent Phoenix">
       <TELL "." CR CR>
-    )
-    (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "west">
       <TELL "." CR>
@@ -1219,11 +1222,11 @@ look at it." CR>
 with you, I'm afraid I must ask you to leave ">
       <ITALICIZE "immediately!">
       <TELL 
-" Now, do you have my wing feather or not?\" -- ">
+"  Now, do you have my wing feather or not?\" -- ">
       <BOLDIZE "Yes">
       <TELL " or ">
       <BOLDIZE "No">
-      <TELL "?" CR>
+      <TELL "?" CR CR>
       <COND
         (<YES?>
           <PHOENIX-PROC-R>
