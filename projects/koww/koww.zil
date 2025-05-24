@@ -13,12 +13,14 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 <ROUTINE GO ()
   <CRLF>
   <CRLF>
-  <ITALICIZE "*** Find out if the grass is really greener on the other side of
-the chasm. ***">
+  <ITALICIZE 
+"*** Find out if the grass is really greener on the other side of the chasm. 
+***">
   <CRLF>
   <CRLF>
   <V-VERSION>
   <CRLF>
+  <SETG MODE ,VERBOSE>
   <SETG HERE ,KOWWS-CHASM>
   <MOVE ,PLAYER ,HERE>
   <V-LOOK>
@@ -37,8 +39,9 @@ the chasm. ***">
       <CALL FINISH-R>
     )
     (T
-      <TELL "That's not a spell you know.  But perhaps if you could find a
-scroll -- like the ones owned by the Great Phoenix -- you could do so." CR>
+      <TELL 
+"That's not a spell you know.  But perhaps if you could find a scroll -- like
+the ones owned by the Great Phoenix -- you could do so." CR>
     )
   >
 >
@@ -49,13 +52,15 @@ scroll -- like the ones owned by the Great Phoenix -- you could do so." CR>
 <SYNTAX USE OBJECT WITH OBJECT = V-USE-ON>
 
 <ROUTINE V-USE ()
-  <TELL "That command doesn't work here. Be more specific about what you wish to
-do with " T, PRSO "." CR>
+  <TELL 
+"That command doesn't work here. Be more specific about what you wish to do with
+" T, PRSO "." CR>
 >
 
 <ROUTINE V-USE-ON ()
-  <TELL "That command doesn't work here. Be more specific about what you wish to
-do with " T, PRSO " and " T, PRSI "." CR>
+  <TELL 
+"That command doesn't work here. Be more specific about what you wish to do with
+" T, PRSO " and " T, PRSI "." CR>
 >
 
 <SYNTAX SPEAK TO OBJECT = V-SPEAK>
@@ -90,49 +95,190 @@ do with " T, PRSO " and " T, PRSI "." CR>
 
 <ROUTINE MILK-R ()
   <COND
-    (<VERB? EXAMINE>
-      <TELL "todo" CR>
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
     )
     (<VERB? GIVE>
       <COND
         (<PRSI? ZEKE>
-          <TELL "\"Well, thanks a lot, good buddy!  Well, tell ya what, why
-don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
-          <REMOVE MILK>
+          <TELL 
+"\"Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this
+here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
+          <REMOVE ,MILK>
           <MOVE ,PITCHFORK ,PLAYER>
         )
       >
-    )
-    (<VERB? DROP>
-      <TELL "You can't drop your own milk." CR>
     )
   >
 >
 
 <OBJECT PITCHFORK
   (DESC "pitchfork")
-  (SYNONYM PITCHF)
+  (SYNONYM PITCHF PITCHFORK)
   (ACTION PITCHFORK-R)
 >
 
 <ROUTINE PITCHFORK-R ()
-  <TELL "TODO" CR>
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
+    )
+  >
 >
 
 <OBJECT FLY-SCROLL
   (DESC "fly scroll")
   (SYNONYM FLY SCROLL)
+  (ADJECTIVE FLY)
   (ACTION FLY-SCROLL-R)
   (FLAGS TAKEBIT)
 >
 
 <ROUTINE FLY-SCROLL-R ()
   <COND
-    (<VERB? EXAMINE>
-      <TELL "TODO" CR>
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
     )
     (<VERB? USE>
       <CALL FINISH-R>
+    )
+  >
+>
+
+<OBJECT WING-FEATHER
+  (DESC "wing feather")
+  (SYNONYM WING FEATHER)
+  (ADJECTIVE WING)
+  (FLAGS TAKEBIT)
+  (ACTION WING-FEATHER-R)
+>
+
+<ROUTINE WING-FEATHER-R ()
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
+    )
+  >
+>
+
+<OBJECT JADE-STATUETTE
+  (DESC "jade statuette")
+  (SYNONYM JADE STATUETTE)
+  (ADJECTIVE JADE)
+  (FLAGS TAKEBIT)
+  (ACTION JADE-STATUETTE-R)
+>
+
+<ROUTINE JADE-STATUETTE-R ()
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
+    )
+  >
+>
+
+<OBJECT GOBLIN-SPIT
+  (DESC "goblin spit")
+  (SYNONYM SPIT)
+  (ADJECTIVE GOBLIN)
+  (FLAGS TAKEBIT)
+  (ACTION GOBLIN-SPIT-R)
+>
+
+<ROUTINE GOBLIN-SPIT-R ()
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
+    )
+  >
+>
+
+<OBJECT SOMETHING-ITEM
+  (DESC "something")
+  (SYNONYM SOMETHING)
+  (FLAGS TAKEBIT)
+  (ACTION SOMETHING-ITEM-R)
+>
+
+<ROUTINE SOMETHING-ITEM-R ()
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
+    )
+  >
+>
+
+<OBJECT NOTHING-ITEM
+  (DESC "nothing")
+  (SYNONYM NOTHING)
+  (FLAGS TAKEBIT)
+  (ACTION NOTHING-ITEM-R)
+>
+
+<ROUTINE NOTHING-ITEM-R ()
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
+    )
+  >
+>
+
+<OBJECT DUCK-TURD
+  (DESC "duck turd")
+  (SYNONYM TURD)
+  (ADJECTIVE DUCK)
+  (FLAGS TAKEBIT)
+  (ACTION DUCK-TURD-R)
+>
+
+<ROUTINE DUCK-TURD-R ()
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
+    )
+  >
+>
+
+<OBJECT GRAPPLING-HOOK
+  (DESC "grappling hook")
+  (SYNONYM HOOK)
+  (ADJECTIVE GRAPPLING)
+  (FLAGS TAKEBIT)
+  (ACTION GRAPPLING-HOOK-R)
+>
+
+<ROUTINE GRAPPLING-HOOK-R ()
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
+    )
+  >
+>
+
+
+<OBJECT PURPLE-PAINT
+  (DESC "purple paint")
+  (SYNONYM PURPLE PAINT)
+  (ADJECTIVE PURPLE)
+  (FLAGS TAKEBIT)
+  (ACTION PURPLE-PAINT-R)
+>
+
+<ROUTINE PURPLE-PAINT-R ()
+  <COND
+    (<VERB? EXAMINE DROP>
+      <TELL 
+"TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. NO 'X' OR 'DROP' INV|">
     )
   >
 >
@@ -144,19 +290,23 @@ don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
   (DESC "Koww's Chasm")
   (FLAGS LIGHTBIT)
   (ACTION KOWWS-CHASM-R)
-  (FLAGS LIGHTBIT)
+  (FLAGS LIGHTBIT OUTSIDEBIT)
   (EAST TO ZEKES-FARM)
 >
 
 <ROUTINE KOWWS-CHASM-R (RARG)
   <COND
     (<==? .RARG ,M-LOOK>
-      <TELL "You are outside in a pasture of pure, pure green.  Green as far as
-the eye can see.  But you, Koww the Magician, are not satisfied.  The grass may
-be even greener on the other side of the ">
+      <TELL 
+"You are outside in a pasture of pure, pure green.  Green as far as the eye can
+see.  But you, Koww the Magician, are not satisfied.  The grass may be even
+greener on the other side of the ">
       <BOLDIZE "chasm">
       <TELL "... you must know!  Also in the area is a very undramatic ">
       <BOLDIZE "sign">
+      <TELL "." CR CR>
+      <TELL "You can go ">
+      <BOLDIZE "east">
       <TELL "." CR>
     )
   >
@@ -181,12 +331,13 @@ be even greener on the other side of the ">
 <ROUTINE CHASM-R ()
   <COND
     (<VERB? TAKE>
-      <TELL "Don't worry, the men in the white coats will soon be here to deal
-with you." CR>
+      <TELL 
+"Don't worry, the men in the white coats will soon be here to deal with you.|">
     )
     (<VERB? EXAMINE>
-      <TELL "That's the chasm you simply MUST cross!  Surely the only way to
-cross it is to FLY!" CR>
+      <TELL 
+"That's the chasm you simply MUST cross!  Surely the only way to cross it is to
+FLY!" CR>
     )
   >
 >
@@ -199,8 +350,9 @@ cross it is to FLY!" CR>
         <TELL "'" CR>
       )
       (<VERB? TAKE>
-        <TELL "You yank the sign out of the ground and try to fit it in your
-Koww-pack.  But it just doesn't fit.  Frustrated, you put it back." CR>
+        <TELL 
+"You yank the sign out of the ground and try to fit it in your Koww-pack.  But
+it just doesn't fit.  Frustrated, you put it back." CR>
       )
     >
 >
@@ -213,6 +365,9 @@ Koww-pack.  But it just doesn't fit.  Frustrated, you put it back." CR>
   (ACTION ZEKES-FARM-R)
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (WEST TO KOWWS-CHASM)
+  (SOUTH TO GOBLIN-TRAIL)
+  (EAST TO PHOENIX-MOUNTAIN-PASS)
+  (NORTH TO LAND-OF-NECROYAKS)
 >
 
 <ROUTINE ZEKES-FARM-R (RARG)
@@ -227,13 +382,16 @@ Koww-pack.  But it just doesn't fit.  Frustrated, you put it back." CR>
       <TELL " and a ">
       <BOLDIZE "pond">
       <TELL " here." CR CR>
+      <TELL "You can go ">
+      <BOLDIZE "west">
+      <TELL "." CR>
     )
   >
 >
 
 <OBJECT ZEKES-FARMHOUSE-ENTRANCE
   (IN ZEKES-FARM)
-  (SYNONYM FARMHO FARMHO)
+  (SYNONYM FARMHO FARMHOUSE)
   (ADJECTIVE ZEKE'S ZEKES)
   (DESC "Zeke's Farmhouse")
   (FLAGS NARTICLEBIT NDESCBIT)
@@ -271,7 +429,7 @@ Koww-pack.  But it just doesn't fit.  Frustrated, you put it back." CR>
   (IN ROOMS)
   (DESC "Zeke's Farmhouse")
   (LDESC "You're inside Farmer Zeke's rather cramped home.  No one's here at the
-moment.  Perhaps you should go away.")
+moment.  Perhaps you should go away.||You can go out.")
   (FLAGS LIGHTBIT)
   (OUT TO ZEKES-FARM)
 >
@@ -302,6 +460,9 @@ moment.  Perhaps you should go away.")
       <TELL "Gee, this place smells just like rotting feed.  Standing in the
 silo, grinning like the idiot that he is, is Farmer ">
       <BOLDIZE "Zeke">
+      <TELL "." CR CR>
+      <TELL "You can go ">
+      <BOLDIZE "out">
       <TELL "." CR>
     )
   >
@@ -311,6 +472,7 @@ silo, grinning like the idiot that he is, is Farmer ">
   (DESC "Zeke")
   (IN ZEKES-SILO)
   (SYNONYM FARMER ZEKE)
+  (ADJECTIVE FARMER)
   (FLAGS PERSONBIT NARTICLEBIT NDESCBIT)
   (ACTION ZEKE-R)
 >
@@ -358,17 +520,86 @@ guess there's a limit!\"" CR>
 
 ; *************** GOBLIN TRAIL ************************
 
+<OBJECT GOBLIN-TRAIL
+  (IN ROOMS)
+  (DESC "Goblin Trail")
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (NORTH TO ZEKES-FARM)
+  (SOUTH TO GOBLIN-LAIR)
+>
+
 ; *************** GOBLIN LAIR *************************
+
+<OBJECT GOBLIN-LAIR
+  (IN ROOMS)
+  (DESC "Goblin Lair")
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (NORTH GOBLIN-TRAIL)
+>
+
+<OBJECT INSIDE-GOBLIN-LAIR-ENTRANCE
+  (IN GOBLIN-LAIR)
+  (ACTION INSIDE-GOBLIN-LAIR-ENTRANCE-R)
+  (DESC "inside the goblin lair")
+  (SYNONYM LAIR)
+  (ADJECTIVE INSIDE GOBLIN)
+  (FLAGS DOORBIT)
+>
+
+<ROUTINE INSIDE-GOBLIN-LAIR-ENTRANCE-R ()
+  <COND
+    (<VERB? ENTER>
+      <GOTO INSIDE-GOBLIN-LAIR>
+    )
+  >
+>
 
 ; *************** INSIDE THE GOBLIN LAIR **************
 
+<OBJECT INSIDE-GOBLIN-LAIR
+  (IN ROOMS)
+  (DESC "Inside the Goblin Lair")
+  (FLAGS LIGHTBIT NDESCBIT)
+  (OUT TO GOBLIN-LAIR)
+>
+
 ; *************** LAND OF THE NECROYAKS ***************
+
+<OBJECT LAND-OF-NECROYAKS
+  (IN ROOMS)
+  (DESC "Land of the Necroyaks")
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (SOUTH TO ZEKES-FARM)
+  (NORTH TO AMBUSH-POINT)
+>
 
 ; *************** AMBUSH POINT ************************
 
+<OBJECT AMBUSH-POINT
+  (IN ROOMS)
+  (DESC "Deep in NecroYak Territory")
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (SOUTH TO LAND-OF-NECROYAKS)
+>
+
 ; *************** PHOENIX MOUNTAIN PASS ***************
 
+<OBJECT PHOENIX-MOUNTAIN-PASS
+  (IN ROOMS)
+  (DESC "Phoenix Mountain Pass")
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (WEST TO ZEKES-FARM)
+  (EAST TO PHOENIX-PEAK)
+>
+
 ; *************** PHOENIX PEAK ************************
+
+<OBJECT PHOENIX-PEAK
+  (IN ROOMS)
+  (DESC "Pheonix Peak")
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (WEST TO PHOENIX-MOUNTAIN-PASS)
+>
 
 ; *************** END OF ROOM DESCRIPTIONS ************
 
