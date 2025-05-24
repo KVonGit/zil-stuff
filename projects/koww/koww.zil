@@ -13,7 +13,8 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 <ROUTINE GO ()
   <CRLF>
   <CRLF>
-  <ITALICIZE "*** Find out if the grass is really greener on the other side of the chasm. ***">
+  <ITALICIZE "*** Find out if the grass is really greener on the other side of
+the chasm. ***">
   <CRLF>
   <CRLF>
   <V-VERSION>
@@ -36,7 +37,8 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
       <CALL FINISH-R>
     )
     (T
-      <TELL "That's not a spell you know.  But perhaps if you could find a scroll -- like the ones owned by the Great Phoenix -- you could do so." CR>
+      <TELL "That's not a spell you know.  But perhaps if you could find a
+scroll -- like the ones owned by the Great Phoenix -- you could do so." CR>
     )
   >
 >
@@ -47,11 +49,13 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 <SYNTAX USE OBJECT WITH OBJECT = V-USE-ON>
 
 <ROUTINE V-USE ()
-  <TELL "That command doesn't work here. Be more specific about what you wish to do with " T, PRSO "." CR>
+  <TELL "That command doesn't work here. Be more specific about what you wish to
+do with " T, PRSO "." CR>
 >
 
 <ROUTINE V-USE-ON ()
-  <TELL "That command doesn't work here. Be more specific about what you wish to do with " T, PRSO " and " T, PRSI "." CR>
+  <TELL "That command doesn't work here. Be more specific about what you wish to
+do with " T, PRSO " and " T, PRSI "." CR>
 >
 
 <SYNTAX SPEAK TO OBJECT = V-SPEAK>
@@ -60,6 +64,19 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 
 <ROUTINE V-SPEAK ()
   <TELL "There is no reply." CR>
+>
+
+<SYNTAX SPLASH OBJECT ON OBJECT = V-SPLASH>
+
+<ROUTINE V-SPLASH ()
+   <COND
+    (<AND <PRSO? ,MILK><HELD? ,MILK>>
+      <TELL "Why would you do that?  Awful waste of milk." CR>
+    )
+    (T
+      <TELL "You CAN'T DO THAT." CR>
+    )
+  >
 >
 
 ; *************** ITEMS *******************************
@@ -79,7 +96,8 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
     (<VERB? GIVE>
       <COND
         (<PRSI? ZEKE>
-          <TELL "" CR>
+          <TELL "\"Well, thanks a lot, good buddy!  Well, tell ya what, why
+don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
           <REMOVE MILK>
           <MOVE ,PITCHFORK ,PLAYER>
         )
@@ -133,7 +151,9 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 <ROUTINE KOWWS-CHASM-R (RARG)
   <COND
     (<==? .RARG ,M-LOOK>
-      <TELL "You are outside in a pasture of pure, pure green.  Green as far as the eye can see.  But you, Koww the Magician, are not satisfied.  The grass may be even greener on the other side of the ">
+      <TELL "You are outside in a pasture of pure, pure green.  Green as far as
+the eye can see.  But you, Koww the Magician, are not satisfied.  The grass may
+be even greener on the other side of the ">
       <BOLDIZE "chasm">
       <TELL "... you must know!  Also in the area is a very undramatic ">
       <BOLDIZE "sign">
@@ -161,10 +181,12 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 <ROUTINE CHASM-R ()
   <COND
     (<VERB? TAKE>
-      <TELL "Don't worry, the men in the white coats will soon be here to deal with you." CR>
+      <TELL "Don't worry, the men in the white coats will soon be here to deal
+with you." CR>
     )
     (<VERB? EXAMINE>
-      <TELL "That's the chasm you simply MUST cross!  Surely the only way to cross it is to FLY!" CR>
+      <TELL "That's the chasm you simply MUST cross!  Surely the only way to
+cross it is to FLY!" CR>
     )
   >
 >
@@ -177,7 +199,8 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
         <TELL "'" CR>
       )
       (<VERB? TAKE>
-        <TELL "You yank the sign out of the ground and try to fit it in your Koww-pack.  But it just doesn't fit.  Frustrated, you put it back." CR>
+        <TELL "You yank the sign out of the ground and try to fit it in your
+Koww-pack.  But it just doesn't fit.  Frustrated, you put it back." CR>
       )
     >
 >
@@ -210,7 +233,7 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 
 <OBJECT ZEKES-FARMHOUSE-ENTRANCE
   (IN ZEKES-FARM)
-  (SYNONYM FARMHO)
+  (SYNONYM FARMHO FARMHO)
   (ADJECTIVE ZEKE'S ZEKES)
   (DESC "Zeke's Farmhouse")
   (FLAGS NARTICLEBIT NDESCBIT)
@@ -221,7 +244,6 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
   <COND
     (<VERB? ENTER>
       <GOTO ZEKES-FARMHOUSE>
-      <RTRUE>
     )
   >
 >
@@ -239,7 +261,6 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
   <COND
     (<VERB? ENTER>
       <GOTO ZEKES-SILO>
-      <RTRUE>
     )
   >
 >
@@ -249,11 +270,18 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 <OBJECT ZEKES-FARMHOUSE
   (IN ROOMS)
   (DESC "Zeke's Farmhouse")
-  (LDESC "You're inside Farmer Zeke's rather cramped home.  No one's here at the moment.  Perhaps you should go away.")
+  (LDESC "You're inside Farmer Zeke's rather cramped home.  No one's here at the
+moment.  Perhaps you should go away.")
   (FLAGS LIGHTBIT)
   (OUT TO ZEKES-FARM)
 >
 
+<OBJECT TABLE
+  (IN ZEKES-FARMHOUSE)
+  (DESC "table")
+  (SYNONYM TABLE)
+  (FLAGS SURFACEBIT)
+>
 
 
 ; *************** ZEKE'S SILO *************************
@@ -271,7 +299,8 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 <ROUTINE ZEKES-SILO-R (RARG)
   <COND
     (<==? .RARG ,M-LOOK>
-      <TELL "Gee, this place smells just like rotting feed.  Standing in the silo, grinning like the idiot that he is, is Farmer ">
+      <TELL "Gee, this place smells just like rotting feed.  Standing in the
+silo, grinning like the idiot that he is, is Farmer ">
       <BOLDIZE "Zeke">
       <TELL "." CR>
     )
@@ -282,28 +311,49 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
   (DESC "Zeke")
   (IN ZEKES-SILO)
   (SYNONYM FARMER ZEKE)
-  (FLAGS PERSONBIT)
+  (FLAGS PERSONBIT NARTICLEBIT NDESCBIT)
   (ACTION ZEKE-R)
 >
 
 <ROUTINE ZEKE-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL "He's wearing a straw hat and at least one of his teeth is rotting away, but he seems pleased as punch that you've arrived." CR>
+      <TELL "He's wearing a straw hat and at least one of his teeth is rotting
+away, but he seems pleased as punch that you've arrived." CR>
     )
     (<VERB? SPEAK>
-      <TELL "\"Hey there, good buddy!  Say, bein' a wizard an' all, couldja find it in yer heart to gimme some magic milk?  I'm all out!\"" CR>
+      <TELL "\"Hey there, good buddy!  Say, bein' a wizard an' all, couldja find
+it in yer heart to gimme some magic milk?  I'm all out!\"" CR>
     )
     (<VERB? GIVE>
       <COND
-        (<PRSO? MILK>
-          <TELL "\"Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
-          <REMOVE MILK>
+        (<PRSO? ,MILK>
+          <TELL "\"Well, thanks a lot, good buddy!  Well, tell ya what, why
+don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
+          <REMOVE ,MILK>
           <MOVE ,PITCHFORK ,PLAYER>
         )
       >
     )
+    (<VERB? ATTACK>
+      <TELL "You may be an evil sorcerer, but at least you're an ETHICAL evil
+sorcerer.  No killing allowed!  Especially not of idiots.  They don't know
+they're idiots." CR>
+    )
+    (<VERB? SPLASH>
+      <CALL DUMB-LOSE-R>
+    )
   >
+>
+
+<ROUTINE DUMB-LOSE-R ()
+  <TELL "\"Well, gee,\" says Farmer Zeke, \"I shore do like ya a lot, but I
+guess there's a limit!\"" CR>
+	<TELL "So saying, Zeke stabs you with his pitchfork." CR>
+  <CRLF>
+	<JIGS-UP ,LOSE-TEXT>
+  <CRLF>
+  <V-QUIT>
 >
 
 ; *************** GOBLIN TRAIL ************************
@@ -322,7 +372,10 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
 
 ; *************** END OF ROOM DESCRIPTIONS ************
 
-<GLOBAL WIN-TEXT "Congratulations, you have found out that you were better off where you started anyway.  The grass here is brown and crackly.  Too bad!  And... OH NO!  Now you're trapped here, alone with the NecroYaks!  Stay tuned for \"The Adventures of Koww the Magician II -- Escape from the NecroYaks!\"">
+<GLOBAL WIN-TEXT "Congratulations, you have found out that you were better off
+where you started anyway.  The grass here is brown and crackly.  Too bad!
+ And... OH NO!  Now you're trapped here, alone with the NecroYaks!  Stay tuned
+for \"The Adventures of Koww the Magician II -- Escape from the NecroYaks!\"">
 
 <GLOBAL LOSE-TEXT "Idiot.  You die.  HA HA HA HA HA!">
 
@@ -332,14 +385,15 @@ Copyright (c) 1999 Brian the Great. All rights reserved.">
       <CALL END-R>
     )
     (T
-      <TELL "Maybe you'll find it someday, but you don't have it today.  You stupid cow." CR>
+      <TELL "Maybe you'll find it someday, but you don't have it today.  You
+stupid cow." CR>
     )
   >
 >
 
 <ROUTINE END-R ()
   <TELL "You fly up and over the chasm!" CR CR>
-  <TELL WIN-TEXT>
+  <TELL ,WIN-TEXT>
   <V-QUIT>
 >
 

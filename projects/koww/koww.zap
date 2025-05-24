@@ -3696,7 +3696,7 @@ START::
 
 	.FUNCT V-TURN-OFF
 	EQUAL? PRSO,WINNER \?L1
-	CALL2 PICK-ONE-R,T?103 >STACK
+	CALL2 PICK-ONE-R,T?104 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
@@ -3989,12 +3989,12 @@ START::
 ?L1:	PRINTR "That's not a spell you know. But perhaps if you could find a scroll -- like the ones owned by the Great Phoenix -- you could do so."
 
 	.FUNCT V-USE
-	PRINTI "That command doesn't work in this port. Be more specific about what you wish to do with "
+	PRINTI "That command doesn't work here. Be more specific about what you wish to do with "
 	ICALL2 PRINT-DEF,PRSO
 	PRINTR "."
 
 	.FUNCT V-USE-ON
-	PRINTI "That command doesn't work in this port. Be more specific about what you wish to do with "
+	PRINTI "That command doesn't work here. Be more specific about what you wish to do with "
 	ICALL2 PRINT-DEF,PRSO
 	PRINTI " and "
 	ICALL2 PRINT-DEF,PRSI
@@ -4003,12 +4003,19 @@ START::
 	.FUNCT V-SPEAK
 	PRINTR "There is no reply."
 
+	.FUNCT V-SPLASH
+	EQUAL? PRSO,MILK \?L1
+	CALL2 HELD?,MILK >STACK
+	ZERO? STACK /?L1
+	PRINTR "Why would you do that?  Awful waste of milk."
+?L1:	PRINTR "You CAN'T DO THAT."
+
 	.FUNCT MILK-R
 	EQUAL? PRSA,V?EXAMINE \?L1
 	PRINTR "todo"
 ?L1:	EQUAL? PRSA,V?GIVE \?L3
 	EQUAL? PRSI,ZEKE \FALSE
-	PRINTI ""
+	PRINTI """Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk."""
 	CRLF
 	REMOVE MILK
 	MOVE PITCHFORK,PLAYER
@@ -4057,22 +4064,22 @@ START::
 	ICALL2 BOLDIZE,STR?39
 	PRINTI " beside it. There are a "
 	ICALL2 BOLDIZE,STR?40
-	PRINTI "and a "
+	PRINTI " and a "
 	ICALL2 BOLDIZE,STR?41
-	PRINTI "here."
+	PRINTI " here."
 	CRLF
 	CRLF
 	RTRUE
 
 	.FUNCT ZEKES-FARMHOUSE-ENTRANCE-R
 	EQUAL? PRSA,V?ENTER \FALSE
-	ICALL2 GOTO,ZEKES-FARMHOUSE
-	RTRUE
+	CALL2 GOTO,ZEKES-FARMHOUSE >STACK
+	RSTACK
 
 	.FUNCT ZEKES-SILO-ENTRANCE-R
 	EQUAL? PRSA,V?ENTER \FALSE
-	ICALL2 GOTO,ZEKES-SILO
-	RTRUE
+	CALL2 GOTO,ZEKES-SILO >STACK
+	RSTACK
 
 	.FUNCT ZEKES-SILO-R,RARG
 	EQUAL? RARG,M-LOOK \FALSE
@@ -4085,13 +4092,29 @@ START::
 	PRINTR "He's wearing a straw hat and at least one of his teeth is rotting away, but he seems pleased as punch that you've arrived."
 ?L1:	EQUAL? PRSA,V?SPEAK \?L3
 	PRINTR """Hey there, good buddy!  Say, bein' a wizard an' all, couldja find it in yer heart to gimme some magic milk?  I'm all out!"""
-?L3:	EQUAL? PRSA,V?GIVE \FALSE
+?L3:	EQUAL? PRSA,V?GIVE \?L4
 	EQUAL? PRSO,MILK \FALSE
 	PRINTI """Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk."""
 	CRLF
 	REMOVE MILK
 	MOVE PITCHFORK,PLAYER
 	RTRUE
+?L4:	EQUAL? PRSA,V?ATTACK \?L8
+	PRINTR "You may be an evil sorcerer, but at least you're an ETHICAL evil sorcerer. No killing allowed!  Especially not of idiots. They don't know they're idiots."
+?L8:	EQUAL? PRSA,V?SPLASH \FALSE
+	CALL1 DUMB-LOSE-R >STACK
+	RSTACK
+
+	.FUNCT DUMB-LOSE-R
+	PRINTI """Well, gee,"" says Farmer Zeke, ""I shore do like ya a lot, but I guess there's a limit!"""
+	CRLF
+	PRINTI "So saying, Zeke stabs you with his pitchfork."
+	CRLF
+	CRLF
+	ICALL2 JIGS-UP,LOSE-TEXT
+	CRLF
+	CALL1 V-QUIT >STACK
+	RSTACK
 
 	.FUNCT FINISH-R
 	CALL2 HELD?,FLY-SCROLL >STACK
@@ -4104,7 +4127,7 @@ START::
 	PRINTI "You fly up and over the chasm!"
 	CRLF
 	CRLF
-	PRINT 'WIN-TEXT
+	PRINT WIN-TEXT
 	CALL1 V-QUIT >STACK
 	RSTACK
 
