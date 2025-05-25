@@ -26,6 +26,9 @@ v0.1.0 alpha">
 
 <INSERT-FILE "parser">
 
+<CONSTANT DEBUG T>
+<CONSTANT DEBUGGING-VERBS T>
+
 ;HACK
 ;"<SYNTAX EAT OBJECT (FIND EDIBLEBIT) (TAKE HAVE HELD CARRIED ON-GROUND IN-ROOM) = V-EAT>"
 <SYNTAX EAT OBJECT (FIND EDIBLEBIT) (TAKE HELD CARRIED ON-GROUND IN-ROOM) = V-EAT>
@@ -76,14 +79,62 @@ the ones owned by the Great Phoenix -- you could do so." CR>
       <TELL "You CAN'T DO THAT." CR>
     )>>
 
+<SYNTAX CAST OBJECT (FIND SPELLBIT) = V-CAST>
+
+<ROUTINE V-CAST ()
+  <TELL 
+"You don't know that spell." CR>>
+
+<SYNTAX DIG OBJECT WITH OBJECT = V-DIG>
+
+<ROUTINE V-DIG ()
+  <TELL 
+"You can't dig " T, PRSI " with " T, PRSO ".">>
+
+<SYNTAX CLIMB = V-CLIMB-MOD>
+
+<ROUTINE V-CLIMB-MOD ()
+  <COND
+    (<==? <LOC ,PLAYER> ,PHOENIX-MOUNTAIN-PASS>
+      <PERFORM ,V?CLIMB ,MOUNTAINS>)
+    (T
+      <V-CLIMB>)>>
+
+<SYNTAX STAB OBJECT WITH OBJECT = V-STAB>
+
+<VERB-SYNONYM STAB STICK POKE JAB PROD>
+
+<ROUTINE V-STAB ()
+  <V-ATTACK>>
+
+<SYNTAX PAINT OBJECT = V-PAINT>
+
+<ROUTINE V-PAINT ()
+  <COND
+    (<HELD? ,PURPLE-PAINT>
+      <TELL 
+"You don't have any paint!" CR>)
+    (<PRSO? ,PLAYER>
+      <PURPLE-COW-R>)
+    (T
+      <POINTLESS "Painting">)>>
+
 ; ************************* ITEMS **********************************************
 
 <ROUTINE QUEST-TWO-R ()
-  <CRLF>
-  <TELL
+  <COND
+    (<==? ,PRSA ,V?EXAMINE>
+      <TELL 
+"About what you'd expect." CR>)
+    (<==? ,PRSA ,V?DROP>
+      <TELL
+"That's not something you should drop." CR>)
+    (T
+      <CRLF>
+      <TELL
 "*** TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. WE COULD NOT
 INTERACT WITH QUEST 2 'ITEMS', EXCEPT FOR 'USE OBJECT' AND 'GIVE OBJECT TO
-OBJECT'. ***" CR>>
+OBJECT'. ***" CR>)>>
 
 <OBJECT MILK
   (IN PLAYER)
@@ -115,25 +166,28 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
   <COND
     (<VERB? EXAMINE DROP>
       <QUEST-TWO-R>)
-    (<VERB? USE-ON>
+    (<VERB? USE-ON DIG>
       <COND
-        (<PRSI? ,HAYSTACK>
-          <CALL OPEN-STATUE-CAVE-R>)>)>>
+        (<OR 
+          <AND <VERB? USE-ON><PRSI? ,HAYSTACK>>
+          <AND <VERB? DIG><PRSO? ,HAYSTACK>>>
+            <CALL OPEN-STATUE-CAVE-R>)>)>>
 
 <OBJECT FLY-SCROLL
   (DESC "the fly scroll")
-  (SYNONYM SCROLL)
+  (SYNONYM FLY SCROLL SPELL)
   (ADJECTIVE FLY)
   (ACTION FLY-SCROLL-R)
-  (FLAGS TAKEBIT NARTICLEBIT)>
+  (FLAGS TAKEBIT NARTICLEBIT SPELLBIT)>
 
 <ROUTINE FLY-SCROLL-R ()
   <COND
     (<VERB? EXAMINE DROP>
       <QUEST-TWO-R>
     )
-    (<VERB? USE>
+    (<VERB? USE CAST>
       <CALL FINISH-R>)>>
+
 
 <OBJECT WING-FEATHER
   (DESC "wing feather")
@@ -186,7 +240,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
   <COND
     (<VERB? EXAMINE DROP>
       <QUEST-TWO-R>)
-    (<VERB? USE-ON>
+    (<VERB? USE-ON PUT-IN>
       <COND
         (<PRSI? ,POND>
           <CALL GET-DUCK-TURD-R>)>)>>
@@ -396,7 +450,7 @@ FLY!" CR>)>>
   (SYNONYM SILO)
   (ADJECTIVE ZEKE'S ZEKES)
   (DESC "Zeke's Silo")
-  (FLAGS NARTICLEBIT NDESCBIT)
+  (FLAGS NARTICLEBIT NDESCBIT DOORBIT)
   (ACTION ZEKES-SILO-ENTRANCE-R)>
 
 <ROUTINE ZEKES-SILO-ENTRANCE-R ()
@@ -448,7 +502,7 @@ carnivorous, they'd make you hungry." CR>)
       <TELL
 "You sip the water from the pond.  Just what you need to wash down a bit of
 grazing." CR>)
-    (<VERB? USE-ON>
+    (<VERB? USE-ON PUT-IN>
       <COND
         (<PRSO? ,SOMETHING-ITEM>
           <CALL GET-DUCK-TURD-R>
@@ -456,10 +510,18 @@ grazing." CR>)
 
 <ROUTINE GET-DUCK-TURD-R ()
   <TELL
-"You throw the something into the lake.  The ducks swarm around it in curiosity. 
+"You throw the something into the pond.  The ducks swarm around it in curiosity. 
 You take the opportunity to grab a duck turd without being noticed!" CR>
   <REMOVE ,SOMETHING-ITEM>
   <MOVE ,DUCK-TURD, PLAYER>>
+  
+<OBJECT DUCKS
+  (DESC "ducks")
+  (LDESC "About what you'd expect.")
+  (SYNONYM DUCK DUCKS DUCKIE DUCKIES)
+  (ADJECTIVE LITTLE TINY)
+  (IN ZEKES-FARM)
+  (FLAGS NDESCBIT NPREFIXBIT PLURALBIT)>
 
 ; ************************* ZEKE'S FARMHOUSE ***********************************
 
@@ -502,6 +564,7 @@ moment.  Perhaps you should go away.||">)
 
 <OBJECT TREASURE-CHEST
   (DESC "treasure chest")
+  (LDESC "About what you'd expect.")
   (SYNONYM CHEST)
   (ADJECTIVE TREASU TREASURE)
   (IN ZEKES-FARMHOUSE)
@@ -521,8 +584,8 @@ moment.  Perhaps you should go away.||">)
 "Ooooo!  There's nothing inside!  Told ya you should have gone away." CR>
   <MOVE ,NOTHING-ITEM ,PLAYER>
   <THIS-IS-IT ,NOTHING-ITEM>
-  <REMOVE ,TABLE> ;"NOT SURE WHY THIS HAPPENS IN THE ORIGINAL"
-  <REMOVE ,TREASURE-CHEST> ;"NOT SURE WHY THIS HAPPENS IN THE ORIGINAL">
+  <REMOVE ,TABLE>
+  <REMOVE ,TREASURE-CHEST>>
 
 
 ; ************************** ZEKE'S SILO ***************************************
@@ -539,11 +602,12 @@ moment.  Perhaps you should go away.||">)
 <ROUTINE ZEKES-SILO-R (RARG)
   <COND
     (<==? .RARG ,M-LOOK>
-      <TELL "Gee, this place smells just like rotting feed.  Standing in the
-silo, grinning like the idiot that he is, is Farmer ">
-      <BOLDIZE "Zeke">
-      <TELL "." CR CR>)
+      <TELL "Gee, this place smells just like rotting feed.  ">)
     (<==? .RARG ,M-FLASH>
+      <TELL 
+"Standing in the silo, grinning like the idiot that he is, is Farmer ">
+      <BOLDIZE "Zeke">
+      <TELL "." CR CR>
       <TELL "You can go ">
       <BOLDIZE "out">
       <TELL "." CR>)>>
@@ -732,7 +796,7 @@ thing!\"" CR>
 "You are escorted to the Goblin King's throne room, a large chamber ornamented
 with ">
       <BOLDIZE "statues">
-      <TELL " of nude female goblins.  You try hard to avoid puking." CR>)
+      <TELL " of nude female goblins.  You try hard to avoid puking." CR CR>)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "out">
@@ -980,23 +1044,28 @@ Here, in all its glory, sits the ">
 look at it." CR>)
     (<VERB? SPEAK>
       <TELL
-"The Resplendent Magnificent Phoenix demands to know ">
-      <ITALICIZE "why">
-      <TELL
+"The Resplendent Magnificent Phoenix ">
+      <COND
+        (<HELD? ,FLY-SCROLL>
+          <TELL "does not reply." CR>)
+        (T
+          <TELL "demands to know ">
+          <ITALICIZE "why">
+          <TELL
 " such a weakling as you has come here!  \"If you do not have my wing feather
 with you, I'm afraid I must ask you to leave ">
-      <ITALICIZE "immediately!">
-      <TELL 
+          <ITALICIZE "immediately!">
+          <TELL 
 "  Now, do you have my wing feather or not?\" -- ">
-      <BOLDIZE "Yes">
-      <TELL " or ">
-      <BOLDIZE "No">
-      <TELL "?" CR CR>
-      <COND
-        (<YES?>
-          <PHOENIX-PROC-R>)
-        (T
-          <PHOENIX-KILL-R>)>)>>
+          <BOLDIZE "Yes">
+          <TELL " or ">
+          <BOLDIZE "No">
+          <TELL "?" CR CR>
+          <COND
+            (<YES?>
+              <PHOENIX-PROC-R>)
+            (T
+              <PHOENIX-KILL-R>)>)>)>>
 
 <ROUTINE PHOENIX-PROC-R ()
   <TELL 
