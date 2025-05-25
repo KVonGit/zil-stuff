@@ -26,9 +26,6 @@ v0.1.0 alpha">
 
 <INSERT-FILE "parser">
 
-<CONSTANT DEBUG T>
-<CONSTANT DEBUGGING-VERBS T>
-
 ;HACK
 ;"<SYNTAX EAT OBJECT (FIND EDIBLEBIT) (TAKE HAVE HELD CARRIED ON-GROUND IN-ROOM) = V-EAT>"
 <SYNTAX EAT OBJECT (FIND EDIBLEBIT) (TAKE HELD CARRIED ON-GROUND IN-ROOM) = V-EAT>
@@ -39,13 +36,16 @@ v0.1.0 alpha">
 
 <ROUTINE V-FLY ()
   <COND
-    (<AND <IN? ,PLAYER ,KOWWS-CHASM><HELD? FLY-SCROLL>>
-      <CALL FINISH-R>    )
+    (<HELD? FLY-SCROLL>
+      <COND
+        (<IN? ,PLAYER ,KOWWS-CHASM>
+          <CALL FINISH-R>)
+        (T
+          <TSD>)>)
     (T
       <TELL 
 "That's not a spell you know.  But perhaps if you could find a scroll -- like
-the ones owned by the Great Phoenix -- you could do so." CR>
-    )>>
+the ones owned by the Great Phoenix -- you could do so." CR>)>>
 
 <SYNTAX USE OBJECT = V-USE>
 
@@ -112,12 +112,14 @@ the ones owned by the Great Phoenix -- you could do so." CR>
 <ROUTINE V-PAINT ()
   <COND
     (<HELD? ,PURPLE-PAINT>
-      <TELL 
-"You don't have any paint!" CR>)
-    (<PRSO? ,PLAYER>
-      <PURPLE-COW-R>)
+      <COND
+        (<PRSO? ,PLAYER>
+          <PURPLE-USE-R>)
+        (T
+          <POINTLESS "Painting">)>)
     (T
-      <POINTLESS "Painting">)>>
+      <TELL 
+"You don't have any paint!" CR>)>>
 
 ; ************************* ITEMS **********************************************
 
@@ -125,16 +127,9 @@ the ones owned by the Great Phoenix -- you could do so." CR>
   <COND
     (<==? ,PRSA ,V?EXAMINE>
       <TELL 
-"About what you'd expect." CR>)
+"About what you'd expect from " T, PRSO "." CR>)
     (<==? ,PRSA ,V?DROP>
-      <TELL
-"That's not something you should drop." CR>)
-    (T
-      <CRLF>
-      <TELL
-"*** TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. WE COULD NOT
-INTERACT WITH QUEST 2 'ITEMS', EXCEPT FOR 'USE OBJECT' AND 'GIVE OBJECT TO
-OBJECT'. ***" CR>)>>
+      <POINTLESS "Dropping">)>>
 
 <OBJECT MILK
   (IN PLAYER)
@@ -301,7 +296,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
   (DESC "purple paint")
   (SYNONYM PURPLE PAINT)
   (ADJECTIVE PURPLE)
-  (FLAGS TAKEBIT NARTICLEBIT)
+  (FLAGS TAKEBIT NARTICLEBIT WEARBIT)
   (ACTION PURPLE-PAINT-R)>
 
 <ROUTINE PURPLE-PAINT-R ()
@@ -311,16 +306,21 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
     (<VERB? USE>
       <COND
         (<==? <LOC ,PLAYER> ,ZEKES-SILO>
-          <PURPLE-USE-R>)>)>>
+          <PURPLE-USE-R>)>)
+    (<VERB? WEAR>
+        <PURPLE-USE-R>)>>
 
 <ROUTINE PURPLE-USE-R ()
   <COND
     (<HELD? ,PURPLE-PAINT>
-      <PURPLE-COW-R>)
+      <COND
+        (<==? <LOC ,PLAYER> ,ZEKES-SILO>
+          <PURPLE-COW-R>)
+        (T
+          <TSD>)>)
     (T
       <TELL
-"You don't know where that is." CR>
-    )>>
+"You don't know where that is." CR>)>>
 
 <ROUTINE PURPLE-COW-R ()
   <REMOVE ,PURPLE-PAINT>
@@ -463,27 +463,45 @@ FLY!" CR>)>>
   (DESC "haystack")
   (SYNONYM HAY HAYSTA HAYSTACK)
   (IN ZEKES-FARM)
-  (FLAGS NDESCBIT TAKEBIT TRYTAKEBIT EDIBLEBIT)
+  (FLAGS NDESCBIT TAKEBIT TRYTAKEBIT EDIBLEBIT ATTACKBIT)
   (ACTION HAYSTACK-R)>
 
 <ROUTINE HAYSTACK-R ()
   <COND
     (<VERB? EXAMINE>
       <TELL 
-"About what you'd expect from a haystack.  It's made of... HAY!  You munch on it
-for a while." CR>)
+"About what you'd expect from a haystack">
+      <COND
+        (<==? <LOC ,HOLE> ,HERE>
+          <TELL ", except it's in a hole." CR>)
+        (T
+          <TELL ".  It's made of... HAY!  You munch on it
+for a while." CR>)>)
     (<VERB? EAT TAKE>
       <TELL 
-"You take a bite of the haystack.  Yummy... tastes just like chicken!" CR>
-    )>>
+"You take a bite of the haystack.  Yummy... tastes just like chicken!" CR>)
+    (<VERB? STAB ATTACK>
+      <OPEN-STATUE-CAVE-R>)>>
 
 <ROUTINE OPEN-STATUE-CAVE-R ()
-  <TELL
+  <COND
+    (<HELD? ,PITCHFORK>
+      <TELL
 "You stab the pitchfork into the haystack.  Lo and behold, the haystack falls
 down into a hole in the ground!  Inside the hole is a jade statuette, which you
 take." CR>
-  <REMOVE ,PITCHFORK>
-  <MOVE ,JADE-STATUETTE ,PLAYER>>
+      <REMOVE ,PITCHFORK>
+      <MOVE ,HOLE ,HERE>
+      <MOVE ,JADE-STATUETTE ,PLAYER>)
+    (T
+      <TELL
+"You don't have the required tool." CR>)>>
+
+<OBJECT HOLE
+  (DESC "hole")
+  (LDESC "About what you'd expect from a hole.")
+  (SYNONYM HOLE)
+  (FLAGS NDESCBIT)>
 
 <OBJECT POND
   (DESC "pond")
@@ -507,6 +525,8 @@ grazing." CR>)
         (<PRSO? ,SOMETHING-ITEM>
           <CALL GET-DUCK-TURD-R>
         )>)>>
+
+<SYNONYM IN INTO>
 
 <ROUTINE GET-DUCK-TURD-R ()
   <TELL
@@ -1097,6 +1117,8 @@ for \"The Adventures of Koww the Magician II -- Escape from the NecroYaks!\"">
 
 <ROUTINE FINISH-R ()
   <COND
+    (<NOT <==? <LOC ,PLAYER> ,KOWWS-CHASM>>
+      <TSD>)
     (<HELD? FLY-SCROLL>
       <CALL END-R>)
     (T
