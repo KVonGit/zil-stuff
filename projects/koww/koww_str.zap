@@ -52,7 +52,7 @@
 	.GSTR STR?0,"The Adventures of Koww the Magician (ZIL Port)
 An Interactive Fantasy by Brian the Great
 Copyright (c) 1999 Brian the Great. All rights reserved.
-v0.0.1-alpha"
+v0.1.0 alpha"
 	.GSTR STR?60,"The greenness of the farmland dissolves into gray bleakness as you pass into the land of the NecroYaks. Yaks are the sworn enemies of cows -- you'd better stay on your toes!
 "
 	.GSTR STR?24,"them"

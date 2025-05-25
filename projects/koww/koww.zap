@@ -4011,7 +4011,8 @@ START::
 ?L1:	PRINTR "You CAN'T DO THAT."
 
 	.FUNCT QUEST-TWO-R
-	PRINTR "TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. WE COULD NOT INTERACT WITH QUEST 2 'ITEMS', EXCEPT FOR 'USE OBJECT' AND 'GIVE OBJECT TO OBJECT'."
+	CRLF
+	PRINTR "*** TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. WE COULD NOT INTERACT WITH QUEST 2 'ITEMS', EXCEPT FOR 'USE OBJECT' AND 'GIVE OBJECT TO OBJECT'. ***"
 
 	.FUNCT MILK-R
 	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
@@ -4481,14 +4482,12 @@ START::
 ?L1:	PRINTR "Those particular mountains are too steep."
 
 	.FUNCT PHOENIX-PEAK-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
+	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "After hard hours of climbing, you finally reach the summit of Phoenix Peak.  Here, in all its glory, sits the "
 	ICALL2 BOLDIZE,STR?54
 	PRINTI "."
 	CRLF
 	CRLF
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
 	ICALL2 BOLDIZE,STR?44
 	PRINTR "."
@@ -4501,11 +4500,12 @@ START::
 	ICALL2 ITALICIZE,STR?55
 	PRINTI " such a weakling as you has come here!  ""If you do not have my wing feather with you, I'm afraid I must ask you to leave "
 	ICALL2 ITALICIZE,STR?56
-	PRINTI " Now, do you have my wing feather or not?"" -- "
+	PRINTI "  Now, do you have my wing feather or not?"" -- "
 	ICALL2 BOLDIZE,STR?57
 	PRINTI " or "
 	ICALL2 BOLDIZE,STR?58
 	PRINTI "?"
+	CRLF
 	CRLF
 	CALL1 YES? >STACK
 	ZERO? STACK /?L4

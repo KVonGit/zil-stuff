@@ -22,8 +22,7 @@ v0.1.0 alpha">
   <SETG HERE ,KOWWS-CHASM>
   <MOVE ,PLAYER ,HERE>
   <V-LOOK>
-  <MAIN-LOOP>
->
+  <MAIN-LOOP>>
 
 <INSERT-FILE "parser">
 
@@ -38,15 +37,12 @@ v0.1.0 alpha">
 <ROUTINE V-FLY ()
   <COND
     (<AND <IN? ,PLAYER ,KOWWS-CHASM><HELD? FLY-SCROLL>>
-      <CALL FINISH-R>
-    )
+      <CALL FINISH-R>    )
     (T
       <TELL 
 "That's not a spell you know.  But perhaps if you could find a scroll -- like
 the ones owned by the Great Phoenix -- you could do so." CR>
-    )
-  >
->
+    )>>
 
 <SYNTAX USE OBJECT = V-USE>
 
@@ -56,35 +52,29 @@ the ones owned by the Great Phoenix -- you could do so." CR>
 <ROUTINE V-USE ()
   <TELL 
 "That command doesn't work here. Be more specific about what you wish to do with
-" T, PRSO "." CR>
->
+" T, PRSO "." CR>>
 
 <ROUTINE V-USE-ON ()
   <TELL 
 "That command doesn't work here. Be more specific about what you wish to do with
-" T, PRSO " and " T, PRSI "." CR>
->
+" T, PRSO " and " T, PRSI "." CR>>
 
 <SYNTAX SPEAK TO OBJECT = V-SPEAK>
 
 <VERB-SYNONYM SPEAK TALK>
 
 <ROUTINE V-SPEAK ()
-  <TELL "There is no reply." CR>
->
+  <TELL "There is no reply." CR>>
 
 <SYNTAX SPLASH OBJECT ON OBJECT = V-SPLASH>
 
 <ROUTINE V-SPLASH ()
    <COND
     (<AND <PRSO? ,MILK><HELD? ,MILK>>
-      <TELL "Why would you do that?  Awful waste of milk." CR>
-    )
+      <TELL "Why would you do that?  Awful waste of milk." CR>)
     (T
       <TELL "You CAN'T DO THAT." CR>
-    )
-  >
->
+    )>>
 
 ; ************************* ITEMS **********************************************
 
@@ -93,22 +83,19 @@ the ones owned by the Great Phoenix -- you could do so." CR>
   <TELL
 "*** TODO - QUEST 2 HAD NO BUILT-IN INVENTORY FUNCTIONALITY. WE COULD NOT
 INTERACT WITH QUEST 2 'ITEMS', EXCEPT FOR 'USE OBJECT' AND 'GIVE OBJECT TO
-OBJECT'. ***" CR>
->
+OBJECT'. ***" CR>>
 
 <OBJECT MILK
   (IN PLAYER)
   (DESC "milk")
   (SYNONYM MILK)
   (ACTION MILK-R)
-  (FLAGS NARTICLEBIT)
->
+  (FLAGS NARTICLEBIT)>
 
 <ROUTINE MILK-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
+      <QUEST-TWO-R>)
     (<VERB? GIVE>
       <COND
         (<PRSI? ZEKE>
@@ -117,40 +104,28 @@ OBJECT'. ***" CR>
 here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
           <REMOVE ,MILK>
           <MOVE ,PITCHFORK ,PLAYER>
-        )
-      >
-    )
-  >
->
+        )>)>>
 
 <OBJECT PITCHFORK
   (DESC "pitchfork")
   (SYNONYM PITCHF PITCHFORK)
-  (ACTION PITCHFORK-R)
->
+  (ACTION PITCHFORK-R)>
 
 <ROUTINE PITCHFORK-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
+      <QUEST-TWO-R>)
     (<VERB? USE-ON>
       <COND
         (<PRSI? ,HAYSTACK>
-          <CALL OPEN-STATUE-CAVE-R>
-        )
-      >
-    )
-  >
->
+          <CALL OPEN-STATUE-CAVE-R>)>)>>
 
 <OBJECT FLY-SCROLL
   (DESC "the fly scroll")
   (SYNONYM SCROLL)
   (ADJECTIVE FLY)
   (ACTION FLY-SCROLL-R)
-  (FLAGS TAKEBIT NARTICLEBIT)
->
+  (FLAGS TAKEBIT NARTICLEBIT)>
 
 <ROUTINE FLY-SCROLL-R ()
   <COND
@@ -158,94 +133,69 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
       <QUEST-TWO-R>
     )
     (<VERB? USE>
-      <CALL FINISH-R>
-    )
-  >
->
+      <CALL FINISH-R>)>>
 
 <OBJECT WING-FEATHER
   (DESC "wing feather")
   (SYNONYM WING FEATHER)
   (ADJECTIVE WING)
   (FLAGS TAKEBIT)
-  (ACTION WING-FEATHER-R)
->
+  (ACTION WING-FEATHER-R)>
 
 <ROUTINE WING-FEATHER-R ()
   <COND
     (<VERB? EXAMINE DROP>
       <QUEST-TWO-R>
-    )
-  >
->
+    )>>
 
 <OBJECT JADE-STATUETTE
   (DESC "jade statuette")
   (SYNONYM JADE STATUETTE STATUE)
   (ADJECTIVE JADE)
   (FLAGS TAKEBIT)
-  (ACTION JADE-STATUETTE-R)
->
+  (ACTION JADE-STATUETTE-R)>
 
 <ROUTINE JADE-STATUETTE-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
+      <QUEST-TWO-R>)
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-KING>
-          <GIFT-OF-KING-R>
-        )
-      >
-    )
-  >
->
+          <GIFT-OF-KING-R>)>)>>
 
 <OBJECT GOBLIN-SPIT
   (DESC "goblin spit")
   (SYNONYM SPIT)
   (ADJECTIVE GOBLIN)
   (FLAGS TAKEBIT NARTICLEBIT)
-  (ACTION GOBLIN-SPIT-R)
->
+  (ACTION GOBLIN-SPIT-R)>
 
 <ROUTINE GOBLIN-SPIT-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
-  >
->
+      <QUEST-TWO-R>)>>
 
 <OBJECT SOMETHING-ITEM
   (DESC "something")
   (SYNONYM SOMETHING)
   (FLAGS TAKEBIT NARTICLEBIT)
-  (ACTION SOMETHING-ITEM-R)
->
+  (ACTION SOMETHING-ITEM-R)>
 
 <ROUTINE SOMETHING-ITEM-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
+      <QUEST-TWO-R>)
     (<VERB? USE-ON>
       <COND
         (<PRSI? ,POND>
-          <CALL GET-DUCK-TURD-R>
-        )
-      >
-    )
-  >
->
+          <CALL GET-DUCK-TURD-R>)>)>>
 
 <OBJECT NOTHING-ITEM
   (DESC "nothing")
   (SYNONYM NOTHING)
   (FLAGS TAKEBIT NARTICLEBIT)
-  (ACTION NOTHING-ITEM-R)
->
+  (ACTION NOTHING-ITEM-R)>
 
 <ROUTINE NOTHING-ITEM-R ()
   <COND
@@ -255,100 +205,68 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-GUARD>
-          <CALL SECRET-ONE-R>
-        )
-      >
-    )
-  >
->
+          <CALL SECRET-ONE-R>)>)>>
 
 <OBJECT DUCK-TURD
   (DESC "duck turd")
   (SYNONYM TURD)
   (ADJECTIVE DUCK)
   (FLAGS TAKEBIT)
-  (ACTION DUCK-TURD-R)
->
+  (ACTION DUCK-TURD-R)>
 
 <ROUTINE DUCK-TURD-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
+      <QUEST-TWO-R>)
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-KING>
-          <OTHER-GIFT-R>
-        )
-      >
-    )
-  >
->
+          <OTHER-GIFT-R>)>)>>
 
 <OBJECT GRAPPLING-HOOK
   (DESC "grappling hook")
   (SYNONYM HOOK)
   (ADJECTIVE GRAPPLING)
   (FLAGS TAKEBIT)
-  (ACTION GRAPPLING-HOOK-R)
->
+  (ACTION GRAPPLING-HOOK-R)>
 
 <ROUTINE GRAPPLING-HOOK-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
+      <QUEST-TWO-R>)
     (<VERB? USE>
       <COND
         (<==? <LOC ,PLAYER> ,MOUNTAINS>
-          <CLIMB-THEM-R>
-        )
-      >
-    )
+          <CLIMB-THEM-R>)>)
     (<VERB? USE-ON>
       <COND
         (<PRSO? ,MOUNTAINS>
-          <CLIMB-THEM-R>
-        )
-      >
-    )
-  >
->
+          <CLIMB-THEM-R>)>)>>
 
 <OBJECT PURPLE-PAINT
   (DESC "purple paint")
   (SYNONYM PURPLE PAINT)
   (ADJECTIVE PURPLE)
   (FLAGS TAKEBIT NARTICLEBIT)
-  (ACTION PURPLE-PAINT-R)
->
+  (ACTION PURPLE-PAINT-R)>
 
 <ROUTINE PURPLE-PAINT-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
+      <QUEST-TWO-R>)
     (<VERB? USE>
       <COND
         (<==? <LOC ,PLAYER> ,ZEKES-SILO>
-          <PURPLE-USE-R>
-        )
-      >
-    )
-  >
->
+          <PURPLE-USE-R>)>)>>
 
 <ROUTINE PURPLE-USE-R ()
   <COND
     (<HELD? ,PURPLE-PAINT>
-      <PURPLE-COW-R>
-    )
+      <PURPLE-COW-R>)
     (T
       <TELL
 "You don't know where that is." CR>
-    )
-  >
->
+    )>>
 
 <ROUTINE PURPLE-COW-R ()
   <REMOVE ,PURPLE-PAINT>
@@ -362,8 +280,7 @@ anyhow, I'd rather see than be one!">
   <TELL "\"" CR>
   <TELL
 "Wonderful!  You have just activated the scenario's secret feature!  That's it. 
-Return to your home.  There's nothing more to do here." CR>
->
+Return to your home.  There's nothing more to do here." CR>>
 
 
 ; ************************* KOWW'S CHASM ***************************************
@@ -374,8 +291,7 @@ Return to your home.  There's nothing more to do here." CR>
   (FLAGS LIGHTBIT)
   (ACTION KOWWS-CHASM-R)
   (FLAGS LIGHTBIT OUTSIDEBIT)
-  (EAST TO ZEKES-FARM)
->
+  (EAST TO ZEKES-FARM)>
 
 <ROUTINE KOWWS-CHASM-R (RARG)
   <COND
@@ -387,60 +303,46 @@ greener on the other side of the ">
       <BOLDIZE "chasm">
       <TELL "... you must know!  Also in the area is a very undramatic ">
       <BOLDIZE "sign">
-      <TELL "." CR CR>
-    )
+      <TELL "." CR CR>)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "east">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT CHASM-SIGN
   (DESC "sign")
   (SYNONYM SIGN)
   (IN KOWWS-CHASM)
   (FLAGS TRYTAKEBIT NDESCBIT)
-  (ACTION CHASM-SIGN-R)
->
+  (ACTION CHASM-SIGN-R)>
 
 <OBJECT CHASM
   (DESC "chasm")
   (FLAGS NDESCBIT)
   (SYNONYM CHASM)
   (IN KOWWS-CHASM)
-  (ACTION CHASM-R)
->
+  (ACTION CHASM-R)>
 
 <ROUTINE CHASM-SIGN-R ()
     <COND
       (<OR <VERB? EXAMINE><VERB? READ>>
         <TELL "It reads: '">
         <ITALICIZE "Got milk?  Come to Farmer Zeke's mag-NIFicent silo!">
-        <TELL "'" CR>
-      )
+        <TELL "'" CR>)
       (<VERB? TAKE>
         <TELL 
 "You yank the sign out of the ground and try to fit it in your Koww-pack.  But
-it just doesn't fit.  Frustrated, you put it back." CR>
-      )
-    >
->
+it just doesn't fit.  Frustrated, you put it back." CR>)>>
 
 <ROUTINE CHASM-R ()
   <COND
     (<VERB? TAKE>
       <TELL 
-"Don't worry, the men in the white coats will soon be here to deal with you.|">
-    )
+"Don't worry, the men in the white coats will soon be here to deal with you.|">)
     (<VERB? EXAMINE>
       <TELL 
 "That's the chasm you simply MUST cross!  Surely the only way to cross it is to
-FLY!" CR>
-    )
-  >
->
+FLY!" CR>)>>
 
 ; ************************* ZEKE'S FARM ****************************************
 
@@ -452,8 +354,7 @@ FLY!" CR>
   (WEST TO KOWWS-CHASM)
   (SOUTH TO GOBLIN-TRAIL)
   (EAST TO PHOENIX-MOUNTAIN-PASS)
-  (NORTH TO LAND-OF-NECROYAKS)
->
+  (NORTH TO LAND-OF-NECROYAKS)>
 
 <ROUTINE ZEKES-FARM-R (RARG)
   <COND
@@ -475,10 +376,7 @@ FLY!" CR>
       <BOLDIZE "east">
       <TELL ", or ">
       <BOLDIZE "north">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT ZEKES-FARMHOUSE-ENTRANCE
   (IN ZEKES-FARM)
@@ -486,16 +384,12 @@ FLY!" CR>
   (ADJECTIVE ZEKE'S ZEKES)
   (DESC "Zeke's Farmhouse")
   (FLAGS NARTICLEBIT NDESCBIT)
-  (ACTION ZEKES-FARMHOUSE-ENTRANCE-R)
->
+  (ACTION ZEKES-FARMHOUSE-ENTRANCE-R)>
 
 <ROUTINE ZEKES-FARMHOUSE-ENTRANCE-R ()
   <COND
     (<VERB? ENTER>
-      <GOTO ZEKES-FARMHOUSE>
-    )
-  >
->
+      <GOTO ZEKES-FARMHOUSE>)>>
 
 <OBJECT ZEKES-SILO-ENTRANCE
   (IN ZEKES-FARM)
@@ -503,38 +397,31 @@ FLY!" CR>
   (ADJECTIVE ZEKE'S ZEKES)
   (DESC "Zeke's Silo")
   (FLAGS NARTICLEBIT NDESCBIT)
-  (ACTION ZEKES-SILO-ENTRANCE-R)
->
+  (ACTION ZEKES-SILO-ENTRANCE-R)>
 
 <ROUTINE ZEKES-SILO-ENTRANCE-R ()
   <COND
     (<VERB? ENTER>
       <GOTO ZEKES-SILO>
-    )
-  >
->
+    )>>
 
 <OBJECT HAYSTACK
   (DESC "haystack")
   (SYNONYM HAY HAYSTA HAYSTACK)
   (IN ZEKES-FARM)
   (FLAGS NDESCBIT TAKEBIT TRYTAKEBIT EDIBLEBIT)
-  (ACTION HAYSTACK-R)
->
+  (ACTION HAYSTACK-R)>
 
 <ROUTINE HAYSTACK-R ()
   <COND
     (<VERB? EXAMINE>
       <TELL 
 "About what you'd expect from a haystack.  It's made of... HAY!  You munch on it
-for a while." CR>
-    )
+for a while." CR>)
     (<VERB? EAT TAKE>
       <TELL 
 "You take a bite of the haystack.  Yummy... tastes just like chicken!" CR>
-    )
-  >
->
+    )>>
 
 <ROUTINE OPEN-STATUE-CAVE-R ()
   <TELL
@@ -542,46 +429,37 @@ for a while." CR>
 down into a hole in the ground!  Inside the hole is a jade statuette, which you
 take." CR>
   <REMOVE ,PITCHFORK>
-  <MOVE ,JADE-STATUETTE ,PLAYER>
->
+  <MOVE ,JADE-STATUETTE ,PLAYER>>
 
 <OBJECT POND
   (DESC "pond")
   (SYNONYM POND WATER)
   (IN ZEKES-FARM)
   (FLAGS NDESCBIT TAKEBIT TRYTAKEBIT EDIBLEBIT)
-  (ACTION POND-R)
->
+  (ACTION POND-R)>
 
 <ROUTINE POND-R ()
   <COND
     (<VERB? EXAMINE>
       <TELL
 "A nice, placid pond full of little tiny duckies.  Ooo, how cute!  If you were
-carnivorous, they'd make you hungry." CR>
-    )
+carnivorous, they'd make you hungry." CR>)
     (<VERB? TAKE DRINK>
       <TELL
 "You sip the water from the pond.  Just what you need to wash down a bit of
-grazing." CR>
-    )
+grazing." CR>)
     (<VERB? USE-ON>
       <COND
         (<PRSO? ,SOMETHING-ITEM>
           <CALL GET-DUCK-TURD-R>
-        )
-      >
-    )
-  >
->
+        )>)>>
 
 <ROUTINE GET-DUCK-TURD-R ()
   <TELL
 "You throw the something into the lake.  The ducks swarm around it in curiosity. 
 You take the opportunity to grab a duck turd without being noticed!" CR>
   <REMOVE ,SOMETHING-ITEM>
-  <MOVE ,DUCK-TURD, PLAYER>
->
+  <MOVE ,DUCK-TURD, PLAYER>>
 
 ; ************************* ZEKE'S FARMHOUSE ***********************************
 
@@ -590,31 +468,25 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
   (DESC "Zeke's Farmhouse")
   (FLAGS LIGHTBIT)
   (OUT TO ZEKES-FARM)
-  (ACTION ZEKES-FARMHOUSE-R)
->
+  (ACTION ZEKES-FARMHOUSE-R)>
 
 <ROUTINE ZEKES-FARMHOUSE-R (RARG)
   <COND
     (<==? .RARG ,M-LOOK>
       <TELL
 "You're inside Farmer Zeke's rather cramped home.  No one's here at the
-moment.  Perhaps you should go away.||">
-    )
+moment.  Perhaps you should go away.||">)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "out">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT TABLE
   (IN ZEKES-FARMHOUSE)
   (DESC "table")
   (SYNONYM TABLE)
   (FLAGS CONTBIT SURFACEBIT)
-  (ACTION TABLE-R)
->
+  (ACTION TABLE-R)>
 
 <ROUTINE TABLE-R ()
   <COND
@@ -623,14 +495,10 @@ moment.  Perhaps you should go away.||">
 "Hmmm, what's a table doing here?  Cool!  It has a ">
       <BOLDIZE "treasure chest">
       <TELL " on it!" CR>
-      <THIS-IS-IT ,TREASURE-CHEST>
-    )
+      <THIS-IS-IT ,TREASURE-CHEST>)
     (<VERB? TAKE>
       <TELL
-"Farmer Zeke took the wise precaution of bolting his table to the floor." CR>
-    )
-  >
->
+"Farmer Zeke took the wise precaution of bolting his table to the floor." CR>)>>
 
 <OBJECT TREASURE-CHEST
   (DESC "treasure chest")
@@ -638,20 +506,15 @@ moment.  Perhaps you should go away.||">
   (ADJECTIVE TREASU TREASURE)
   (IN ZEKES-FARMHOUSE)
   (FLAGS NDESCBIT CONTBIT OPENABLEBIT)
-  (ACTION TREASURE-CHEST-R)
->
+  (ACTION TREASURE-CHEST-R)>
 
 <ROUTINE TREASURE-CHEST-R ()
   <COND
     (<VERB? OPEN>
-      <CALL GET-NOTHING-R>
-    )
+      <CALL GET-NOTHING-R>)
     (<VERB? TAKE>
       <TELL
-"It's too big.  You could open it instead..." CR>
-    )
-  >
->
+"It's too big.  You could open it instead..." CR>)>>
 
 <ROUTINE GET-NOTHING-R ()
   <TELL
@@ -659,8 +522,7 @@ moment.  Perhaps you should go away.||">
   <MOVE ,NOTHING-ITEM ,PLAYER>
   <THIS-IS-IT ,NOTHING-ITEM>
   <REMOVE ,TABLE> ;"NOT SURE WHY THIS HAPPENS IN THE ORIGINAL"
-  <REMOVE ,TREASURE-CHEST> ;"NOT SURE WHY THIS HAPPENS IN THE ORIGINAL"
->
+  <REMOVE ,TREASURE-CHEST> ;"NOT SURE WHY THIS HAPPENS IN THE ORIGINAL">
 
 
 ; ************************** ZEKE'S SILO ***************************************
@@ -672,8 +534,7 @@ moment.  Perhaps you should go away.||">
   (DESC "Zeke's Silo")
   (FLAGS LIGHTBIT)
   (OUT TO ZEKES-FARM)
-  (ACTION ZEKES-SILO-R)
->
+  (ACTION ZEKES-SILO-R)>
 
 <ROUTINE ZEKES-SILO-R (RARG)
   <COND
@@ -681,15 +542,11 @@ moment.  Perhaps you should go away.||">
       <TELL "Gee, this place smells just like rotting feed.  Standing in the
 silo, grinning like the idiot that he is, is Farmer ">
       <BOLDIZE "Zeke">
-      <TELL "." CR CR>
-    )
+      <TELL "." CR CR>)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "out">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT ZEKE
   (DESC "Zeke")
@@ -697,8 +554,7 @@ silo, grinning like the idiot that he is, is Farmer ">
   (SYNONYM FARMER ZEKE)
   (ADJECTIVE FARMER)
   (FLAGS PERSONBIT NARTICLEBIT NDESCBIT)
-  (ACTION ZEKE-R)
->
+  (ACTION ZEKE-R)>
 
 <ROUTINE ZEKE-R ()
   <COND
@@ -708,28 +564,20 @@ away, but he seems pleased as punch that you've arrived." CR>
     )
     (<VERB? SPEAK>
       <TELL "\"Hey there, good buddy!  Say, bein' a wizard an' all, couldja find
-it in yer heart to gimme some magic milk?  I'm all out!\"" CR>
-    )
+it in yer heart to gimme some magic milk?  I'm all out!\"" CR>)
     (<VERB? GIVE>
       <COND
         (<PRSO? ,MILK>
           <TELL "\"Well, thanks a lot, good buddy!  Well, tell ya what, why
 don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
           <REMOVE ,MILK>
-          <MOVE ,PITCHFORK ,PLAYER>
-        )
-      >
-    )
+          <MOVE ,PITCHFORK ,PLAYER>)>)
     (<VERB? ATTACK>
       <TELL "You may be an evil sorcerer, but at least you're an ETHICAL evil
 sorcerer.  No killing allowed!  Especially not of idiots.  They don't know
-they're idiots." CR>
-    )
+they're idiots." CR>)
     (<VERB? SPLASH>
-      <CALL DUMB-LOSE-R>
-    )
-  >
->
+      <CALL DUMB-LOSE-R>)>>
 
 <ROUTINE DUMB-LOSE-R ()
   <TELL "\"Well, gee,\" says Farmer Zeke, \"I shore do like ya a lot, but I
@@ -738,8 +586,7 @@ guess there's a limit!\"" CR>
   <CRLF>
 	<JIGS-UP ,LOSE-TEXT>
   <CRLF>
-  <V-QUIT>
->
+  <V-QUIT>>
 
 ; ************************** GOBLIN TRAIL **************************************
 
@@ -749,8 +596,7 @@ guess there's a limit!\"" CR>
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (NORTH TO ZEKES-FARM)
   (SOUTH TO GOBLIN-LAIR)
-  (ACTION GOBLIN-TRAIL-R)
->
+  (ACTION GOBLIN-TRAIL-R)>
 
 <ROUTINE GOBLIN-TRAIL-R (RARG)
   <COND
@@ -765,33 +611,25 @@ weak." CR CR>
       <BOLDIZE "north">
       <TELL " or ">
       <BOLDIZE "south">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT ROAD-GOBLIN-TRAIL
   (DESC "the road")
   (SYNONYM ROAD)
   (IN GOBLIN-TRAIL)
   (FLAGS NARTICLEBIT)
-  (ACTION ROAD-GOBLIN-TRAIL-R)
->
+  (ACTION ROAD-GOBLIN-TRAIL-R)>
 
 <ROUTINE ROAD-GOBLIN-TRAIL-R ()
   <COND
     (<VERB? EXAMINE>
         <TELL
-"It's made of dirt.  Concrete hasn't been invented yet." CR>
-    )
+"It's made of dirt.  Concrete hasn't been invented yet." CR>)
     (<VERB? TAKE>
       <TELL
 "But you're already taking the road!  You're taking it either north or south! 
 Har har har!  Hey, I saw a car transform the other day!  Yeah, it turned into a
-driveway!" CR>
-    )
-  >
->
+driveway!" CR>)>>
 
 ; ************************** GOBLIN LAIR ***************************************
 
@@ -801,8 +639,7 @@ driveway!" CR>
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (NORTH TO GOBLIN-TRAIL)
   (IN TO INSIDE-GOBLIN-LAIR)
-  (ACTION GOBLIN-LAIR-R)
->
+  (ACTION GOBLIN-LAIR-R)>
 
 <ROUTINE GOBLIN-LAIR-R (RARG)
   <COND
@@ -817,36 +654,27 @@ them." CR CR>
       <BOLDIZE "north">
       <TELL " or ">
       <BOLDIZE "in">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT CLIFF
   (DESC "cliff")
   (SYNONYM CLIFF)
   (IN GOBLIN-TRAIL)
-  (ACTION CLIFF-R)
->
+  (ACTION CLIFF-R)>
 
 <ROUTINE CLIFF-R ()
   <COND
     (<VERB? EXAMINE>
       <TELL
-"It's a cliff; you could climb it, but it might be a difficult climb." CR>
-    )
+"It's a cliff; you could climb it, but it might be a difficult climb." CR>)
     (<VERB? TAKE>
       <TELL
-"If you want to climb the cliff, say so!" CR>
-    )
+"If you want to climb the cliff, say so!" CR>)
     (<VERB? CLIMB>
       <TELL
 "After a difficult climb, you reach the top.  You're very pleased with yourself.
  Unfortunately, the ledge crumbles beneath you and you plummet back to the
- ground." CR>
-    )
-  >
->
+ ground." CR>)>>
 
 <OBJECT INSIDE-GOBLIN-LAIR-ENTRANCE
   (IN GOBLIN-LAIR)
@@ -854,16 +682,13 @@ them." CR CR>
   (DESC "inside the goblin lair")
   (SYNONYM LAIR CAVE)
   (ADJECTIVE INSIDE GOBLIN)
-  (FLAGS DOORBIT NDESCBIT)
->
+  (FLAGS DOORBIT NDESCBIT)>
 
 <ROUTINE INSIDE-GOBLIN-LAIR-ENTRANCE-R ()
   <COND
     (<VERB? ENTER>
       <GOTO INSIDE-GOBLIN-LAIR>
-    )
-  >
->
+    )>>
 
 <OBJECT GOBLIN-GUARD
   (IN GOBLIN-LAIR)
@@ -871,30 +696,25 @@ them." CR CR>
   (SYNONYM GOBLIN GUARD)
   (ADJECTIVE GOBLIN)
   (FLAGS PERSONBIT)
-  (ACTION GOBLIN-GUARD-R)
->
+  (ACTION GOBLIN-GUARD-R)>
 
 <ROUTINE GOBLIN-GUARD-R ()
   <COND
     (<VERB? EXAMINE>
       <TELL
 "It's very ugly, like most of its kind.  Don't get too close; you could faint
-from the smell." CR>
-    )
+from the smell." CR>)
     (<VERB? SPEAK>
       <TELL
 "\"Yu wan go cave?  No try no funny bizniss -- I can tell.\"" CR>
-    )
-  >
->
+    )>>
 
 <ROUTINE SECRET-ONE-R ()
   <TELL
 "\"Ooooo!  Nuthing!  Jus wut I all ways want'd!  Inn ex chaynge, I giv yu summ
 thing!\"" CR>
   <REMOVE NOTHING-ITEM>
-  <MOVE ,SOMETHING-ITEM ,PLAYER>
->
+  <MOVE ,SOMETHING-ITEM ,PLAYER>>
 
 ; ************************** INSIDE THE GOBLIN LAIR ****************************
 
@@ -903,8 +723,7 @@ thing!\"" CR>
   (DESC "Inside the Goblin Lair")
   (ACTION INSIDE-GOBLIN-LAIR-R)
   (FLAGS LIGHTBIT NDESCBIT)
-  (OUT TO GOBLIN-LAIR)
->
+  (OUT TO GOBLIN-LAIR)>
 
 <ROUTINE INSIDE-GOBLIN-LAIR-R (RARG)
   <COND
@@ -913,39 +732,30 @@ thing!\"" CR>
 "You are escorted to the Goblin King's throne room, a large chamber ornamented
 with ">
       <BOLDIZE "statues">
-      <TELL " of nude female goblins.  You try hard to avoid puking." CR>
-    )
+      <TELL " of nude female goblins.  You try hard to avoid puking." CR>)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "out">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT STATUES
   (DESC "statues")
   (SYNONYM STATUE STATUES)
   (IN INSIDE-GOBLIN-LAIR)
   (FLAGS NDESCBIT)
-  (ACTION STATUES-R)
->
+  (ACTION STATUES-R)>
 
 <ROUTINE STATUES-R ()
   <COND
     (<VERB? EXAMINE>
       <TELL
 "Apparently, the goblin idea of beauty is the same as the bovine idea of
-putridity.  You'd prefer not to look at these statues." CR>
-    )
+putridity.  You'd prefer not to look at these statues." CR>)
     (<VERB? TAKE>
       <TELL
 "That would be difficult, considering the statues are about seven feet tall,
 are made of stone, weigh about a ton, and are guarded by some mean-looking
-goblins." CR>
-    )
-  >
->
+goblins." CR>)>>
 
 <OBJECT GOBLIN-KING
   (DESC "the Goblin King")
@@ -953,38 +763,32 @@ goblins." CR>
   (ADJECTIVE GOBLIN)
   (IN INSIDE-GOBLIN-LAIR)
   (FLAGS PERSONBIT NARTICLEBIT)
-  (ACTION GOBLIN-KING-R)
->
+  (ACTION GOBLIN-KING-R)>
 
 <ROUTINE GOBLIN-KING-R ()
   <COND
     (<VERB? EXAMINE>
       <TELL
 "An officious-looking, double-chinned goblin monarch sits royally atop a throne
-of deer hide." CR>
-    )
+of deer hide." CR>)
     (<VERB? SPEAK>
       <TELL
 "\"Hoo hoo hoo!  Goblinz so grate, our spit is assid!  We spit on yu if yu make
 us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!\"" CR>
-    )
-  >
->
+    )>>
 
 <ROUTINE GIFT-OF-KING-R ()
   <REMOVE ,JADE-STATUETTE>
   <MOVE ,GOBLIN-SPIT ,PLAYER>
   <TELL
-"\"Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!\"" CR>
->
+"\"Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!\"" CR>>
 
 <ROUTINE OTHER-GIFT-R ()
   <REMOVE ,DUCK-TURD>
   <MOVE ,GRAPPLING-HOOK ,PLAYER>
   <TELL
 "\"Ooooo!  GIMME GIMME GIMME!  Duck turd favorite goblin food!  We giv yu
-grapple hook!\"" CR>
->
+grapple hook!\"" CR>>
 
 ; ************************** LAND OF THE NECROYAKS *****************************
 
@@ -998,8 +802,7 @@ stay on your toes!|")
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (SOUTH TO ZEKES-FARM)
   (NORTH TO AMBUSH-POINT)
-  (ACTION LAND-OF-NECROYAKS-R)
->
+  (ACTION LAND-OF-NECROYAKS-R)>
 
 <ROUTINE LAND-OF-NECROYAKS-R (RARG)
   <COND
@@ -1008,34 +811,28 @@ stay on your toes!|")
       <BOLDIZE "north">
       <TELL " or ">
       <BOLDIZE "south">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT NECROYAKS-SIGN
   (IN LAND-OF-NECROYAKS)
   (DESC "sign")
   (SYNONYM SIGN)
   (FLAGS TRYTAKEBIT)
-  (ACTION NECROYAKS-SIGN-R)
->
+  (ACTION NECROYAKS-SIGN-R)>
 
 <ROUTINE NECROYAKS-SIGN-R ()
   <COND
     (<VERB? EXAMINE READ>
-      <TELL
+      <TELL 
 "It reads: ">
       <ITALICIZE 
 "\"Unless you own a vial of acid that you can give to the NecroYaks for their
 sinister experiments, do not proceed on pain of Death!\"">
-      <CRLF>
-    )
+      <CRLF>)
     (<VERB? TAKE>
-      <TELL "Oh, THAT'S original." CR>
-    )
-  >
->
+      <TELL 
+"Oh, THAT'S original." CR>
+    )>>
 
 ; ************************** AMBUSH POINT **************************************
 
@@ -1044,8 +841,7 @@ sinister experiments, do not proceed on pain of Death!\"">
   (DESC "Deep in NecroYak Territory")
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (ACTION AMBUSH-POINT-R)
-  (SOUTH TO LAND-OF-NECROYAKS)
->
+  (SOUTH TO LAND-OF-NECROYAKS)>
 
 <ROUTINE AMBUSH-POINT-R (RARG)
   <COND
@@ -1060,15 +856,12 @@ to continue, you'll have to ">
       <TELL "You can go ">
       <BOLDIZE "south">
       <TELL "." CR>
-    )
-  >
->
+    )>>
 
 <ROUTINE YAKS-KILL-R ()
   <TELL 
 "The NecroYaks recognize you as a cow, then jump out and kill you." CR CR>
-  <JIGS-UP ,LOSE-TEXT>
->
+  <JIGS-UP ,LOSE-TEXT>>
 
 <ROUTINE YAKS-LOVE-R ()
   <TELL 
@@ -1077,8 +870,7 @@ take it, and run off.  But one of them drops a phoenix feather, and you scoop it
 up unnoticed.  By the way, there's no way to go farther this way unless you're a
 yak." CR>
   <REMOVE ,GOBLIN-SPIT>
-  <MOVE ,WING-FEATHER ,PLAYER>
->
+  <MOVE ,WING-FEATHER ,PLAYER>>
 
 <SYNTAX SEARCH = V-SEARCH-THE-ROOM>
 
@@ -1087,18 +879,11 @@ yak." CR>
     (<==? <LOC ,PLAYER> ,AMBUSH-POINT>
       <COND
         (<HELD? ,GOBLIN-SPIT>
-          <YAKS-LOVE-R>
-        )
+          <YAKS-LOVE-R>)
         (T
-          <YAKS-KILL-R>
-        )
-      >
-    )
+          <YAKS-KILL-R>)>)
     (T
-      <V-SEARCH>
-    )
-  >
->
+      <V-SEARCH>)>>
 
 ; ************************** PHOENIX MOUNTAIN PASS *****************************
 
@@ -1108,8 +893,7 @@ yak." CR>
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (ACTION PHOENIX-MOUNTAIN-PASS-R)
   (WEST TO ZEKES-FARM)
-  (EAST TO PHOENIX-PEAK)
->
+  (EAST TO PHOENIX-PEAK)>
 
 <ROUTINE PHOENIX-MOUNTAIN-PASS-R (RARG)
   <COND
@@ -1117,17 +901,13 @@ yak." CR>
       <TELL
 "The towering mountains surround you on all sides but back to your west. 
 Passage farther east is remotely possible, should you be brave or foolhardy
-enough to try it." CR CR>
-    )
+enough to try it." CR CR>)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "west">
       <TELL " or ">
       <BOLDIZE "east">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT MOUNTAINS
   (DESC "mountains")
@@ -1142,19 +922,14 @@ enough to try it." CR CR>
     (<VERB? EXAMINE>
       <TELL 
 "They tower up almost as high as the Great Auk Mountains far, far to the
-north." CR>
-    )
+north." CR>)
     (<VERB? TAKE>
       <TELL 
 "After several hours of effort, you manage to chip a piece off of the mountain
 you're standing on.  But you accidentally let go and it plummets into the valley
-below." CR>
-    )
+below." CR>)
     (<VERB? CLIMB>
-      <CLIMB-THEM-R>
-    )
-  >
->
+      <CLIMB-THEM-R>)>>
 
 <ROUTINE CLIMB-THEM-R ()
   <COND
@@ -1163,14 +938,10 @@ below." CR>
       <MOVE ,PURPLE-PAINT ,PLAYER>
       <TELL 
 "On top of the mountain, you find a bunch of purple paint, which you take. 
-After descending again, you ditch your grappling hook." CR>
-    )
+After descending again, you ditch your grappling hook." CR>)
     (T
       <TELL 
-"Those particular mountains are too steep." CR>
-    )
-  >
->
+"Those particular mountains are too steep." CR>)>>
 
 ; ************************** PHOENIX PEAK **************************************
 
@@ -1179,8 +950,7 @@ After descending again, you ditch your grappling hook." CR>
   (DESC "Pheonix Peak")
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (ACTION PHOENIX-PEAK-R)
-  (WEST TO PHOENIX-MOUNTAIN-PASS)
->
+  (WEST TO PHOENIX-MOUNTAIN-PASS)>
 
 <ROUTINE PHOENIX-PEAK-R (RARG)
   <COND
@@ -1192,10 +962,7 @@ Here, in all its glory, sits the ">
       <TELL "." CR CR>
       <TELL "You can go ">
       <BOLDIZE "west">
-      <TELL "." CR>
-    )
-  >
->
+      <TELL "." CR>)>>
 
 <OBJECT PHOENIX
   (DESC "the Resplendent Magnificent Phoenix")
@@ -1203,16 +970,14 @@ Here, in all its glory, sits the ">
   (ADJECTIVE RESPLE REPLENDENT MAGNIF MAGNIFICENT)
   (IN PHOENIX-PEAK)
   (FLAGS PERSONBIT NDESCBIT NARTICLEBIT)
-  (ACTION PHOENIX-R)
->
+  (ACTION PHOENIX-R)>
 
 <ROUTINE PHOENIX-R ()
   <COND
     (<VERB? EXAMINE>
       <TELL
 "The Resplendent Magnificent Phoenix's visage is so brilliant that it hurts to
-look at it." CR>
-    )
+look at it." CR>)
     (<VERB? SPEAK>
       <TELL
 "The Resplendent Magnificent Phoenix demands to know ">
@@ -1229,15 +994,9 @@ with you, I'm afraid I must ask you to leave ">
       <TELL "?" CR CR>
       <COND
         (<YES?>
-          <PHOENIX-PROC-R>
-        )
+          <PHOENIX-PROC-R>)
         (T
-          <PHOENIX-KILL-R>
-        )
-      >
-    )
-  >
->
+          <PHOENIX-KILL-R>)>)>>
 
 <ROUTINE PHOENIX-PROC-R ()
   <TELL 
@@ -1247,8 +1006,7 @@ your hard work.  ">
   <BOLDIZE "Use">
   <TELL " the scroll to fly, but it will only work once." CR>
   <MOVE ,FLY-SCROLL ,PLAYER>
-  <REMOVE ,WING-FEATHER>
->
+  <REMOVE ,WING-FEATHER>>
 
 <ROUTINE PHOENIX-KILL-R ()
   <TELL 
@@ -1257,8 +1015,7 @@ do you?  You shammer.  I was going to dismiss you without hurting you, but I'm
 afraid now I'll have to kill you.\"||The Resplendent Magnificent Phoenix bats
 you with one claw.  You roll back down the mountainside, finally coming to a
 complete stop looking very much like a well-done steak." CR CR>
-  <JIGS-UP ,LOSE-TEXT>
->
+  <JIGS-UP ,LOSE-TEXT>>
 
 ; ************************** END OF ROOM DESCRIPTIONS **************************
 
@@ -1272,25 +1029,19 @@ for \"The Adventures of Koww the Magician II -- Escape from the NecroYaks!\"">
 <ROUTINE FINISH-R ()
   <COND
     (<HELD? FLY-SCROLL>
-      <CALL END-R>
-    )
+      <CALL END-R>)
     (T
       <TELL "Maybe you'll find it someday, but you don't have it today.  You
-stupid cow." CR>
-    )
-  >
->
+stupid cow." CR>)>>
 
 <ROUTINE END-R ()
   <TELL "You fly up and over the chasm!" CR CR>
   <TELL ,WIN-TEXT CR CR>
-  <QUIT>
->
+  <QUIT>>
 
 ; *** TEXT ROUTINES ***
 
 <ROUTINE BOLDIZE (TEXT)
   <HLIGHT 2>
   <TELL .TEXT>
-  <HLIGHT 0>
->
+  <HLIGHT 0>>
