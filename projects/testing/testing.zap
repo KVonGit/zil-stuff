@@ -30,22 +30,25 @@
 	.WORD 0
 	.WORD 0
 	.WORD 0
-	.INSERT "koww_freq"
-	.INSERT "koww_data"
+	.INSERT "testing_freq"
+	.INSERT "testing_data"
 
 	.FUNCT GO
 START::
+	COLOR 4,2
+	PRINTI "Do you want color?"
 	CRLF
+	CALL1 YES? >STACK
+	ZERO? STACK /?L1
+	COLOR 1,1
+?L1:	CRLF
 	CRLF
-	ICALL2 BOLDIZE,STR?6
-	CRLF
-	CRLF
-	ICALL2 ITALICIZE,STR?7
+	PRINTI "INTRODUCTORY TEXT!"
 	CRLF
 	CRLF
 	ICALL1 V-VERSION
 	CRLF
-	SET 'HERE,KOWWS-CHASM
+	SET 'HERE,STARTROOM
 	MOVE PLAYER,HERE
 	ICALL1 V-LOOK
 	ICALL1 MAIN-LOOP
@@ -3107,7 +3110,7 @@ START::
 	CALL2 DOOR-DIR,PRSO >STACK
 	ICALL2 DO-WALK,STACK
 	RTRUE
-?L1:	ICALL2 NOT-POSSIBLE,STR?8
+?L1:	ICALL2 NOT-POSSIBLE,STR?3
 	RTRUE
 
 	.FUNCT DO-WALK,DIR,ORIG?PRSO-DIR,?RESULT
@@ -3191,24 +3194,24 @@ START::
 	CALL1 YOU-MASHER >STACK
 	RSTACK
 ?L3:	FSET? PRSO,CONTBIT /?L4
-	CALL2 NOT-POSSIBLE,STR?9 >STACK
+	CALL2 NOT-POSSIBLE,STR?4 >STACK
 	RSTACK
 ?L4:	FSET? PRSO,OPENABLEBIT \?L5
 	CALL2 SEE-INSIDE?,PRSO >STACK
 	ZERO? STACK \?L5
 	ICALL2 PRINT-CDEF,PRSO
 	FSET? PRSO,PLURALBIT \?L6
-	PUSH STR?10
+	PUSH STR?5
 	JUMP ?L8
-?L6:	PUSH STR?11
+?L6:	PUSH STR?6
 ?L8:	PRINT STACK
 	PRINTR " closed."
 ?L5:	FIRST? PRSO >STACK /?L9
 	ICALL2 PRINT-CDEF,PRSO
 	FSET? PRSO,PLURALBIT \?L10
-	PUSH STR?10
+	PUSH STR?5
 	JUMP ?L12
-?L10:	PUSH STR?11
+?L10:	PUSH STR?6
 ?L12:	PRINT STACK
 	PRINTR " empty."
 ?L9:	CALL2 DESCRIBE-CONTENTS,PRSO >STACK
@@ -3267,7 +3270,7 @@ START::
 	RFALSE
 ?L9:	FSET? OBJ,TAKEBIT /?L12
 	ZERO? SILENT \FALSE
-	ICALL2 NOT-POSSIBLE,STR?12
+	ICALL2 NOT-POSSIBLE,STR?7
 	RFALSE
 ?L12:	IN? OBJ,WINNER \?L15
 	ZERO? SILENT \FALSE
@@ -3449,7 +3452,7 @@ START::
 	RTRUE
 ?L1:	FSET? PRSI,CONTBIT \?L4
 	FSET? PRSI,SURFACEBIT /?L3
-?L4:	ICALL2 NOT-POSSIBLE,STR?13
+?L4:	ICALL2 NOT-POSSIBLE,STR?8
 	RTRUE
 ?L3:	IN? PRSO,WINNER /?L5
 	PRINTR "You don't have that."
@@ -3503,7 +3506,7 @@ START::
 	RTRUE
 ?L1:	FSET? PRSI,CONTBIT \?L4
 	FSET? PRSI,SURFACEBIT \?L3
-?L4:	ICALL2 NOT-POSSIBLE,STR?14
+?L4:	ICALL2 NOT-POSSIBLE,STR?9
 	RTRUE
 ?L3:	FSET? PRSI,OPENBIT /?L6
 	FSET? PRSI,OPENABLEBIT \?L5
@@ -3573,7 +3576,7 @@ START::
 	FSET? PRSO,WEARBIT \?L1
 	ICALL PERFORM,V?TAKE,PRSO
 	RTRUE
-?L1:	ICALL2 NOT-POSSIBLE,STR?15
+?L1:	ICALL2 NOT-POSSIBLE,STR?10
 	RTRUE
 
 	.FUNCT V-UNWEAR
@@ -3625,7 +3628,7 @@ START::
 	ICALL1 YOU-MASHER
 	RTRUE
 ?L1:	FSET? PRSO,OPENABLEBIT /?L3
-	ICALL2 NOT-POSSIBLE,STR?16
+	ICALL2 NOT-POSSIBLE,STR?11
 	RTRUE
 ?L3:	FSET? PRSO,OPENBIT \?L4
 	PRINTR "It's already open."
@@ -3653,7 +3656,7 @@ START::
 	ICALL1 YOU-MASHER
 	RTRUE
 ?L1:	FSET? PRSO,OPENABLEBIT /?L3
-	ICALL2 NOT-POSSIBLE,STR?17
+	ICALL2 NOT-POSSIBLE,STR?12
 	RTRUE
 ?L3:	FSET? PRSO,OPENBIT /?L4
 	PRINTR "It's already closed."
@@ -3671,11 +3674,11 @@ START::
 	RSTACK
 
 	.FUNCT V-LOCK
-	ICALL2 NOT-POSSIBLE,STR?18
+	ICALL2 NOT-POSSIBLE,STR?13
 	RTRUE
 
 	.FUNCT V-UNLOCK
-	ICALL2 NOT-POSSIBLE,STR?19
+	ICALL2 NOT-POSSIBLE,STR?14
 	RTRUE
 
 	.FUNCT V-WAIT,T,INTERRUPT,ENDACT
@@ -3727,7 +3730,7 @@ START::
 
 	.FUNCT V-READ,T
 	FSET? PRSO,READBIT /?L1
-	ICALL2 NOT-POSSIBLE,STR?20
+	ICALL2 NOT-POSSIBLE,STR?15
 	RTRUE
 ?L1:	GETP PRSO,P?TEXT >T
 	ZERO? T /?L3
@@ -3749,7 +3752,7 @@ START::
 	ICALL1 TSD
 	RTRUE
 ?L1:	FSET? PRSO,DEVICEBIT /?L3
-	ICALL2 NOT-POSSIBLE,STR?21
+	ICALL2 NOT-POSSIBLE,STR?16
 	RTRUE
 ?L3:	FSET? PRSO,ONBIT \?L4
 	PRINTR "It's already on."
@@ -3762,12 +3765,12 @@ START::
 
 	.FUNCT V-TURN-OFF
 	EQUAL? PRSO,WINNER \?L1
-	CALL2 PICK-ONE-R,T?118 >STACK
+	CALL2 PICK-ONE-R,T?110 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
 ?L1:	FSET? PRSO,DEVICEBIT /?L3
-	ICALL2 NOT-POSSIBLE,STR?21
+	ICALL2 NOT-POSSIBLE,STR?16
 	RTRUE
 ?L3:	FSET? PRSO,ONBIT /?L4
 	PRINTR "It's already off."
@@ -3781,9 +3784,9 @@ START::
 	.FUNCT V-FLIP
 	FSET? PRSO,DEVICEBIT /?L1
 	FSET? PRSO,SURFACEBIT \?L3
-	ICALL2 POINTLESS,STR?22
+	ICALL2 POINTLESS,STR?17
 	RTRUE
-?L3:	ICALL2 NOT-POSSIBLE,STR?21
+?L3:	ICALL2 NOT-POSSIBLE,STR?16
 	RTRUE
 ?L1:	FSET? PRSO,ONBIT \?L6
 	ICALL PERFORM,V?TURN-OFF,PRSO
@@ -3797,7 +3800,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	ICALL1 YOU-MASHER
 	RTRUE
-?L3:	ICALL2 POINTLESS,STR?23
+?L3:	ICALL2 POINTLESS,STR?18
 	RTRUE
 
 	.FUNCT V-PULL
@@ -3806,7 +3809,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	ICALL1 YOU-MASHER
 	RTRUE
-?L3:	ICALL2 POINTLESS,STR?24
+?L3:	ICALL2 POINTLESS,STR?19
 	RTRUE
 
 	.FUNCT V-YES
@@ -3819,7 +3822,7 @@ START::
 
 	.FUNCT V-DRINK
 	PRINTI "You aren't "
-	ICALL2 ITALICIZE,STR?25
+	ICALL2 ITALICIZE,STR?20
 	PRINTR " thirsty."
 
 	.FUNCT V-FILL
@@ -3839,22 +3842,22 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	ICALL1 YOU-MASHER
 	RTRUE
-?L3:	ICALL2 POINTLESS,STR?22
+?L3:	ICALL2 POINTLESS,STR?17
 	RTRUE
 
 	.FUNCT V-THROW-AT
 	EQUAL? PRSO,WINNER \?L1
 	PRINTI "Get "
 	FSET? PRSO,PLURALBIT \?L3
-	PUSH STR?26
+	PUSH STR?21
 	JUMP ?L5
-?L3:	PUSH STR?27
+?L3:	PUSH STR?22
 ?L5:	PRINT STACK
 	PRINTR " yourself."
 ?L1:	FSET? PRSI,PERSONBIT \?L6
 	ICALL2 YOU-MASHER,PRSI
 	RTRUE
-?L6:	ICALL POINTLESS,STR?22,0,1
+?L6:	ICALL POINTLESS,STR?17,0,1
 	RTRUE
 
 	.FUNCT V-GIVE
@@ -3864,9 +3867,9 @@ START::
 	PRINTR "You already have that."
 ?L3:	PRINTI "Get "
 	FSET? PRSO,PLURALBIT \?L6
-	PUSH STR?26
+	PUSH STR?21
 	JUMP ?L8
-?L6:	PUSH STR?27
+?L6:	PUSH STR?22
 ?L8:	PRINT STACK
 	PRINTR " yourself."
 ?L1:	EQUAL? PRSO,WINNER \?L9
@@ -3876,13 +3879,13 @@ START::
 	CALL1 YOU-MASHER >STACK
 	RSTACK
 ?L10:	FSET? PRSI,PERSONBIT /?L11
-	CALL2 NOT-POSSIBLE,STR?28 >STACK
+	CALL2 NOT-POSSIBLE,STR?23 >STACK
 	RSTACK
 ?L11:	ICALL2 PRINT-CDEF,PRSI
 	FSET? PRSI,PLURALBIT \?L13
-	PUSH STR?29
+	PUSH STR?24
 	JUMP ?L15
-?L13:	PUSH STR?30
+?L13:	PUSH STR?25
 ?L15:	PRINT STACK
 	PRINTI " take "
 	ICALL2 PRINT-DEF,PRSO
@@ -3912,7 +3915,7 @@ START::
 	RTRUE
 
 	.FUNCT V-WAVE-HANDS
-	ICALL2 POINTLESS,STR?31
+	ICALL2 POINTLESS,STR?26
 	RTRUE
 
 	.FUNCT V-WAVE
@@ -3921,7 +3924,7 @@ START::
 
 	.FUNCT V-CLIMB
 	ZERO? PRSO /?L1
-	ICALL2 NOT-POSSIBLE,STR?32
+	ICALL2 NOT-POSSIBLE,STR?27
 	RTRUE
 ?L1:	ICALL1 SILLY
 	RTRUE
@@ -3931,7 +3934,7 @@ START::
 	RTRUE
 
 	.FUNCT V-JUMP
-	ICALL2 POINTLESS,STR?33
+	ICALL2 POINTLESS,STR?28
 	RTRUE
 
 	.FUNCT V-SING
@@ -3946,7 +3949,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	CALL1 YOU-MASHER >STACK
 	RSTACK
-?L3:	CALL2 NOT-POSSIBLE,STR?34 >STACK
+?L3:	CALL2 NOT-POSSIBLE,STR?29 >STACK
 	RSTACK
 
 	.FUNCT V-RUB
@@ -3956,7 +3959,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	CALL1 YOU-MASHER >STACK
 	RSTACK
-?L3:	CALL2 POINTLESS,STR?35 >STACK
+?L3:	CALL2 POINTLESS,STR?30 >STACK
 	RSTACK
 
 	.FUNCT V-BURN
@@ -3965,7 +3968,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	CALL1 YOU-MASHER >STACK
 	RSTACK
-?L3:	CALL2 POINTLESS,STR?36 >STACK
+?L3:	CALL2 POINTLESS,STR?31 >STACK
 	RSTACK
 
 	.FUNCT V-UNDO
@@ -4351,660 +4354,14 @@ START::
 	EQUAL? PRSA,V?EXAMINE \FALSE
 	PRINTR "You look like you're up for an adventure."
 
-	.FUNCT V-FLY
-	CALL2 HELD?,FLY-SCROLL >STACK
-	ZERO? STACK /?L1
-	IN? PLAYER,KOWWS-CHASM \?L3
-	CALL1 FINISH-R >STACK
-	RSTACK
-?L3:	CALL1 TSD >STACK
-	RSTACK
-?L1:	PRINTR "That's not a spell you know. But perhaps if you could find a scroll -- like the ones owned by the Great Phoenix -- you could do so."
-
-	.FUNCT V-USE
-	PRINT NO-QUEST-USE-LIE
-	PRINTI " "
+	.FUNCT BOB-R
+	EQUAL? PRSA,V?TELL \FALSE
+	PRINTI "Bob doesn't care about "
 	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-
-	.FUNCT V-USE-ON
-	PRINT NO-QUEST-USE-LIE
-	PRINTI " "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTI " and "
+	PRINTI " or "
 	ICALL2 PRINT-DEF,PRSI
-	PRINTR "."
-
-	.FUNCT V-SPEAK
-	PRINTR "There is no reply."
-
-	.FUNCT V-SPLASH
-	EQUAL? PRSO,MILK \?L1
-	CALL2 HELD?,MILK >STACK
-	ZERO? STACK /?L1
-	PRINTR "Why would you do that?  Awful waste of milk."
-?L1:	PRINTR "You can't do that."
-
-	.FUNCT V-CAST
-	PRINTR "You don't know that spell."
-
-	.FUNCT V-DIG
-	PRINTI "You can't dig "
-	ICALL2 PRINT-DEF,PRSI
-	PRINTI " with "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTI "."
+	PRINTI "!"
 	RTRUE
 
-	.FUNCT V-CLIMB-MOD
-	LOC PLAYER >STACK
-	EQUAL? STACK,PHOENIX-MOUNTAIN-PASS \?L1
-	CALL PERFORM,V?CLIMB,MOUNTAINS >STACK
-	RSTACK
-?L1:	CALL1 V-CLIMB >STACK
-	RSTACK
-
-	.FUNCT V-STAB
-	CALL1 V-ATTACK >STACK
-	RSTACK
-
-	.FUNCT V-PAINT
-	CALL2 HELD?,PURPLE-PAINT >STACK
-	ZERO? STACK /?L1
-	EQUAL? PRSO,PLAYER \?L3
-	CALL1 PURPLE-USE-R >STACK
-	RSTACK
-?L3:	CALL2 POINTLESS,STR?37 >STACK
-	RSTACK
-?L1:	PRINTR "You don't have any paint."
-
-	.FUNCT V-TOSS-INTO
-	CALL2 POINTLESS,STR?38 >STACK
-	RSTACK
-
-	.FUNCT QUEST-TWO-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTI "About what you'd expect from "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-?L1:	EQUAL? PRSA,V?DROP \FALSE
-	CALL2 POINTLESS,STR?39 >STACK
-	RSTACK
-
-	.FUNCT MILK-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTI "Don't worry, the men in the white coats will soon be here to deal with you.
-"
-	RTRUE
-?L1:	EQUAL? PRSA,V?DROP \?L3
-	PRINTR "Why would you do that?  Awful waste of milk."
-?L3:	EQUAL? PRSA,V?GIVE \FALSE
-	EQUAL? PRSI,ZEKE \FALSE
-	PRINTI """Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk."""
-	CRLF
-	REMOVE MILK
-	MOVE PITCHFORK,PLAYER
-	RTRUE
-
-	.FUNCT PITCHFORK-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?USE-ON,V?DIG \FALSE
-	EQUAL? PRSA,V?USE-ON \?L7
-	EQUAL? PRSI,HAYSTACK /?L6
-?L7:	EQUAL? PRSA,V?DIG \FALSE
-	EQUAL? PRSO,HAYSTACK \FALSE
-?L6:	CALL1 OPEN-STATUE-CAVE-R >STACK
-	RSTACK
-
-	.FUNCT FLY-SCROLL-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?USE,V?CAST \FALSE
-	CALL1 FINISH-R >STACK
-	RSTACK
-
-	.FUNCT WING-FEATHER-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \FALSE
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-
-	.FUNCT JADE-STATUETTE-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?GIVE \FALSE
-	EQUAL? PRSI,GOBLIN-KING \FALSE
-	CALL1 GIFT-OF-KING-R >STACK
-	RSTACK
-
-	.FUNCT GOBLIN-SPIT-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \FALSE
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-
-	.FUNCT SOMETHING-ITEM-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?USE-ON,V?PUT-IN \FALSE
-	EQUAL? PRSI,POND \FALSE
-	CALL1 GET-DUCK-TURD-R >STACK
-	RSTACK
-
-	.FUNCT NOTHING-ITEM-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?GIVE \FALSE
-	EQUAL? PRSI,GOBLIN-GUARD \FALSE
-	CALL1 SECRET-ONE-R >STACK
-	RSTACK
-
-	.FUNCT DUCK-TURD-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?GIVE \FALSE
-	EQUAL? PRSI,GOBLIN-KING \FALSE
-	CALL1 OTHER-GIFT-R >STACK
-	RSTACK
-
-	.FUNCT GRAPPLING-HOOK-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?USE \?L3
-	LOC PLAYER >STACK
-	EQUAL? STACK,MOUNTAINS \FALSE
-	CALL1 CLIMB-THEM-R >STACK
-	RSTACK
-?L3:	EQUAL? PRSA,V?USE-ON \FALSE
-	EQUAL? PRSO,MOUNTAINS \FALSE
-	CALL1 CLIMB-THEM-R >STACK
-	RSTACK
-
-	.FUNCT PURPLE-PAINT-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
-	CALL1 QUEST-TWO-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?USE \?L3
-	LOC PLAYER >STACK
-	EQUAL? STACK,ZEKES-SILO \FALSE
-	CALL1 PURPLE-USE-R >STACK
-	RSTACK
-?L3:	EQUAL? PRSA,V?WEAR \FALSE
-	CALL1 PURPLE-USE-R >STACK
-	RSTACK
-
-	.FUNCT PURPLE-USE-R
-	CALL2 HELD?,PURPLE-PAINT >STACK
-	ZERO? STACK /?L1
-	LOC PLAYER >STACK
-	EQUAL? STACK,ZEKES-SILO \?L3
-	CALL1 PURPLE-COW-R >STACK
-	RSTACK
-?L3:	CALL1 TSD >STACK
-	RSTACK
-?L1:	PRINTR "You don't know where that is."
-
-	.FUNCT PURPLE-COW-R
-	REMOVE PURPLE-PAINT
-	PRINTI "You spread the purple paint on yourself. Suddenly Farmer Zeke bursts into song!"
-	CRLF
-	PRINTI """"
-	ICALL2 ITALICIZE,STR?40
-	PRINTI """"
-	CRLF
-	PRINTR "Wonderful!  You have just activated the scenario's secret feature!  That's it.  Return to your home. There's nothing more to do here."
-
-	.FUNCT KOWWS-CHASM-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
-	PRINTI "You are outside in a pasture of pure, pure green. Green as far as the eye can see. But you, Koww the Magician, are not satisfied. The grass may be even greener on the other side of the "
-	ICALL2 BOLDIZE,STR?41
-	PRINTI "... you must know!  Also in the area is a very undramatic "
-	ICALL2 BOLDIZE,STR?42
-	PRINTI "."
-	CRLF
-	CRLF
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?43
-	PRINTR "."
-
-	.FUNCT CHASM-SIGN-R
-	EQUAL? PRSA,V?EXAMINE /?L3
-	EQUAL? PRSA,V?READ \?L1
-?L3:	PRINTI "It reads: '"
-	ICALL2 ITALICIZE,STR?44
-	PRINTR "'"
-?L1:	EQUAL? PRSA,V?TAKE \FALSE
-	PRINTR "You yank the sign out of the ground and try to fit it in your Koww-pack. But it just doesn't fit. Frustrated, you put it back."
-
-	.FUNCT CHASM-R
-	EQUAL? PRSA,V?TAKE \?L1
-	PRINTI "Don't worry, the men in the white coats will soon be here to deal with you.
-"
-	RTRUE
-?L1:	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "That's the chasm you simply MUST cross!  Surely the only way to cross it is to FLY!"
-
-	.FUNCT ZEKES-FARM-R,RARG
-	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You stand outside of a small "
-	ICALL2 BOLDIZE,STR?45
-	PRINTI " with a "
-	ICALL2 BOLDIZE,STR?46
-	PRINTI " beside it. There is a "
-	ICALL2 BOLDIZE,STR?47
-	PRINTI " and a "
-	ICALL2 BOLDIZE,STR?48
-	PRINTI " here."
-	CRLF
-	CRLF
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?49
-	PRINTI ", "
-	ICALL2 BOLDIZE,STR?50
-	PRINTI ", "
-	ICALL2 BOLDIZE,STR?43
-	PRINTI ", or "
-	ICALL2 BOLDIZE,STR?51
-	PRINTR "."
-
-	.FUNCT ZEKES-FARMHOUSE-ENTRANCE-R
-	EQUAL? PRSA,V?ENTER \FALSE
-	CALL2 GOTO,ZEKES-FARMHOUSE >STACK
-	RSTACK
-
-	.FUNCT ZEKES-SILO-ENTRANCE-R
-	EQUAL? PRSA,V?ENTER \FALSE
-	CALL2 GOTO,ZEKES-SILO >STACK
-	RSTACK
-
-	.FUNCT HAYSTACK-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTI "About what you'd expect from a haystack"
-	LOC HOLE >STACK
-	EQUAL? STACK,HERE \?L3
-	PRINTR ", except it's in a hole."
-?L3:	PRINTR ". It's made of... HAY!  You munch on it for a while."
-?L1:	EQUAL? PRSA,V?EAT,V?TAKE \?L6
-	PRINTR "You take a bite of the haystack. Yummy... tastes just like chicken!"
-?L6:	EQUAL? PRSA,V?STAB,V?ATTACK \FALSE
-	CALL1 OPEN-STATUE-CAVE-R >STACK
-	RSTACK
-
-	.FUNCT OPEN-STATUE-CAVE-R
-	CALL2 HELD?,PITCHFORK >STACK
-	ZERO? STACK /?L1
-	PRINTI "You stab the pitchfork into the haystack. Lo and behold, the haystack falls down into a hole in the ground!  Inside the hole is a jade statuette, which you take."
-	CRLF
-	REMOVE PITCHFORK
-	MOVE HOLE,HERE
-	MOVE JADE-STATUETTE,PLAYER
-	RTRUE
-?L1:	PRINTR "You don't have the required tool."
-
-	.FUNCT POND-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "A nice, placid pond full of little tiny duckies. Ooo, how cute!  If you were carnivorous, they'd make you hungry."
-?L1:	EQUAL? PRSA,V?TAKE,V?DRINK \?L3
-	PRINTR "You sip the water from the pond. Just what you need to wash down a bit of grazing."
-?L3:	EQUAL? PRSA,V?USE-ON,V?PUT-IN \FALSE
-	EQUAL? PRSO,SOMETHING-ITEM \FALSE
-	CALL1 GET-DUCK-TURD-R >STACK
-	RSTACK
-
-	.FUNCT GET-DUCK-TURD-R
-	PRINTI "You throw the something into the pond. The ducks swarm around it in curiosity.  You take the opportunity to grab a duck turd without being noticed!"
-	CRLF
-	REMOVE SOMETHING-ITEM
-	MOVE DUCK-TURD,PLAYER
-	RTRUE
-
-	.FUNCT ZEKES-FARMHOUSE-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
-	PRINTI "You're inside Farmer Zeke's rather cramped home. No one's here at the moment. Perhaps you should go away.
-
-"
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?52
-	PRINTR "."
-
-	.FUNCT TABLE-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTI "Hmmm, what's a table doing here?  Cool!  It has a "
-	ICALL2 BOLDIZE,STR?53
-	PRINTI " on it!"
-	CRLF
-	CALL2 THIS-IS-IT,TREASURE-CHEST >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?TAKE \FALSE
-	PRINTR "Farmer Zeke took the wise precaution of bolting his table to the floor."
-
-	.FUNCT TREASURE-CHEST-R
-	EQUAL? PRSA,V?OPEN \?L1
-	CALL1 GET-NOTHING-R >STACK
-	RSTACK
-?L1:	EQUAL? PRSA,V?TAKE \FALSE
-	PRINTR "It's too big. You could open it instead..."
-
-	.FUNCT GET-NOTHING-R
-	PRINTI "Ooooo!  There's nothing inside!  Told ya you should have gone away."
-	CRLF
-	MOVE NOTHING-ITEM,PLAYER
-	ICALL2 THIS-IS-IT,NOTHING-ITEM
-	REMOVE TABLE
-	REMOVE TREASURE-CHEST
-	RTRUE
-
-	.FUNCT ZEKES-SILO-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
-	PRINTI "Gee, this place smells just like rotting feed. "
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "Standing in the silo, grinning like the idiot that he is, is Farmer "
-	ICALL2 BOLDIZE,STR?54
-	PRINTI "."
-	CRLF
-	CRLF
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?52
-	PRINTR "."
-
-	.FUNCT ZEKE-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "He's wearing a straw hat and at least one of his teeth is rotting away, but he seems pleased as punch that you've arrived."
-?L1:	EQUAL? PRSA,V?SPEAK \?L3
-	PRINTR """Hey there, good buddy!  Say, bein' a wizard an' all, couldja find it in yer heart to gimme some magic milk?  I'm all out!"""
-?L3:	EQUAL? PRSA,V?GIVE \?L4
-	EQUAL? PRSO,MILK \FALSE
-	PRINTI """Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk."""
-	CRLF
-	REMOVE MILK
-	MOVE PITCHFORK,PLAYER
-	RTRUE
-?L4:	EQUAL? PRSA,V?ATTACK \?L8
-	PRINTR "You may be an evil sorcerer, but at least you're an ETHICAL evil sorcerer. No killing allowed!  Especially not of idiots. They don't know they're idiots."
-?L8:	EQUAL? PRSA,V?SPLASH \FALSE
-	CALL1 DUMB-LOSE-R >STACK
-	RSTACK
-
-	.FUNCT DUMB-LOSE-R
-	PRINTI """Well, gee,"" says Farmer Zeke, ""I shore do like ya a lot, but I guess there's a limit!"""
-	CRLF
-	PRINTI "So saying, Zeke stabs you with his pitchfork."
-	CRLF
-	CRLF
-	ICALL2 JIGS-UP,LOSE-TEXT
-	CRLF
-	CALL1 V-QUIT >STACK
-	RSTACK
-
-	.FUNCT GOBLIN-TRAIL-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
-	PRINTI "The stench of goblins permeates this place. Goblins are small, annoying creatures who like to fight anyone who looks weak. Fortunately, you don't look weak."
-	CRLF
-	CRLF
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?51
-	PRINTI " or "
-	ICALL2 BOLDIZE,STR?50
-	PRINTR "."
-
-	.FUNCT ROAD-GOBLIN-TRAIL-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "It's made of dirt. Concrete hasn't been invented yet."
-?L1:	EQUAL? PRSA,V?TAKE \FALSE
-	PRINTR "But you're already taking the road!  You're taking it either north or south!  Har har har!  Hey, I saw a car transform the other day!  Yeah, it turned into a driveway!"
-
-	.FUNCT GOBLIN-LAIR-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
-	PRINTI "About twenty goblins patrol the front of a massive cave complex. They eye you for a moment, then decide not to attack. You return the favor and don't kill them."
-	CRLF
-	CRLF
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?51
-	PRINTI " or "
-	ICALL2 BOLDIZE,STR?55
-	PRINTR "."
-
-	.FUNCT CLIFF-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "It's a cliff; you could climb it, but it might be a difficult climb."
-?L1:	EQUAL? PRSA,V?TAKE \?L3
-	PRINTR "If you want to climb the cliff, say so!"
-?L3:	EQUAL? PRSA,V?CLIMB \FALSE
-	PRINTR "After a difficult climb, you reach the top. You're very pleased with yourself.  Unfortunately, the ledge crumbles beneath you and you plummet back to the  ground."
-
-	.FUNCT INSIDE-GOBLIN-LAIR-ENTRANCE-R
-	EQUAL? PRSA,V?ENTER \FALSE
-	CALL2 GOTO,INSIDE-GOBLIN-LAIR >STACK
-	RSTACK
-
-	.FUNCT GOBLIN-GUARD-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "It's very ugly, like most of its kind. Don't get too close; you could faint from the smell."
-?L1:	EQUAL? PRSA,V?SPEAK \FALSE
-	PRINTR """Yu wan go cave?  No try no funny bizniss -- I can tell."""
-
-	.FUNCT SECRET-ONE-R
-	PRINTI """Ooooo!  Nuthing!  Jus wut I all ways want'd!  Inn ex chaynge, I giv yu summ thing!"""
-	CRLF
-	REMOVE NOTHING-ITEM
-	MOVE SOMETHING-ITEM,PLAYER
-	RTRUE
-
-	.FUNCT INSIDE-GOBLIN-LAIR-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
-	PRINTI "You are escorted to the Goblin King's throne room, a large chamber ornamented with "
-	ICALL2 BOLDIZE,STR?56
-	PRINTI " of nude female goblins. You try hard to avoid puking."
-	CRLF
-	CRLF
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?52
-	PRINTR "."
-
-	.FUNCT STATUES-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "Apparently, the goblin idea of beauty is the same as the bovine idea of putridity. You'd prefer not to look at these statues."
-?L1:	EQUAL? PRSA,V?TAKE \FALSE
-	PRINTR "That would be difficult, considering the statues are about seven feet tall, are made of stone, weigh about a ton, and are guarded by some mean-looking goblins."
-
-	.FUNCT GOBLIN-KING-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "An officious-looking, double-chinned goblin monarch sits royally atop a throne of deer hide."
-?L1:	EQUAL? PRSA,V?SPEAK \FALSE
-	PRINTR """Hoo hoo hoo!  Goblinz so grate, our spit is assid!  We spit on yu if yu make us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!"""
-
-	.FUNCT GIFT-OF-KING-R
-	REMOVE JADE-STATUETTE
-	MOVE GOBLIN-SPIT,PLAYER
-	PRINTR """Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!"""
-
-	.FUNCT OTHER-GIFT-R
-	REMOVE DUCK-TURD
-	MOVE GRAPPLING-HOOK,PLAYER
-	PRINTR """Ooooo!  GIMME GIMME GIMME!  Duck turd favorite goblin food!  We giv yu grapple hook!"""
-
-	.FUNCT LAND-OF-NECROYAKS-R,RARG
-	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?51
-	PRINTI " or "
-	ICALL2 BOLDIZE,STR?50
-	PRINTR "."
-
-	.FUNCT NECROYAKS-SIGN-R
-	EQUAL? PRSA,V?EXAMINE,V?READ \?L1
-	PRINTI "It reads: "
-	ICALL2 ITALICIZE,STR?57
-	CRLF
-	RTRUE
-?L1:	EQUAL? PRSA,V?TAKE \FALSE
-	PRINTR "Oh, THAT'S original."
-
-	.FUNCT AMBUSH-POINT-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
-	PRINTI "A cliff face blocks your way here. It's steep -- you can't climb. If you want to continue, you'll have to "
-	ICALL2 BOLDIZE,STR?58
-	PRINTI " the face."
-	CRLF
-	CRLF
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?50
-	PRINTR "."
-
-	.FUNCT YAKS-KILL-R
-	PRINTI "The NecroYaks recognize you as a cow, then jump out and kill you."
-	CRLF
-	CRLF
-	CALL2 JIGS-UP,LOSE-TEXT >STACK
-	RSTACK
-
-	.FUNCT YAKS-LOVE-R
-	PRINTI "The NecroYaks jump out and search you for acid. They find your goblin spit, take it, and run off. But one of them drops a phoenix feather, and you scoop it up unnoticed. By the way, there's no way to go farther this way unless you're a yak."
-	CRLF
-	REMOVE GOBLIN-SPIT
-	MOVE WING-FEATHER,PLAYER
-	RTRUE
-
-	.FUNCT V-SEARCH-THE-ROOM
-	LOC PLAYER >STACK
-	EQUAL? STACK,AMBUSH-POINT \?L1
-	CALL2 HELD?,GOBLIN-SPIT >STACK
-	ZERO? STACK /?L3
-	CALL1 YAKS-LOVE-R >STACK
-	RSTACK
-?L3:	CALL1 YAKS-KILL-R >STACK
-	RSTACK
-?L1:	CALL1 V-SEARCH >STACK
-	RSTACK
-
-	.FUNCT PHOENIX-MOUNTAIN-PASS-R,RARG
-	EQUAL? RARG,M-LOOK \?L1
-	PRINTI "The towering mountains surround you on all sides but back to your west.  Passage farther east is remotely possible, should you be brave or foolhardy enough to try it."
-	CRLF
-	CRLF
-	RTRUE
-?L1:	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?49
-	PRINTI " or "
-	ICALL2 BOLDIZE,STR?43
-	PRINTR "."
-
-	.FUNCT MOUNTAINS-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "They tower up almost as high as the Great Auk Mountains far, far to the north."
-?L1:	EQUAL? PRSA,V?TAKE \?L3
-	PRINTR "After several hours of effort, you manage to chip a piece off of the mountain you're standing on. But you accidentally let go and it plummets into the valley below."
-?L3:	EQUAL? PRSA,V?CLIMB \FALSE
-	CALL1 CLIMB-THEM-R >STACK
-	RSTACK
-
-	.FUNCT CLIMB-THEM-R
-	CALL2 HELD?,GRAPPLING-HOOK >STACK
-	ZERO? STACK /?L1
-	REMOVE GRAPPLING-HOOK
-	MOVE PURPLE-PAINT,PLAYER
-	PRINTR "On top of the mountain, you find a bunch of purple paint, which you take.  After descending again, you ditch your grappling hook."
-?L1:	PRINTR "Those particular mountains are too steep."
-
-	.FUNCT PHOENIX-PEAK-R,RARG
-	EQUAL? RARG,M-FLASH \FALSE
-	PRINTI "After hard hours of climbing, you finally reach the summit of Phoenix Peak.  Here, in all its glory, sits the "
-	ICALL2 BOLDIZE,STR?59
-	PRINTI "."
-	CRLF
-	CRLF
-	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?49
-	PRINTR "."
-
-	.FUNCT PHOENIX-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "The Resplendent Magnificent Phoenix's visage is so brilliant that it hurts to look at it."
-?L1:	EQUAL? PRSA,V?SPEAK \FALSE
-	PRINTI "The Resplendent Magnificent Phoenix "
-	CALL2 HELD?,FLY-SCROLL >STACK
-	ZERO? STACK /?L4
-	PRINTR "does not reply."
-?L4:	PRINTI "demands to know "
-	ICALL2 ITALICIZE,STR?60
-	PRINTI " such a weakling as you has come here!  ""If you do not have my wing feather with you, I'm afraid I must ask you to leave "
-	ICALL2 ITALICIZE,STR?61
-	PRINTI "  Now, do you have my wing feather or not?"" -- "
-	CRLF
-	ICALL2 BOLDIZE,STR?62
-	PRINTI " or "
-	ICALL2 BOLDIZE,STR?63
-	PRINTI "? "
-	CALL1 YES? >STACK
-	ZERO? STACK /?L7
-	CALL1 PHOENIX-PROC-R >STACK
-	RSTACK
-?L7:	CALL1 PHOENIX-KILL-R >STACK
-	RSTACK
-
-	.FUNCT PHOENIX-PROC-R
-	PRINTI "Thank you; you have found my wing feather. In the wrong hands, that could have been very dangerous. I will give you this ""fly"" scroll to compensate you for your hard work. "
-	ICALL2 BOLDIZE,STR?64
-	PRINTI " the scroll to fly, but it will only work once."
-	CRLF
-	MOVE FLY-SCROLL,PLAYER
-	REMOVE WING-FEATHER
-	RTRUE
-
-	.FUNCT PHOENIX-KILL-R
-	PRINTI """Then give it to me quickly!  What..... You don't have my wing feather at all, do you?  You shammer. I was going to dismiss you without hurting you, but I'm afraid now I'll have to kill you.""
-
-The Resplendent Magnificent Phoenix bats you with one claw. You roll back down the mountainside, finally coming to a complete stop looking very much like a well-done steak."
-	CRLF
-	CRLF
-	CALL2 JIGS-UP,LOSE-TEXT >STACK
-	RSTACK
-
-	.FUNCT FINISH-R
-	LOC PLAYER >STACK
-	EQUAL? STACK,KOWWS-CHASM /?L1
-	CALL1 TSD >STACK
-	RSTACK
-?L1:	CALL2 HELD?,FLY-SCROLL >STACK
-	ZERO? STACK /?L3
-	CALL1 END-R >STACK
-	RSTACK
-?L3:	PRINTR "Maybe you'll find it someday, but you don't have it today. You stupid cow."
-
-	.FUNCT END-R
-	PRINTI "You fly up and over the chasm!"
-	CRLF
-	CRLF
-	PRINT WIN-TEXT
-	CRLF
-	CRLF
-	QUIT
-
-	.FUNCT BOLDIZE,TEXT
-	HLIGHT 2
-	PRINT TEXT
-	HLIGHT 0
-	RTRUE
-
-	.INSERT "koww_str"
+	.INSERT "testing_str"
 	.END
