@@ -8,7 +8,7 @@
 (ZIL Port of the Quest 2 Classic)|
 An Interactive Fantasy by Brian the Great|
 Copyright (c) 1999 Brian the Great. All rights reserved.|
-v0.1.0 alpha">
+v0.1.1 alpha">
 
 <ROUTINE GO ()
   <CRLF>
@@ -30,6 +30,8 @@ v0.1.0 alpha">
 <COMPILATION-FLAG DEBUGGING-VERBS T>
 
 <INSERT-FILE "parser">
+
+<SET REDEFINE T>
 
 <INSERT-FILE "kowwverbs">
 
@@ -66,6 +68,7 @@ v0.1.0 alpha">
 here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
           <REMOVE ,MILK>
           <MOVE ,PITCHFORK ,PLAYER>
+          <THIS-IS-IT ,PITCHFORK>
         )>)>>
 
 <OBJECT PITCHFORK
@@ -85,7 +88,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
             <CALL OPEN-STATUE-CAVE-R>)>)>>
 
 <OBJECT FLY-SCROLL
-  (DESC "the fly scroll")
+  (DESC "the Fly Scroll")
   (SYNONYM FLY SCROLL SPELL)
   (ADJECTIVE FLY)
   (ACTION FLY-SCROLL-R)
@@ -151,7 +154,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
   <COND
     (<VERB? EXAMINE DROP>
       <QUEST-TWO-R>)
-    (<VERB? USE-ON PUT-IN>
+    (<VERB? USE-ON PUT-IN TOSS-INTO>
       <COND
         (<PRSI? ,POND>
           <CALL GET-DUCK-TURD-R>)>)>>
@@ -324,7 +327,8 @@ FLY!" CR>)>>
   (WEST TO KOWWS-CHASM)
   (SOUTH TO GOBLIN-TRAIL)
   (EAST TO PHOENIX-MOUNTAIN-PASS)
-  (NORTH TO LAND-OF-NECROYAKS)>
+  (NORTH TO LAND-OF-NECROYAKS)
+  (IN "Try ENTER FARMHOUSE or ENTER SILO.")>
 
 <ROUTINE ZEKES-FARM-R (RARG)
   <COND
@@ -350,7 +354,7 @@ FLY!" CR>)>>
 
 <OBJECT ZEKES-FARMHOUSE-ENTRANCE
   (IN ZEKES-FARM)
-  (SYNONYM FARMHO FARMHOUSE)
+  (SYNONYM FARMHO FARMHOUSE HOUSE)
   (ADJECTIVE ZEKE'S ZEKES)
   (DESC "Zeke's Farmhouse")
   (FLAGS NARTICLEBIT NDESCBIT)
@@ -403,12 +407,17 @@ for a while." CR>)>)
   <COND
     (<HELD? ,PITCHFORK>
       <TELL
-"You stab the pitchfork into the haystack.  Lo and behold, the haystack falls
-down into a hole in the ground!  Inside the hole is a jade statuette, which you
-take." CR>
+"You stab the pitchfork into the haystack.  Lo and behold, the pitchfork breaks,
+and the haystack falls down into a hole in the ground!  Inside the hole is a
+jade statuette, which you take." CR>
       <REMOVE ,PITCHFORK>
       <MOVE ,HOLE ,HERE>
-      <MOVE ,JADE-STATUETTE ,PLAYER>)
+      <MOVE ,JADE-STATUETTE ,PLAYER>
+      <FSET ,JADE-STATUETTE ,TOUCHBIT>
+      <THIS-IS-IT ,JADE-STATUETTE>)
+    (<FSET? ,JADE-STATUETTE ,TOUCHBIT>
+      <TELL
+"You've already done that bit." CR>)
     (T
       <TELL
 "You don't have the required tool." CR>)>>
@@ -452,7 +461,7 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
   
 <OBJECT DUCKS
   (DESC "ducks")
-  (LDESC "About what you'd expect.")
+  (LDESC "About what you'd expect ducks to look like.")
   (SYNONYM DUCK DUCKS DUCKIE DUCKIES)
   (ADJECTIVE LITTLE TINY)
   (IN ZEKES-FARM)
@@ -492,7 +501,8 @@ moment.  Perhaps you should go away.||">)
 "Hmmm, what's a table doing here?  Cool!  It has a ">
       <BOLDIZE "treasure chest">
       <TELL " on it!" CR>
-      <THIS-IS-IT ,TREASURE-CHEST>)
+      <THIS-IS-IT ,TREASURE-CHEST>
+      <RTRUE>)
     (<VERB? TAKE>
       <TELL
 "Farmer Zeke took the wise precaution of bolting his table to the floor." CR>)>>
@@ -595,7 +605,9 @@ guess there's a limit!\"" CR>
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (NORTH TO ZEKES-FARM)
   (SOUTH TO GOBLIN-LAIR)
-  (ACTION GOBLIN-TRAIL-R)>
+  (ACTION GOBLIN-TRAIL-R)
+  (DOWN "Down the road?")
+  (UP "Try climbing instead.")>
 
 <ROUTINE GOBLIN-TRAIL-R (RARG)
   <COND
@@ -612,14 +624,14 @@ weak." CR CR>
       <BOLDIZE "south">
       <TELL "." CR>)>>
 
-<OBJECT ROAD-GOBLIN-TRAIL
+<OBJECT ROAD
   (DESC "the road")
   (SYNONYM ROAD)
   (IN GOBLIN-TRAIL)
   (FLAGS NARTICLEBIT)
-  (ACTION ROAD-GOBLIN-TRAIL-R)>
+  (ACTION ROAD-R)>
 
-<ROUTINE ROAD-GOBLIN-TRAIL-R ()
+<ROUTINE ROAD-R ()
   <COND
     (<VERB? EXAMINE>
         <TELL
@@ -637,8 +649,9 @@ driveway!" CR>)>>
   (DESC "Goblin Lair")
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (NORTH TO GOBLIN-TRAIL)
-  (IN TO INSIDE-GOBLIN-LAIR)
-  (ACTION GOBLIN-LAIR-R)>
+  (IN "Try entering the cave.")
+  (ACTION GOBLIN-LAIR-R)
+  (LOCAL-GLOBALS GOBLINS)>
 
 <ROUTINE GOBLIN-LAIR-R (RARG)
   <COND
@@ -678,10 +691,11 @@ them." CR CR>
 <OBJECT INSIDE-GOBLIN-LAIR-ENTRANCE
   (IN GOBLIN-LAIR)
   (ACTION INSIDE-GOBLIN-LAIR-ENTRANCE-R)
-  (DESC "inside the goblin lair")
+  (DESC "cave")
+  (FDESC "You can enter the Cave.")
   (SYNONYM LAIR CAVE)
   (ADJECTIVE INSIDE GOBLIN)
-  (FLAGS DOORBIT NDESCBIT)>
+  (FLAGS DOORBIT)>
 
 <ROUTINE INSIDE-GOBLIN-LAIR-ENTRANCE-R ()
   <COND
@@ -691,10 +705,11 @@ them." CR CR>
 
 <OBJECT GOBLIN-GUARD
   (IN GOBLIN-LAIR)
-  (DESC "goblin guard")
+  (DESC "the Goblin Guard")
+  (FDESC "A Goblin Guard is here.")
   (SYNONYM GOBLIN GUARD)
   (ADJECTIVE GOBLIN)
-  (FLAGS PERSONBIT)
+  (FLAGS PERSONBIT NARTICLEBIT)
   (ACTION GOBLIN-GUARD-R)>
 
 <ROUTINE GOBLIN-GUARD-R ()
@@ -705,8 +720,9 @@ them." CR CR>
 from the smell." CR>)
     (<VERB? SPEAK>
       <TELL
-"\"Yu wan go cave?  No try no funny bizniss -- I can tell.\"" CR>
-    )>>
+"\"Yu wan go cave?  No try no funny bizniss -- I can tell.\"" CR>)
+    (<VERB? SMELL>
+      <SILLY>)>>
 
 <ROUTINE SECRET-ONE-R ()
   <TELL
@@ -714,14 +730,30 @@ from the smell." CR>)
 thing!\"" CR>
   <REMOVE NOTHING-ITEM>
   <MOVE ,SOMETHING-ITEM ,PLAYER>>
+  
+<OBJECT GOBLINS
+  (IN GOBLIN-LAIR)
+  (DESC "goblins")
+  (FLAGS PERSONBIT PLURALBIT NDESCBIT)
+  (ACTION GOBLINS-R)
+  (SYNONYM GOBLINS)>
+
+<ROUTINE GOBLINS-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL
+"They are very ugly, and they're all watching you closely." CR>)
+    (<VERB? SPEAK>
+      <SILLY>)>>
 
 ; ************************** INSIDE THE GOBLIN LAIR ****************************
 
 <OBJECT INSIDE-GOBLIN-LAIR
   (IN ROOMS)
   (DESC "Inside the Goblin Lair")
+  (LDESC "You can go Inside the Goblin Lair.")
   (ACTION INSIDE-GOBLIN-LAIR-R)
-  (FLAGS LIGHTBIT NDESCBIT)
+  (FLAGS LIGHTBIT NDESCBIT NARTICLEBIT)
   (OUT TO GOBLIN-LAIR)>
 
 <ROUTINE INSIDE-GOBLIN-LAIR-R (RARG)
@@ -741,7 +773,7 @@ with ">
   (DESC "statues")
   (SYNONYM STATUE STATUES)
   (IN INSIDE-GOBLIN-LAIR)
-  (FLAGS NDESCBIT)
+  (FLAGS NDESCBIT PLURALBIT)
   (ACTION STATUES-R)>
 
 <ROUTINE STATUES-R ()
@@ -772,19 +804,28 @@ goblins." CR>)>>
 of deer hide." CR>)
     (<VERB? SPEAK>
       <TELL
-"\"Hoo hoo hoo!  Goblinz so grate, our spit is assid!  We spit on yu if yu make
-us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!\"" CR>
+"\"Hoo hoo hoo!">
+      <COND
+        (<NOT <FSET? ,GOBLIN-SPIT ,TOUCHBIT>>
+          <TELL
+"  Goblinz so grate, our spit is assid!  We spit on yu if yu make
+us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!">)>
+      <TELL "\"" CR>
     )>>
 
 <ROUTINE GIFT-OF-KING-R ()
   <REMOVE ,JADE-STATUETTE>
   <MOVE ,GOBLIN-SPIT ,PLAYER>
+  <FSET ,GOBLIN-SPIT ,TOUCHBIT>
+  <THIS-IS-IT ,GOBLIN-SPIT>
   <TELL
 "\"Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!\"" CR>>
 
 <ROUTINE OTHER-GIFT-R ()
   <REMOVE ,DUCK-TURD>
   <MOVE ,GRAPPLING-HOOK ,PLAYER>
+  <FSET ,GRAPPLING-HOOK ,TOUCHBIT>
+  <THIS-IS-IT ,GRAPPLING-HOOK>
   <TELL
 "\"Ooooo!  GIMME GIMME GIMME!  Duck turd favorite goblin food!  We giv yu
 grapple hook!\"" CR>>

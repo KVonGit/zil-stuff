@@ -71,6 +71,8 @@ with">
   <COND
     (<==? <LOC ,PLAYER> ,PHOENIX-MOUNTAIN-PASS>
       <PERFORM ,V?CLIMB ,MOUNTAINS>)
+    (<==? <LOC ,PLAYER> ,GOBLIN-TRAIL>
+      <PERFORM ,V?CLIMB ,CLIFF>)
     (T
       <V-CLIMB>)>>
 
@@ -97,9 +99,46 @@ with">
 
 <SYNTAX DROP OBJECT INTO OBJECT = V-TOSS-INTO>
 <SYNTAX PUT OBJECT INTO OBJECT = V-TOSS-INTO>
+<SYNTAX THROW OBJECT INTO OBJECT = V-TOSS-INTO>
+<SYNTAX PITCH OBJECT INTO OBJECT = V-TOSS-INTO>
+<SYNTAX TOSS OBJECT INTO OBJECT = V-TOSS-INTO>
+<SYNTAX THROW OBJECT IN OBJECT = V-TOSS-INTO>
+<SYNTAX PITCH OBJECT IN OBJECT = V-TOSS-INTO>
+<SYNTAX TOSS OBJECT IN OBJECT = V-TOSS-INTO>
 
-<VERB-SYNONYM DROP TOSS THROW PITCH PUT>
 <SYNONYM IN INTO>
 
 <ROUTINE V-TOSS-INTO ()
   <POINTLESS "Wasting your">>
+  
+<ROUTINE V-SING ()
+  <TELL 
+"Farmer Zeke is the only singer in this game! (Besides, there isn't even a Koww
+bell in this game!)" CR>>
+
+<ROUTINE V-DANCE ()
+  <SILLY>>
+  
+<SYNTAX HINTS = V-HINTS>
+
+<SYNONYM HINTS HINT HELP>
+  
+<ROUTINE V-HINTS ()
+  <TELL
+"If you're really stuck, consult your Koww manual, CONTEMPLATE SOMETHING,
+peruse the feelies, or just check out the walkthrough on IFDB." CR>>
+
+<SYNTAX CROSS OBJECT = V-CROSS>
+
+<ROUTINE V-CROSS ()
+  <COND
+    (<==? ,PRSO ,CHASM>
+      <TELL "(flying)" CR>
+      <PERFORM ,V?FLY>
+      <RTRUE>)
+    (<==? ,PRSO ,ROAD>
+      <TELL
+"Why did the magical cow cross the road?" CR>)
+    (T
+      <TELL
+"You can't cross " T, PRSO "." CR>)>>

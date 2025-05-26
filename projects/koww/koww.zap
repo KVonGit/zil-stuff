@@ -3762,7 +3762,7 @@ START::
 
 	.FUNCT V-TURN-OFF
 	EQUAL? PRSO,WINNER \?L1
-	CALL2 PICK-ONE-R,T?118 >STACK
+	CALL2 PICK-ONE-R,T?122 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
@@ -3933,12 +3933,6 @@ START::
 	.FUNCT V-JUMP
 	ICALL2 POINTLESS,STR?33
 	RTRUE
-
-	.FUNCT V-SING
-	PRINTR "You give a stirring performance of ""MacArthur Park"". Bravo!"
-
-	.FUNCT V-DANCE
-	PRINTR "Dancing is forbidden."
 
 	.FUNCT V-WAKE
 	EQUAL? PRSO,WINNER \?L1
@@ -4401,7 +4395,11 @@ START::
 	EQUAL? STACK,PHOENIX-MOUNTAIN-PASS \?L1
 	CALL PERFORM,V?CLIMB,MOUNTAINS >STACK
 	RSTACK
-?L1:	CALL1 V-CLIMB >STACK
+?L1:	LOC PLAYER >STACK
+	EQUAL? STACK,GOBLIN-TRAIL \?L3
+	CALL PERFORM,V?CLIMB,CLIFF >STACK
+	RSTACK
+?L3:	CALL1 V-CLIMB >STACK
 	RSTACK
 
 	.FUNCT V-STAB
@@ -4421,6 +4419,28 @@ START::
 	.FUNCT V-TOSS-INTO
 	CALL2 POINTLESS,STR?38 >STACK
 	RSTACK
+
+	.FUNCT V-SING
+	PRINTR "Farmer Zeke is the only singer in this game! (Besides, there isn't even a Koww bell in this game!)"
+
+	.FUNCT V-DANCE
+	CALL1 SILLY >STACK
+	RSTACK
+
+	.FUNCT V-HINTS
+	PRINTR "If you're really stuck, consult your Koww manual, CONTEMPLATE SOMETHING, peruse the feelies, or just check out the walkthrough on IFDB."
+
+	.FUNCT V-CROSS
+	EQUAL? PRSO,CHASM \?L1
+	PRINTI "(flying)"
+	CRLF
+	ICALL2 PERFORM,V?FLY
+	RTRUE
+?L1:	EQUAL? PRSO,ROAD \?L3
+	PRINTR "Why did the magical cow cross the road?"
+?L3:	PRINTI "You can't cross "
+	ICALL2 PRINT-DEF,PRSO
+	PRINTR "."
 
 	.FUNCT QUEST-TWO-R
 	EQUAL? PRSA,V?EXAMINE \?L1
@@ -4444,7 +4464,8 @@ START::
 	CRLF
 	REMOVE MILK
 	MOVE PITCHFORK,PLAYER
-	RTRUE
+	CALL2 THIS-IS-IT,PITCHFORK >STACK
+	RSTACK
 
 	.FUNCT PITCHFORK-R
 	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
@@ -4489,7 +4510,7 @@ START::
 	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
 	CALL1 QUEST-TWO-R >STACK
 	RSTACK
-?L1:	EQUAL? PRSA,V?USE-ON,V?PUT-IN \FALSE
+?L1:	EQUAL? PRSA,V?USE-ON,V?PUT-IN,V?TOSS-INTO \FALSE
 	EQUAL? PRSI,POND \FALSE
 	CALL1 GET-DUCK-TURD-R >STACK
 	RSTACK
@@ -4641,13 +4662,17 @@ START::
 	.FUNCT OPEN-STATUE-CAVE-R
 	CALL2 HELD?,PITCHFORK >STACK
 	ZERO? STACK /?L1
-	PRINTI "You stab the pitchfork into the haystack. Lo and behold, the haystack falls down into a hole in the ground!  Inside the hole is a jade statuette, which you take."
+	PRINTI "You stab the pitchfork into the haystack. Lo and behold, the pitchfork breaks, and the haystack falls down into a hole in the ground!  Inside the hole is a jade statuette, which you take."
 	CRLF
 	REMOVE PITCHFORK
 	MOVE HOLE,HERE
 	MOVE JADE-STATUETTE,PLAYER
-	RTRUE
-?L1:	PRINTR "You don't have the required tool."
+	FSET JADE-STATUETTE,TOUCHBIT
+	CALL2 THIS-IS-IT,JADE-STATUETTE >STACK
+	RSTACK
+?L1:	FSET? JADE-STATUETTE,TOUCHBIT \?L3
+	PRINTR "You've already done that bit."
+?L3:	PRINTR "You don't have the required tool."
 
 	.FUNCT POND-R
 	EQUAL? PRSA,V?EXAMINE \?L1
@@ -4683,8 +4708,8 @@ START::
 	ICALL2 BOLDIZE,STR?53
 	PRINTI " on it!"
 	CRLF
-	CALL2 THIS-IS-IT,TREASURE-CHEST >STACK
-	RSTACK
+	ICALL2 THIS-IS-IT,TREASURE-CHEST
+	RTRUE
 ?L1:	EQUAL? PRSA,V?TAKE \FALSE
 	PRINTR "Farmer Zeke took the wise precaution of bolting his table to the floor."
 
@@ -4760,7 +4785,7 @@ START::
 	ICALL2 BOLDIZE,STR?50
 	PRINTR "."
 
-	.FUNCT ROAD-GOBLIN-TRAIL-R
+	.FUNCT ROAD-R
 	EQUAL? PRSA,V?EXAMINE \?L1
 	PRINTR "It's made of dirt. Concrete hasn't been invented yet."
 ?L1:	EQUAL? PRSA,V?TAKE \FALSE
@@ -4795,8 +4820,11 @@ START::
 	.FUNCT GOBLIN-GUARD-R
 	EQUAL? PRSA,V?EXAMINE \?L1
 	PRINTR "It's very ugly, like most of its kind. Don't get too close; you could faint from the smell."
-?L1:	EQUAL? PRSA,V?SPEAK \FALSE
+?L1:	EQUAL? PRSA,V?SPEAK \?L3
 	PRINTR """Yu wan go cave?  No try no funny bizniss -- I can tell."""
+?L3:	EQUAL? PRSA,V?SMELL \FALSE
+	CALL1 SILLY >STACK
+	RSTACK
 
 	.FUNCT SECRET-ONE-R
 	PRINTI """Ooooo!  Nuthing!  Jus wut I all ways want'd!  Inn ex chaynge, I giv yu summ thing!"""
@@ -4804,6 +4832,13 @@ START::
 	REMOVE NOTHING-ITEM
 	MOVE SOMETHING-ITEM,PLAYER
 	RTRUE
+
+	.FUNCT GOBLINS-R
+	EQUAL? PRSA,V?EXAMINE \?L1
+	PRINTR "They are very ugly, and they're all watching you closely."
+?L1:	EQUAL? PRSA,V?SPEAK \FALSE
+	CALL1 SILLY >STACK
+	RSTACK
 
 	.FUNCT INSIDE-GOBLIN-LAIR-R,RARG
 	EQUAL? RARG,M-LOOK \?L1
@@ -4828,16 +4863,23 @@ START::
 	EQUAL? PRSA,V?EXAMINE \?L1
 	PRINTR "An officious-looking, double-chinned goblin monarch sits royally atop a throne of deer hide."
 ?L1:	EQUAL? PRSA,V?SPEAK \FALSE
-	PRINTR """Hoo hoo hoo!  Goblinz so grate, our spit is assid!  We spit on yu if yu make us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!"""
+	PRINTI """Hoo hoo hoo!"
+	FSET? GOBLIN-SPIT,TOUCHBIT /?L4
+	PRINTI "  Goblinz so grate, our spit is assid!  We spit on yu if yu make us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!"
+?L4:	PRINTR """"
 
 	.FUNCT GIFT-OF-KING-R
 	REMOVE JADE-STATUETTE
 	MOVE GOBLIN-SPIT,PLAYER
+	FSET GOBLIN-SPIT,TOUCHBIT
+	ICALL2 THIS-IS-IT,GOBLIN-SPIT
 	PRINTR """Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!"""
 
 	.FUNCT OTHER-GIFT-R
 	REMOVE DUCK-TURD
 	MOVE GRAPPLING-HOOK,PLAYER
+	FSET GRAPPLING-HOOK,TOUCHBIT
+	ICALL2 THIS-IS-IT,GRAPPLING-HOOK
 	PRINTR """Ooooo!  GIMME GIMME GIMME!  Duck turd favorite goblin food!  We giv yu grapple hook!"""
 
 	.FUNCT LAND-OF-NECROYAKS-R,RARG
