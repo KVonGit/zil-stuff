@@ -142,3 +142,33 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
     (T
       <TELL
 "You can't cross " T, PRSO "." CR>)>>
+
+<ROUTINE V-YES ()
+  <TELL "You sound rather positive!" CR>>
+
+<ROUTINE V-NO ()
+  <TELL "You sound rather negative." CR>>
+  
+<ROUTINE V-EAT ()
+    <COND (<PRSO? ,WINNER> <TSD> <RTRUE>)
+          (<FSET? ,PRSO ,PERSONBIT> <YOU-MASHER> <RTRUE>)
+          (<FSET? ,PRSO ,EDIBLEBIT>
+           <REMOVE ,PRSO>
+           <COND (<SHORT-REPORT?> <TELL "Eaten." CR>)
+                 (ELSE <TELL "You devour " T ,PRSO "." CR>)>)
+          (ELSE <TELL 
+"That doesn't look appetizing.  You chew your cudinstead." CR>)>>
+          
+<ROUTINE V-DRINK ()
+  <TELL "" CR>>
+
+<SYNTAX SMELL = V-SMELL-ROOM>
+
+<VERB-SYNONYM SMELL SNIFF>
+
+<ROUTINE V-SMELL-ROOM ()
+    <COND
+      (<==? <LOC ,PLAYER>,GOBLIN-TRAIL ,GOBLIN-LAIR ,INSIDE-GOBLIN-LAIR>
+        <SILLY>)
+      (T
+        <TELL "You smell nothing unexpected." CR>)>>

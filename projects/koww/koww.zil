@@ -85,7 +85,8 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
         (<OR 
           <AND <VERB? USE-ON><PRSI? ,HAYSTACK>>
           <AND <VERB? DIG><PRSO? ,HAYSTACK>>>
-            <CALL OPEN-STATUE-CAVE-R>)>)>>
+            <OPEN-STATUE-CAVE-R>
+            <RTRUE>)>)>>
 
 <OBJECT FLY-SCROLL
   (DESC "the Fly Scroll")
@@ -1040,17 +1041,24 @@ with you, I'm afraid I must ask you to leave ">
           <TELL "? ">
           <COND
             (<YES?>
-              <PHOENIX-PROC-R>)
+              <CRLF>
+              <COND
+                (<HELD? WING-FEATHER>
+                  <PHOENIX-PROC-R>)
+                (T
+                  <PHOENIX-KILL-R>)>)
             (T
-              <PHOENIX-KILL-R>)>)>)>>
+              <CRLF>
+              <TELL
+"\"Then leave me immediately, as I do not appreciate company.\"" CR>)>)>)>>
 
 <ROUTINE PHOENIX-PROC-R ()
   <TELL 
-"Thank you; you have found my wing feather.  In the wrong hands, that could have
-been very dangerous.  I will give you this \"fly\" scroll to compensate you for
+"\"Thank you; you have found my wing feather.  In the wrong hands, that could have
+been very dangerous.  I will give you this 'fly' scroll to compensate you for
 your hard work.  ">
   <BOLDIZE "Use">
-  <TELL " the scroll to fly, but it will only work once." CR>
+  <TELL " the scroll to fly, but it will only work once.\"" CR>
   <MOVE ,FLY-SCROLL ,PLAYER>
   <REMOVE ,WING-FEATHER>>
 
