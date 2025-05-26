@@ -8,7 +8,7 @@
 (ZIL Port of the Quest 2 Classic)|
 An Interactive Fantasy by Brian the Great|
 Copyright (c) 1999 Brian the Great. All rights reserved.|
-v0.1.1 alpha">
+v0.1.3 alpha">
 
 <ROUTINE GO ()
   <CRLF>
@@ -265,6 +265,7 @@ Return to your home.  There's nothing more to do here." CR>>
   (FLAGS LIGHTBIT)
   (ACTION KOWWS-CHASM-R)
   (FLAGS LIGHTBIT OUTSIDEBIT)
+  (THINGS (PURE GREEN) (PASTURE GRASS) "It's very, very green.")
   (EAST TO ZEKES-FARM)>
 
 <ROUTINE KOWWS-CHASM-R (RARG)
@@ -297,6 +298,7 @@ greener on the other side of the ">
   (IN KOWWS-CHASM)
   (ACTION CHASM-R)>
 
+
 <ROUTINE CHASM-SIGN-R ()
     <COND
       (<OR <VERB? EXAMINE><VERB? READ>>
@@ -306,7 +308,8 @@ greener on the other side of the ">
       (<VERB? TAKE>
         <TELL 
 "You yank the sign out of the ground and try to fit it in your Koww-pack.  But
-it just doesn't fit.  Frustrated, you put it back." CR>)>>
+it just doesn't fit.  Frustrated, you put it back." CR>
+        <FCLEAR ,KOWW-PACK ,INVISIBLE>)>>
 
 <ROUTINE CHASM-R ()
   <COND
@@ -351,6 +354,14 @@ FLY!" CR>)>>
       <BOLDIZE "east">
       <TELL ", or ">
       <BOLDIZE "north">
+      <TELL "." CR>
+      <CRLF>
+      <CRLF>
+      <TELL>
+"You can go to "
+      <BOLDIZE "Zeke's Farmhouse">
+      <TELL ", or ">
+      <BOLDIZE "Zeke's Silo">
       <TELL "." CR>)>>
 
 <OBJECT ZEKES-FARMHOUSE-ENTRANCE
@@ -401,6 +412,9 @@ for a while." CR>)>)
     (<VERB? EAT TAKE>
       <TELL 
 "You take a bite of the haystack.  Yummy... tastes just like chicken!" CR>)
+    (<VERB? DRINK>
+      <TELL
+"What, drink THAT?!?!?  You loony." CR>)
     (<VERB? STAB ATTACK>
       <OPEN-STATUE-CAVE-R>)>>
 
@@ -446,6 +460,9 @@ carnivorous, they'd make you hungry." CR>)
       <TELL
 "You sip the water from the pond.  Just what you need to wash down a bit of
 grazing." CR>)
+    (<VERB? EAT>
+      <TELL
+"That doesn't look appetizing.  You chew your cud instead." CR>)
     (<VERB? USE-ON PUT-IN>
       <COND
         (<PRSO? ,SOMETHING-ITEM>
@@ -652,7 +669,7 @@ driveway!" CR>)>>
   (NORTH TO GOBLIN-TRAIL)
   (IN "Try entering the cave.")
   (ACTION GOBLIN-LAIR-R)
-  (LOCAL-GLOBALS GOBLINS)>
+  (GLOBAL GOBLINS)>
 
 <ROUTINE GOBLIN-LAIR-R (RARG)
   <COND
@@ -732,20 +749,7 @@ thing!\"" CR>
   <REMOVE NOTHING-ITEM>
   <MOVE ,SOMETHING-ITEM ,PLAYER>>
   
-<OBJECT GOBLINS
-  (IN GOBLIN-LAIR)
-  (DESC "goblins")
-  (FLAGS PERSONBIT PLURALBIT NDESCBIT)
-  (ACTION GOBLINS-R)
-  (SYNONYM GOBLINS)>
 
-<ROUTINE GOBLINS-R ()
-  <COND
-    (<VERB? EXAMINE>
-      <TELL
-"They are very ugly, and they're all watching you closely." CR>)
-    (<VERB? SPEAK>
-      <SILLY>)>>
 
 ; ************************** INSIDE THE GOBLIN LAIR ****************************
 
@@ -1054,9 +1058,9 @@ with you, I'm afraid I must ask you to leave ">
 
 <ROUTINE PHOENIX-PROC-R ()
   <TELL 
-"\"Thank you; you have found my wing feather.  In the wrong hands, that could have
-been very dangerous.  I will give you this 'fly' scroll to compensate you for
-your hard work.  ">
+"\"Thank you; you have found my wing feather.  In the wrong hands, that could
+have been very dangerous.  I will give you this 'fly' scroll to compensate you
+for your hard work.  ">
   <BOLDIZE "Use">
   <TELL " the scroll to fly, but it will only work once.\"" CR>
   <MOVE ,FLY-SCROLL ,PLAYER>
@@ -1101,3 +1105,75 @@ stupid cow." CR>)>>
   <HLIGHT 2>
   <TELL .TEXT>
   <HLIGHT 0>>
+  
+;"########## GLOBALS ##########"
+
+<OBJECT TAIL
+  (IN GLOBAL-OBJECTS)
+  (DESC "your tail")
+  (SYNONYM TAIL)
+  (ADJECTIVE MY)
+  (FLAGS NARTICLEBIT PARTBIT)>
+
+
+<OBJECT HOOVES
+  (IN GLOBAL-OBJECTS)
+  (DESC "your hooves")
+  (SYNONYM HOOF HOOVES)
+  (ADJECTIVE MY FRONT LEFT BACK RIGHT)
+  (FLAGS PLURALBIT NARTICLEBIT)>
+
+<OBJECT KOWW-PACK
+  (IN GLOBAL-OBJECTS)
+  (DESC "your Koww-pack")
+  (SYNONYM PACK KOWW-PACK)
+  (ADJECTIVE MY KOWW)
+  (FLAGS NARTICLEBIT TAKEBIT TRYTAKEBIT INVISIBLE)
+  (ACTION KOWW-PACK-R)>
+  
+<ROUTINE KOWW-PACK-R ()
+  <TELL
+    <PICK-ONE-R
+      <PLTABLE
+        "You don't have a KOWW-pack."
+        "There is no KOWW-pack in this game."
+        "You don't have a KOWW-pack.">>>
+  <TELL
+    <PICK-ONE-R
+      <PLTABLE
+        " I was just kidding about that."
+        " That was just a joke.">>>
+     <CRLF>>
+
+;"######## LOCAL GLOBALS ########"
+
+<OBJECT GOBLINS
+  (IN LOCAL-GLOBALS)
+  (DESC "goblins")
+  (FLAGS PLURALBIT NDESCBIT)
+  (ACTION GOBLINS-R)
+  (SYNONYM GOBLINS)
+  (ADJECTIVE twenty)>
+
+<ROUTINE GOBLINS-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL
+"They are very ugly, and they're all watching you closely." CR>)
+    (<VERB? SPEAK>
+      <SILLY>)>>
+
+
+;"######## Action handler for the player. (MODIFIED) ######## "
+<ROUTINE PLAYER-F ()
+    <COND (<N==? ,PLAYER ,PRSO>
+            <COND
+              (<VERB? DROP>
+                <COND
+                  (<PRSO? ,KOWW-PACK>
+                    <KOWW-PACK-R>)>
+                    <RTRUE>)
+              (T
+                <RFALSE>)>)
+          (<VERB? EXAMINE>
+           <PRINTR "You look like you're up for an adventure.">)>>

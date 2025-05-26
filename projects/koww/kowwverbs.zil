@@ -143,11 +143,25 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
       <TELL
 "You can't cross " T, PRSO "." CR>)>>
 
+<GLOBAL PRINTED-RHETORICAL <>>
+
 <ROUTINE V-YES ()
-  <TELL "You sound rather positive!" CR>>
+  <COND
+    (<==? ,PRINTED-RHETORICAL ,T>
+      <SETG PRINTED-RHETORICAL <>>
+      <RHETORICAL>
+      <RTRUE>)
+    (T
+      <TELL "You sound rather positive!" CR>)>>
 
 <ROUTINE V-NO ()
-  <TELL "You sound rather negative." CR>>
+  <COND
+    (<==? ,PRINTED-RHETORICAL ,T>
+      <SETG PRINTED-RHETORICAL <>>
+      <RHETORICAL>
+      <RTRUE>)
+    (T
+      <TELL "You sound rather negative." CR>)>>
   
 <ROUTINE V-EAT ()
     <COND (<PRSO? ,WINNER> <TSD> <RTRUE>)
@@ -157,10 +171,7 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
            <COND (<SHORT-REPORT?> <TELL "Eaten." CR>)
                  (ELSE <TELL "You devour " T ,PRSO "." CR>)>)
           (ELSE <TELL 
-"That doesn't look appetizing.  You chew your cudinstead." CR>)>>
-          
-<ROUTINE V-DRINK ()
-  <TELL "" CR>>
+"That doesn't look appetizing.  You chew your cud instead." CR>)>>
 
 <SYNTAX SMELL = V-SMELL-ROOM>
 
@@ -169,6 +180,70 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
 <ROUTINE V-SMELL-ROOM ()
     <COND
       (<==? <LOC ,PLAYER>,GOBLIN-TRAIL ,GOBLIN-LAIR ,INSIDE-GOBLIN-LAIR>
-        <SILLY>)
+        <TELL "All you can smell is the stench of goblins.">)
       (T
         <TELL "You smell nothing unexpected." CR>)>>
+        
+<ROUTINE V-WAVE-HANDS ()
+    <TELL
+"You don't have any hands." CR>
+    <RTRUE>>
+
+           
+<ROUTINE HAVE-TAKE-CHECK-TBL (TBL OPTS "AUX" MAX O N ORM)
+  <SET MAX <GETB .TBL 0>>
+  ;"Attempt implicit take if WINNER isn't directly holding the objects"
+  <COND (<BTST .OPTS ,SF-TAKE>
+   <DO (I 1 .MAX)
+     <COND (<SHOULD-IMPLICIT-TAKE? <GET/B .TBL .I>>
+      <TELL "[taking ">
+      <SET N <LIST-OBJECTS .TBL ,SHOULD-IMPLICIT-TAKE? <+ ,L-PRSTABLE ,L-THE>>>
+      <TELL "]" CR>
+      <REPEAT ()
+          <COND (<SHOULD-IMPLICIT-TAKE? <SET O <GET/B .TBL .I>>>
+                 <COND (<NOT <TRY-TAKE .O T>>
+                        <COND (<G? .N 1>
+                               <SET ORM ,REPORT-MODE>
+                               <SETG REPORT-MODE ,SHORT-REPORT>
+                               <TELL D .O ": ">
+                               <TRY-TAKE .O>
+                               <SETG REPORT-MODE .ORM>)
+                              (ELSE
+                               <TRY-TAKE .O>)>
+                        <RFALSE>)>)>
+          <COND (<IGRTR? I .MAX> <RETURN>)>>
+          <RETURN>)>>)>
+  ;"WINNER must (indirectly) hold the objects if SF-HAVE is set"
+  <COND (<BTST .OPTS ,SF-HAVE>
+   <DO (I 1 .MAX)
+     <COND (<FAILS-HAVE-CHECK? <GET/B .TBL .I>>
+      <COND
+        (<PRSO? ,KOWW-PACK>
+          <RTRUE>)
+        (T
+          <TELL "You aren't holding ">
+          <LIST-OBJECTS .TBL ,FAILS-HAVE-CHECK? <+ ,L-PRSTABLE ,L-THE ,L-OR>>
+          <TELL ", silly cow." CR>
+          <SETG P-CONT 0>
+          <RFALSE>)>)>>)>
+  <RTRUE>>
+
+
+<ROUTINE HAVE-TAKE-CHECK (OBJ OPTS)
+    <COND
+      (<PRSO? ,KOWW-PACK>
+        <RTRUE>)>
+    ;"Attempt implicit take if WINNER isn't directly holding the object"
+    <COND (<BTST .OPTS ,SF-TAKE>
+           <COND (<SHOULD-IMPLICIT-TAKE? .OBJ>
+                  <TELL "[taking " T .OBJ "]" CR>
+                  <COND (<NOT <TRY-TAKE .OBJ T>>
+                         <TRY-TAKE .OBJ>
+                         <RFALSE>)>)>)>
+    ;"WINNER must (indirectly) hold the object if SF-HAVE is set"
+    <COND (<BTST .OPTS ,SF-HAVE>
+           <COND (<FAILS-HAVE-CHECK? .OBJ>
+                  <TELL "You aren't holding " T .OBJ "." CR>
+                  <SETG P-CONT 0>
+                  <RFALSE>)>)>
+    <RTRUE>>
