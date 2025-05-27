@@ -1,12 +1,12 @@
 ### Koww - ZIL Port
 
-[View the source code](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/koww.zil)
+[View the source code in the KVonGit/zil-stuff repo](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/koww.zil)
 
-[Play the Alpha pre-release](KOWW.z5.html)
+[Play the Alpha pre-release in Parchment (in your browser)](KOWW.z5.html)
 
-[Download the story file](KOWW.z5)
+[Download the story file](KOWW.z5) [^1]
 
-[View the Manual](KOWW Manual.html)
+[View the Manual](KOWW%20Manual.html)
 
 ---
 [Original Quest 2 Source Code](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/quest_v2/KOWW1.ASL)
@@ -15,3 +15,8 @@
 
 ---
 [David Agnew's Squiffy Port at textadventures.co.uk](https://textadventures.co.uk/games/view/r8vdjymvf06yfhqlq3zwfa/the-adventures-of-koww-the-magician-squiffy-port)
+
+---
+["projects/koww" directory in the KVonGit/zil-stuff repo](https://github.com/KVonGit/zil-stuff/tree/main/projects/koww)
+
+[^1]: If you download the Z5 file, check its version against the version in the ZIL file from the first link. The Z5 file upload updates slowly sometimes for some reason.
