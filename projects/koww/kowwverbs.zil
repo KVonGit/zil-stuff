@@ -247,3 +247,26 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
                   <SETG P-CONT 0>
                   <RFALSE>)>)>
     <RTRUE>>
+
+<SYNTAX WALK TO OBJECT (FIND DOORBIT) (IN-ROOM) = V-ENTER>
+<SYNTAX WALK INTO OBJECT (FIND DOORBIT) (IN-ROOM) = V-ENTER>
+
+<SYNTAX SCORE = V-SCORE>
+
+<ROUTINE V-SCORE ()
+  <TELL "Your current score is ">
+  <PRINTN ,SCORE>
+  <TELL " of a possible ">
+  <PRINTN ,MAX-SCORE>
+  <TELL "." CR>>
+  
+<SYNTAX QUIT = KOWW-QUIT-R>
+
+<ROUTINE KOWW-QUIT-R ()
+  <TELL
+"We are about to give you your score. (Press RETURN or ENTER when you
+are ready.) >" >
+  <COND
+    (<READLINE>
+    <V-SCORE>
+    <V-QUIT>)>>

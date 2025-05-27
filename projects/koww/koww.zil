@@ -8,7 +8,7 @@
 (ZIL Port of the Quest 2 Classic)|
 An Interactive Fantasy by Brian the Great|
 Copyright (c) 1999 Brian the Great. All rights reserved.|
-v0.1.3 alpha">
+v0.1.5 alpha">
 
 <ROUTINE GO ()
   <CRLF>
@@ -34,6 +34,14 @@ v0.1.3 alpha">
 <SET REDEFINE T>
 
 <INSERT-FILE "kowwverbs">
+<INSERT-FILE "kowwified">
+
+<CONSTANT MAX-SCORE 110>
+
+<ROUTINE INCREMENT-SCORE (NUM)
+  <SETG SCORE <+ ,SCORE .NUM>>
+  <TELL 
+"[Your score has just gone up by " N .NUM ".]" CR>>
 
 ; ************************* ITEMS **********************************************
 
@@ -49,6 +57,7 @@ v0.1.3 alpha">
   (IN PLAYER)
   (DESC "milk")
   (SYNONYM MILK)
+  (ADJECTIVE MY MAGICAL MAGIC)
   (ACTION MILK-R)
   (FLAGS NARTICLEBIT)>
 
@@ -56,7 +65,7 @@ v0.1.3 alpha">
   <COND
     (<VERB? EXAMINE>
       <TELL
-"Don't worry, the men in the white coats will soon be here to deal with you.|">)
+"Why would you do that?  You are more than familiar with your own magical milk.|">)
     (<VERB? DROP>
       <TELL 
 "Why would you do that?  Awful waste of milk." CR>)
@@ -65,11 +74,12 @@ v0.1.3 alpha">
         (<PRSI? ZEKE>
           <TELL 
 "\"Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this
-here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
+here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
+          <INCREMENT-SCORE 5>
           <REMOVE ,MILK>
           <MOVE ,PITCHFORK ,PLAYER>
           <THIS-IS-IT ,PITCHFORK>
-        )>)>>
+          <RTRUE>)>)>>
 
 <OBJECT PITCHFORK
   (DESC "pitchfork")
@@ -190,7 +200,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-KING>
-          <OTHER-GIFT-R>)>)>>
+          <OTHER-GIFT-R>)>)
+    (<VERB? SMELL>
+      <SILLY>)>>
 
 <OBJECT GRAPPLING-HOOK
   (DESC "grappling hook")
@@ -242,8 +254,11 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
       <TELL
 "You don't know where that is." CR>)>>
 
+<GLOBAL PAINTED <>>
+
 <ROUTINE PURPLE-COW-R ()
   <REMOVE ,PURPLE-PAINT>
+  <SETG PAINTED T>
   <TELL
 "You spread the purple paint on yourself.  Suddenly Farmer Zeke bursts into
 song!" CR>
@@ -254,7 +269,8 @@ anyhow, I'd rather see than be one!">
   <TELL "\"" CR>
   <TELL
 "Wonderful!  You have just activated the scenario's secret feature!  That's it. 
-Return to your home.  There's nothing more to do here." CR>>
+Return to your home.  There's nothing more to do here." CR>
+  <INCREMENT-SCORE 15>>
 
 
 ; ************************* KOWW'S CHASM ***************************************
@@ -287,6 +303,7 @@ greener on the other side of the ">
 <OBJECT CHASM-SIGN
   (DESC "sign")
   (SYNONYM SIGN)
+  (ADJECTIVE VERY UNDRAMATIC)
   (IN KOWWS-CHASM)
   (FLAGS TRYTAKEBIT NDESCBIT)
   (ACTION CHASM-SIGN-R)>
@@ -356,9 +373,8 @@ FLY!" CR>)>>
       <BOLDIZE "north">
       <TELL "." CR>
       <CRLF>
-      <CRLF>
-      <TELL>
-"You can go to "
+      <TELL
+"You can go to ">
       <BOLDIZE "Zeke's Farmhouse">
       <TELL ", or ">
       <BOLDIZE "Zeke's Silo">
@@ -367,7 +383,7 @@ FLY!" CR>)>>
 <OBJECT ZEKES-FARMHOUSE-ENTRANCE
   (IN ZEKES-FARM)
   (SYNONYM FARMHO FARMHOUSE HOUSE)
-  (ADJECTIVE ZEKE'S ZEKES)
+  (ADJECTIVE ZEKE\'S ZEKES)
   (DESC "Zeke's Farmhouse")
   (FLAGS NARTICLEBIT NDESCBIT)
   (ACTION ZEKES-FARMHOUSE-ENTRANCE-R)>
@@ -380,7 +396,7 @@ FLY!" CR>)>>
 <OBJECT ZEKES-SILO-ENTRANCE
   (IN ZEKES-FARM)
   (SYNONYM SILO)
-  (ADJECTIVE ZEKE'S ZEKES)
+  (ADJECTIVE ZEKE\'S ZEKES)
   (DESC "Zeke's Silo")
   (FLAGS NARTICLEBIT NDESCBIT DOORBIT)
   (ACTION ZEKES-SILO-ENTRANCE-R)>
@@ -429,7 +445,8 @@ jade statuette, which you take." CR>
       <MOVE ,HOLE ,HERE>
       <MOVE ,JADE-STATUETTE ,PLAYER>
       <FSET ,JADE-STATUETTE ,TOUCHBIT>
-      <THIS-IS-IT ,JADE-STATUETTE>)
+      <THIS-IS-IT ,JADE-STATUETTE>
+      <INCREMENT-SCORE 5>)
     (<FSET? ,JADE-STATUETTE ,TOUCHBIT>
       <TELL
 "You've already done that bit." CR>)
@@ -475,7 +492,9 @@ grazing." CR>)
 "You throw the something into the pond.  The ducks swarm around it in curiosity. 
 You take the opportunity to grab a duck turd without being noticed!" CR>
   <REMOVE ,SOMETHING-ITEM>
-  <MOVE ,DUCK-TURD, PLAYER>>
+  <MOVE ,DUCK-TURD, PLAYER>
+  <THIS-IS-IT ,DUCK-TURD>
+  <INCREMENT-SCORE 10>>
   
 <OBJECT DUCKS
   (DESC "ducks")
@@ -499,7 +518,9 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
     (<==? .RARG ,M-LOOK>
       <TELL
 "You're inside Farmer Zeke's rather cramped home.  No one's here at the
-moment.  Perhaps you should go away.||">)
+moment.  Perhaps you should go away.||There is a ">
+    <BOLDIZE "table">
+    <TELL " here.||">)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "out">
@@ -507,16 +528,22 @@ moment.  Perhaps you should go away.||">)
 
 <OBJECT TABLE
   (IN ZEKES-FARMHOUSE)
-  (DESC "table")
+  (DESC "the table")
   (SYNONYM TABLE)
-  (FLAGS CONTBIT SURFACEBIT)
+  (FLAGS CONTBIT SURFACEBIT NDESCBIT NARTICLEBIT)
   (ACTION TABLE-R)>
+
+<GLOBAL EXAMINED-TABLE <>>
 
 <ROUTINE TABLE-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL
-"Hmmm, what's a table doing here?  Cool!  It has a ">
+      <COND
+        (<NOT<==? ,EXAMINED-TABLE ,T>>
+        <SETG EXAMINED-TABLE T>
+        <TELL
+"Hmmm, what's a table doing here?  Cool!  ">)>
+      <TELL "It has a ">
       <BOLDIZE "treasure chest">
       <TELL " on it!" CR>
       <THIS-IS-IT ,TREASURE-CHEST>
@@ -527,10 +554,10 @@ moment.  Perhaps you should go away.||">)
 
 <OBJECT TREASURE-CHEST
   (DESC "treasure chest")
-  (LDESC "About what you'd expect.")
+  (LDESC "Exactly how you'd expect a treasure chest would look.|")
   (SYNONYM CHEST)
   (ADJECTIVE TREASU TREASURE)
-  (IN ZEKES-FARMHOUSE)
+  (IN TABLE)
   (FLAGS NDESCBIT CONTBIT OPENABLEBIT)
   (ACTION TREASURE-CHEST-R)>
 
@@ -547,8 +574,8 @@ moment.  Perhaps you should go away.||">)
 "Ooooo!  There's nothing inside!  Told ya you should have gone away." CR>
   <MOVE ,NOTHING-ITEM ,PLAYER>
   <THIS-IS-IT ,NOTHING-ITEM>
-  <REMOVE ,TABLE>
-  <REMOVE ,TREASURE-CHEST>>
+  <INCREMENT-SCORE 5>
+  <RTRUE>>
 
 
 ; ************************** ZEKE'S SILO ***************************************
@@ -592,13 +619,6 @@ away, but he seems pleased as punch that you've arrived." CR>
     (<VERB? SPEAK>
       <TELL "\"Hey there, good buddy!  Say, bein' a wizard an' all, couldja find
 it in yer heart to gimme some magic milk?  I'm all out!\"" CR>)
-    (<VERB? GIVE>
-      <COND
-        (<PRSO? ,MILK>
-          <TELL "\"Well, thanks a lot, good buddy!  Well, tell ya what, why
-don't I give ya this here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
-          <REMOVE ,MILK>
-          <MOVE ,PITCHFORK ,PLAYER>)>)
     (<VERB? ATTACK>
       <TELL "You may be an evil sorcerer, but at least you're an ETHICAL evil
 sorcerer.  No killing allowed!  Especially not of idiots.  They don't know
@@ -682,8 +702,6 @@ them." CR CR>
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "north">
-      <TELL " or ">
-      <BOLDIZE "in">
       <TELL "." CR>)>>
 
 <OBJECT CLIFF
@@ -747,7 +765,9 @@ from the smell." CR>)
 "\"Ooooo!  Nuthing!  Jus wut I all ways want'd!  Inn ex chaynge, I giv yu summ
 thing!\"" CR>
   <REMOVE NOTHING-ITEM>
-  <MOVE ,SOMETHING-ITEM ,PLAYER>>
+  <MOVE ,SOMETHING-ITEM ,PLAYER>
+  <THIS-IS-IT ,SOMETHING-ITEM>
+  <INCREMENT-SCORE 10>>
   
 
 
@@ -824,7 +844,8 @@ us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!">)>
   <FSET ,GOBLIN-SPIT ,TOUCHBIT>
   <THIS-IS-IT ,GOBLIN-SPIT>
   <TELL
-"\"Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!\"" CR>>
+"\"Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!\"" CR>
+  <INCREMENT-SCORE 5>>
 
 <ROUTINE OTHER-GIFT-R ()
   <REMOVE ,DUCK-TURD>
@@ -833,7 +854,8 @@ us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!">)>
   <THIS-IS-IT ,GRAPPLING-HOOK>
   <TELL
 "\"Ooooo!  GIMME GIMME GIMME!  Duck turd favorite goblin food!  We giv yu
-grapple hook!\"" CR>>
+grapple hook!\"" CR>
+  <INCREMENT-SCORE 5>>
 
 ; ************************** LAND OF THE NECROYAKS *****************************
 
@@ -915,7 +937,9 @@ take it, and run off.  But one of them drops a phoenix feather, and you scoop it
 up unnoticed.  By the way, there's no way to go farther this way unless you're a
 yak." CR>
   <REMOVE ,GOBLIN-SPIT>
-  <MOVE ,WING-FEATHER ,PLAYER>>
+  <MOVE ,WING-FEATHER ,PLAYER>
+  <THIS-IS-IT ,WING-FEATHER>
+  <INCREMENT-SCORE 10>>
 
 <SYNTAX SEARCH = V-SEARCH-THE-ROOM>
 
@@ -982,9 +1006,11 @@ below." CR>)
     (<HELD? ,GRAPPLING-HOOK>
       <REMOVE ,GRAPPLING-HOOK>
       <MOVE ,PURPLE-PAINT ,PLAYER>
+      <THIS-IS-IT ,PURPLE-PAINT>
       <TELL 
 "On top of the mountain, you find a bunch of purple paint, which you take. 
-After descending again, you ditch your grappling hook." CR>)
+After descending again, you ditch your grappling hook." CR>
+      <INCREMENT-SCORE 10>)
     (T
       <TELL 
 "Those particular mountains are too steep." CR>)>>
@@ -1064,7 +1090,9 @@ for your hard work.  ">
   <BOLDIZE "Use">
   <TELL " the scroll to fly, but it will only work once.\"" CR>
   <MOVE ,FLY-SCROLL ,PLAYER>
-  <REMOVE ,WING-FEATHER>>
+  <THIS-IS-IT ,FLY-SCROLL>
+  <REMOVE ,WING-FEATHER>
+  <INCREMENT-SCORE 10>>
 
 <ROUTINE PHOENIX-KILL-R ()
   <TELL 
@@ -1095,8 +1123,18 @@ for \"The Adventures of Koww the Magician II -- Escape from the NecroYaks!\"">
 stupid cow." CR>)>>
 
 <ROUTINE END-R ()
+  <INCREMENT-SCORE 20>
   <TELL "You fly up and over the chasm!" CR CR>
-  <TELL ,WIN-TEXT CR CR>
+  <TELL ,WIN-TEXT CR>
+  <TELL "[PRESS RETURN OR ENTER TO VIEW YOUR SCORE.]">
+  <READLINE>
+  <CRLF>
+  <TELL "You scored ">
+  <PRINTN ,SCORE>
+  <TELL " of a possible ">
+  <PRINTN ,MAX-SCORE>
+  <TELL "." CR>
+  <TELL "PRESS ENTER TO QUIT.">
   <QUIT>>
 
 ; *** TEXT ROUTINES ***
@@ -1107,6 +1145,20 @@ stupid cow." CR>)>>
   <HLIGHT 0>>
   
 ;"########## GLOBALS ##########"
+
+<OBJECT CUD
+  (IN GLOBAL-OBJECTS)
+  (DESC "your cud")
+  (SYNONYM CUD)
+  (ADJECTIVE MY)
+  (LDESC "You can't see your cud, it's regurgitated into your mouth!")
+  (FLAGS NARTICLEBIT PARTBIT)
+  (ACTION CUD-R)>
+  
+<ROUTINE CUD-R ()
+  <COND
+    (<VERB? EAT>
+      <TELL "You chew your cud." CR>)>>
 
 <OBJECT TAIL
   (IN GLOBAL-OBJECTS)
@@ -1176,4 +1228,9 @@ stupid cow." CR>)>>
               (T
                 <RFALSE>)>)
           (<VERB? EXAMINE>
-           <PRINTR "You look like you're up for an adventure.">)>>
+           
+           <COND
+            (<==? ,PAINTED ,T>
+              <PRINTR "You are covered in purple paint.">)
+            (T
+              <PRINTR "You look like you're up for an adventure.">)>)>>
