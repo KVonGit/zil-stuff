@@ -85,7 +85,7 @@
 (ZIL Port of the Quest 2 Classic)
 An Interactive Fantasy by Brian the Great
 Copyright (c) 1999 Brian the Great. All rights reserved.
-v0.1.5 alpha"
+v0.1.6 alpha"
 	.GSTR STR?76,"The greenness of the farmland dissolves into gray bleakness as you pass into the land of the NecroYaks. Yaks are the sworn enemies of cows -- you'd better stay on your toes!
 "
 	.GSTR STR?26,"them"

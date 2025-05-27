@@ -113,8 +113,8 @@ with">
   
 <ROUTINE V-SING ()
   <TELL 
-"Farmer Zeke is the only singer in this game! (Besides, there isn't even a Koww
-bell in this game!)" CR>>
+"Farmer Zeke is the only singer in this game! (Besides, you didn't even bring a
+Koww bell!)" CR>>
 
 <ROUTINE V-DANCE ()
   <SILLY>>
@@ -138,7 +138,7 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
       <RTRUE>)
     (<==? ,PRSO ,ROAD>
       <TELL
-"Why did the magical cow cross the road?" CR>)
+"You are Koww!!! The Magician!!! Not a lowly chicken!" CR>)
     (T
       <TELL
 "You can't cross " T, PRSO "." CR>)>>
@@ -162,6 +162,15 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
       <RTRUE>)
     (T
       <TELL "You sound rather negative." CR>)>>
+      
+<SYNTAX DON\'T KNOW = V-I-DONT-KNOW>
+<SYNTAX DONT KNOW = V-I-DONT-KNOW>
+<SYNTAX DUNNO = V-I-DONT-KNOW>
+
+<VERB-SYNONYM DUNNO UNSURE \?>
+
+<ROUTINE V-I-DONT-KNOW ()
+  <TELL "You seem confused." CR>>
   
 <ROUTINE V-EAT ()
     <COND (<PRSO? ,WINNER> <TSD> <RTRUE>)
@@ -180,13 +189,30 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
 <ROUTINE V-SMELL-ROOM ()
     <COND
       (<==? <LOC ,PLAYER>,GOBLIN-TRAIL ,GOBLIN-LAIR ,INSIDE-GOBLIN-LAIR>
-        <TELL "All you can smell is the stench of goblins.">)
+        <TELL "All you can smell is the stench of goblins." CR>)
+      (<==? <LOC ,PLAYER> ,ZEKES-FARM>
+        <TELL 
+"You can smell the farmer nearby, as well as goblins from afar." CR>)
+      (<==? <LOC ,PLAYER> ,ZEKES-FARMHOUSE ,ZEKES-SILO>
+        <TELL "You can smell the farmer, but you'd rather not!" CR>)
+      (<==? <LOC ,PLAYER> ,LAND-OF-NECROYAKS ,AMBUSH-POINT>
+        <TELL "You can smell ">
+        <COND
+          (<HELD? ,GOBLIN-SPIT>
+            <TELL "the stench emanating from the jar of spit and ">)>
+        <TELL "Necroyaks!!!" CR>)
+      (<==? <LOC ,PLAYER> ,PHOENIX-MOUNTAIN-PASS>
+        <TELL 
+"You smell something purple from above, and also... something resplendent...
+from the east." CR>)
+      (<==? <LOC ,PLAYER> ,PHOENIX-PEAK>
+        <TELL "You can smell the resplendent magnificence of the Phoenix!" CR>)
       (T
-        <TELL "You smell nothing unexpected." CR>)>>
+        <TELL "You can smell adventure!" CR>)>>
         
 <ROUTINE V-WAVE-HANDS ()
     <TELL
-"You don't have any hands." CR>
+"You don't have hands; so, you nod and snort instead." CR>
     <RTRUE>>
 
            

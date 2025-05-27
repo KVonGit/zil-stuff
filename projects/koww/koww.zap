@@ -3433,7 +3433,7 @@ START::
 
 	.FUNCT V-TURN-OFF
 	EQUAL? PRSO,WINNER \?L1
-	CALL2 PICK-ONE-R,T?126 >STACK
+	CALL2 PICK-ONE-R,T?129 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
@@ -4075,7 +4075,7 @@ START::
 	RSTACK
 
 	.FUNCT V-SING
-	PRINTR "Farmer Zeke is the only singer in this game! (Besides, there isn't even a Koww bell in this game!)"
+	PRINTR "Farmer Zeke is the only singer in this game! (Besides, you didn't even bring a Koww bell!)"
 
 	.FUNCT V-DANCE
 	CALL1 SILLY >STACK
@@ -4091,7 +4091,7 @@ START::
 	ICALL2 PERFORM,V?FLY
 	RTRUE
 ?L1:	EQUAL? PRSO,ROAD \?L3
-	PRINTR "Why did the magical cow cross the road?"
+	PRINTR "You are Koww!!! The Magician!!! Not a lowly chicken!"
 ?L3:	PRINTI "You can't cross "
 	ICALL2 PRINT-DEF,PRSO
 	PRINTR "."
@@ -4109,6 +4109,9 @@ START::
 	ICALL1 RHETORICAL
 	RTRUE
 ?L1:	PRINTR "You sound rather negative."
+
+	.FUNCT V-I-DONT-KNOW
+	PRINTR "You seem confused."
 
 	.FUNCT V-EAT
 	EQUAL? PRSO,WINNER \?L1
@@ -4129,12 +4132,30 @@ START::
 	.FUNCT V-SMELL-ROOM
 	LOC PLAYER >STACK
 	EQUAL? STACK,GOBLIN-TRAIL,GOBLIN-LAIR,INSIDE-GOBLIN-LAIR \?L1
-	PRINTI "All you can smell is the stench of goblins."
-	RTRUE
-?L1:	PRINTR "You smell nothing unexpected."
+	PRINTR "All you can smell is the stench of goblins."
+?L1:	LOC PLAYER >STACK
+	EQUAL? STACK,ZEKES-FARM \?L3
+	PRINTR "You can smell the farmer nearby, as well as goblins from afar."
+?L3:	LOC PLAYER >STACK
+	EQUAL? STACK,ZEKES-FARMHOUSE,ZEKES-SILO \?L4
+	PRINTR "You can smell the farmer, but you'd rather not!"
+?L4:	LOC PLAYER >STACK
+	EQUAL? STACK,LAND-OF-NECROYAKS,AMBUSH-POINT \?L5
+	PRINTI "You can smell "
+	CALL2 HELD?,GOBLIN-SPIT >STACK
+	ZERO? STACK /?L6
+	PRINTI "the stench emanating from the jar of spit and "
+?L6:	PRINTR "Necroyaks!!!"
+?L5:	LOC PLAYER >STACK
+	EQUAL? STACK,PHOENIX-MOUNTAIN-PASS \?L9
+	PRINTR "You smell something purple from above, and also... something resplendent... from the east."
+?L9:	LOC PLAYER >STACK
+	EQUAL? STACK,PHOENIX-PEAK \?L10
+	PRINTR "You can smell the resplendent magnificence of the Phoenix!"
+?L10:	PRINTR "You can smell adventure!"
 
 	.FUNCT V-WAVE-HANDS
-	PRINTR "You don't have any hands."
+	PRINTR "You don't have hands; so, you nod and snort instead."
 
 	.FUNCT HAVE-TAKE-CHECK-TBL,TBL,OPTS,MAX,O,N,ORM,I
 	GETB TBL,0 >MAX
@@ -4534,9 +4555,11 @@ START::
 	RSTACK
 
 	.FUNCT GOBLIN-SPIT-R
-	EQUAL? PRSA,V?EXAMINE,V?DROP \FALSE
+	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
 	CALL1 QUEST-TWO-R >STACK
 	RSTACK
+?L1:	EQUAL? PRSA,V?SMELL \FALSE
+	PRINTR "Yuck!"
 
 	.FUNCT SOMETHING-ITEM-R
 	EQUAL? PRSA,V?EXAMINE,V?DROP \?L1
@@ -4591,9 +4614,11 @@ START::
 	EQUAL? STACK,ZEKES-SILO \FALSE
 	CALL1 PURPLE-USE-R >STACK
 	RSTACK
-?L3:	EQUAL? PRSA,V?WEAR \FALSE
+?L3:	EQUAL? PRSA,V?WEAR \?L7
 	CALL1 PURPLE-USE-R >STACK
 	RSTACK
+?L7:	EQUAL? PRSA,V?SMELL \FALSE
+	PRINTR "It smells like... about 15 points!"
 
 	.FUNCT PURPLE-USE-R
 	CALL2 HELD?,PURPLE-PAINT >STACK
@@ -4781,7 +4806,11 @@ There is a "
 	CALL1 GET-NOTHING-R >STACK
 	RSTACK
 ?L1:	EQUAL? PRSA,V?TAKE \FALSE
-	PRINTR "It's too big. You could open it instead..."
+	PRINTI "It's too big."
+	FSET? TREASURE-CHEST,OPENBIT /?L4
+	PRINTI " You could open it instead..."
+?L4:	CRLF
+	RTRUE
 
 	.FUNCT GET-NOTHING-R
 	PRINTI "Ooooo!  There's nothing inside!  Told ya you should have gone away."
@@ -4789,6 +4818,7 @@ There is a "
 	MOVE NOTHING-ITEM,PLAYER
 	ICALL2 THIS-IS-IT,NOTHING-ITEM
 	ICALL2 INCREMENT-SCORE,5
+	FSET TREASURE-CHEST,OPENBIT
 	RTRUE
 
 	.FUNCT ZEKES-SILO-R,RARG
@@ -4863,7 +4893,7 @@ There is a "
 ?L1:	EQUAL? PRSA,V?TAKE \?L3
 	PRINTR "If you want to climb the cliff, say so!"
 ?L3:	EQUAL? PRSA,V?CLIMB \FALSE
-	PRINTR "After a difficult climb, you reach the top. You're very pleased with yourself.  Unfortunately, the ledge crumbles beneath you and you plummet back to the  ground."
+	PRINTR "After a difficult climb, you reach the top. You're very pleased with yourself.  Unfortunately, the ledge crumbles beneath you and you plummet back to the ground."
 
 	.FUNCT INSIDE-GOBLIN-LAIR-ENTRANCE-R
 	EQUAL? PRSA,V?ENTER \FALSE
@@ -5130,9 +5160,9 @@ The Resplendent Magnificent Phoenix bats you with one claw. You roll back down t
 	PRINTR "You chew your cud."
 
 	.FUNCT KOWW-PACK-R
-	CALL2 PICK-ONE-R,T?127 >STACK
+	CALL2 PICK-ONE-R,T?130 >STACK
 	PRINT STACK
-	CALL2 PICK-ONE-R,T?128 >STACK
+	CALL2 PICK-ONE-R,T?131 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
@@ -5143,6 +5173,23 @@ The Resplendent Magnificent Phoenix bats you with one claw. You roll back down t
 ?L1:	EQUAL? PRSA,V?SPEAK \FALSE
 	CALL1 SILLY >STACK
 	RSTACK
+
+	.FUNCT GOBLINS-SMELL-R
+	EQUAL? PRSA,V?EXAMINE \?L1
+	LOC PLAYER >STACK
+	EQUAL? STACK,GOBLIN-LAIR,INSIDE-GOBLIN-LAIR /FALSE
+	PRINTR "You can't see them from here."
+?L1:	EQUAL? PRSA,V?SMELL \FALSE
+	LOC PLAYER >STACK
+	EQUAL? STACK,GOBLIN-LAIR,INSIDE-GOBLIN-LAIR /?L7
+	PRINTR "The stench is coming from the south."
+?L7:	PRINTR "They STINK!!!"
+
+	.FUNCT FARMER-SMELL-R
+	LOC ZEKE >STACK
+	EQUAL? STACK,HERE \?L1
+	PRINTR "He smells like magic milk."
+?L1:	PRINTR "He seems to be... in the silo."
 
 	.FUNCT PLAYER-F
 	EQUAL? PLAYER,PRSO /?L1

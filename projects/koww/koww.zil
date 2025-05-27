@@ -8,7 +8,7 @@
 (ZIL Port of the Quest 2 Classic)|
 An Interactive Fantasy by Brian the Great|
 Copyright (c) 1999 Brian the Great. All rights reserved.|
-v0.1.5 alpha">
+v0.1.6 alpha">
 
 <ROUTINE GO ()
   <CRLF>
@@ -153,7 +153,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 <ROUTINE GOBLIN-SPIT-R ()
   <COND
     (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>)>>
+      <QUEST-TWO-R>)
+    (<VERB? SMELL>
+      <TELL "Yuck!" CR>)>>
 
 <OBJECT SOMETHING-ITEM
   (DESC "something")
@@ -240,7 +242,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
         (<==? <LOC ,PLAYER> ,ZEKES-SILO>
           <PURPLE-USE-R>)>)
     (<VERB? WEAR>
-        <PURPLE-USE-R>)>>
+        <PURPLE-USE-R>)
+    (<VERB? SMELL>
+      <TELL "It smells like... about 15 points!" CR>)>>
 
 <ROUTINE PURPLE-USE-R ()
   <COND
@@ -349,7 +353,8 @@ FLY!" CR>)>>
   (SOUTH TO GOBLIN-TRAIL)
   (EAST TO PHOENIX-MOUNTAIN-PASS)
   (NORTH TO LAND-OF-NECROYAKS)
-  (IN "Try ENTER FARMHOUSE or ENTER SILO.")>
+  (IN "Try ENTER FARMHOUSE or ENTER SILO.")
+  (GLOBAL GOBLINS-SMELL FARMER-SMELL)>
 
 <ROUTINE ZEKES-FARM-R (RARG)
   <COND
@@ -511,7 +516,8 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
   (DESC "Zeke's Farmhouse")
   (FLAGS LIGHTBIT)
   (OUT TO ZEKES-FARM)
-  (ACTION ZEKES-FARMHOUSE-R)>
+  (ACTION ZEKES-FARMHOUSE-R)
+  (GLOBAL FARMER-SMELL)>
 
 <ROUTINE ZEKES-FARMHOUSE-R (RARG)
   <COND
@@ -567,7 +573,11 @@ moment.  Perhaps you should go away.||There is a ">
       <CALL GET-NOTHING-R>)
     (<VERB? TAKE>
       <TELL
-"It's too big.  You could open it instead..." CR>)>>
+"It's too big.">
+      <COND
+        (<NOT <FSET? ,TREASURE-CHEST ,OPENBIT>>
+          <TELL " You could open it instead...">)>
+      <CRLF>)>>
 
 <ROUTINE GET-NOTHING-R ()
   <TELL
@@ -575,6 +585,7 @@ moment.  Perhaps you should go away.||There is a ">
   <MOVE ,NOTHING-ITEM ,PLAYER>
   <THIS-IS-IT ,NOTHING-ITEM>
   <INCREMENT-SCORE 5>
+  <FSET ,TREASURE-CHEST ,OPENBIT>
   <RTRUE>>
 
 
@@ -645,7 +656,8 @@ guess there's a limit!\"" CR>
   (SOUTH TO GOBLIN-LAIR)
   (ACTION GOBLIN-TRAIL-R)
   (DOWN "Down the road?")
-  (UP "Try climbing instead.")>
+  (UP "Try climbing instead.")
+  (GLOBAL GOBLINS-SMELL)>
 
 <ROUTINE GOBLIN-TRAIL-R (RARG)
   <COND
@@ -722,7 +734,7 @@ them." CR CR>
       <TELL
 "After a difficult climb, you reach the top.  You're very pleased with yourself.
  Unfortunately, the ledge crumbles beneath you and you plummet back to the
- ground." CR>)>>
+ground." CR>)>>
 
 <OBJECT INSIDE-GOBLIN-LAIR-ENTRANCE
   (IN GOBLIN-LAIR)
@@ -1215,6 +1227,41 @@ stupid cow." CR>)>>
     (<VERB? SPEAK>
       <SILLY>)>>
 
+<OBJECT GOBLINS-SMELL
+  (IN LOCAL-GLOBALS)
+  (DESC "goblins")
+  (SYNONYM GOBLIN GOBLINS)
+  (FLAGS PLURALBIT NARTICLEBIT)
+  (ACTION GOBLINS-SMELL-R)>
+  
+<ROUTINE GOBLINS-SMELL-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <COND
+        (<NOT <==? <LOC ,PLAYER> ,GOBLIN-LAIR ,INSIDE-GOBLIN-LAIR>>
+          <TELL "You can't see them from here." CR>)>)
+    (<VERB? SMELL>
+      <COND
+        (<NOT <==? <LOC ,PLAYER> ,GOBLIN-LAIR ,INSIDE-GOBLIN-LAIR>>
+          <TELL "The stench is coming from the south." CR>)
+        (T
+          <TELL "They STINK!!!" CR>)>)>>
+
+
+<OBJECT FARMER-SMELL
+  (IN LOCAL-GLOBALS)
+  (DESC "Farmer Zeke")
+  (SYNONYM MAN HUMAN FARMER ZEKE)
+  (ADJECTIVE FARMER)
+  (FLAGS PERSONBIT NARTICLEBIT)
+  (ACTION FARMER-SMELL-R)>
+
+<ROUTINE FARMER-SMELL-R ()
+  <COND
+    (<==? <LOC, ZEKE> ,HERE>
+      <TELL "He smells like magic milk." CR>)
+    (T
+      <TELL "He seems to be... in the silo." CR>)>>
 
 ;"######## Action handler for the player. (MODIFIED) ######## "
 <ROUTINE PLAYER-F ()
