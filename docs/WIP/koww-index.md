@@ -8,6 +8,8 @@
 
 [View the Manual](KOWW%20Manual.html)
 
+[ZIL Port Walkthrough](koww-z-walkhtrough.txt)
+
 [^1]: If you download the Z5 file, check its version against the version in the ZIL file from the first link. The Z5 file upload updates slowly sometimes for some reason.
 
 ---
