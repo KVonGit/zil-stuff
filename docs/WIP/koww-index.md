@@ -8,7 +8,6 @@
 
 [View the Manual](KOWW%20Manual.html)
 
----
 [^1]: If you download the Z5 file, check its version against the version in the ZIL file from the first link. The Z5 file upload updates slowly sometimes for some reason.
 
 ---
@@ -20,5 +19,7 @@
 [David Agnew's Squiffy Port at textadventures.co.uk](https://textadventures.co.uk/games/view/r8vdjymvf06yfhqlq3zwfa/the-adventures-of-koww-the-magician-squiffy-port)
 
 ---
-### All the source code
+### More source code
 [Source Code in the "projects/koww" directory in the KVonGit/zil-stuff repo](https://github.com/KVonGit/zil-stuff/tree/main/projects/koww)
+
+---
