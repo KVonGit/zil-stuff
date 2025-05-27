@@ -8,9 +8,9 @@
 
 [View the Manual](KOWW%20Manual.html)
 
-[ZIL Port Walkthrough](koww-z-walkhtrough.txt)
+[ZIL Port Walkthrough](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/koww-z-walkthrough.txt)
 
-[^1]: If you download the Z5 file, check its version against the version in the ZIL file from the first link. The Z5 file upload updates slowly sometimes for some reason.
+[^1]: If you download the Z5 file, check its version against the version in the ZIL file from the first link. The Z5 file upload updates slowly sometimes for some reason. v0.1.6-alpha is the current version as of this writing.
 
 ---
 [Original Quest 2 Source Code](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/quest_v2/KOWW1.ASL)
