@@ -18,7 +18,9 @@
 [Original Quest 2 Game at textadventures.co.uk](https://textadventures.co.uk/games/view/nalydifu9eqbcgy0pcyceq/the-adventures-of-koww-the-magician)
 
 ---
-[David Agnew's Squiffy Port at textadventures.co.uk](https://textadventures.co.uk/games/view/r8vdjymvf06yfhqlq3zwfa/the-adventures-of-koww-the-magician-squiffy-port)
+[“David Agnew's” Squiffy Port at textadventures.co.uk](https://textadventures.co.uk/games/view/r8vdjymvf06yfhqlq3zwfa/the-adventures-of-koww-the-magician-squiffy-port)
+
+[Squiffy Source Code](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/sq/KOWW.squiffy)
 
 ---
 ### More source code
