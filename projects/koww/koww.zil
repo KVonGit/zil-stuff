@@ -89,7 +89,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE PITCHFORK-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+      <TELL "A sharp-looking tool!" CR>)
+    (<VERB? DROP>
       <QUEST-TWO-R>)
     (<VERB? USE-ON DIG>
       <COND
@@ -108,7 +110,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE FLY-SCROLL-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+      <TELL "Try using it (when in the proper location)." CR>)
+    (<VERB? DROP>
       <QUEST-TWO-R>
     )
     (<VERB? USE CAST>
@@ -124,7 +128,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE WING-FEATHER-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+      <TELL "A wing feather from a Phoenix." CR>)
+    (<VERB? DROP>
       <QUEST-TWO-R>
     )>>
 
@@ -137,7 +143,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE JADE-STATUETTE-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+        <TELL "The ugly statuette is a waste of jade." CR>)
+    (DROP>
       <QUEST-TWO-R>)
     (<VERB? GIVE>
       <COND
@@ -153,7 +161,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE GOBLIN-SPIT-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+        <TELL "Yuck... It's chunky!" CR>)
+    (<VERB? DROP>
       <QUEST-TWO-R>)
     (<VERB? SMELL>
       <TELL "Yuck!" CR>)>>
@@ -166,7 +176,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE SOMETHING-ITEM-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+        <TELL "About what you'd expect something to look like in this game." CR>)
+    (<VERB? DROP>
       <QUEST-TWO-R>)
     (<VERB? USE-ON PUT-IN TOSS-INTO>
       <COND
@@ -201,7 +213,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE DUCK-TURD-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+        <TELL "A fowl bit of potty humour." CR>)
+    (<VERB? DROP>
       <QUEST-TWO-R>)
     (<VERB? GIVE>
       <COND
@@ -219,7 +233,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE GRAPPLING-HOOK-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+        <TELL "It looks strong enough to support a cow!" CR>)
+    (<VERB? DROP>
       <QUEST-TWO-R>)
     (<VERB? USE>
       <COND
@@ -239,7 +255,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE PURPLE-PAINT-R ()
   <COND
-    (<VERB? EXAMINE DROP>
+    (<VERB? EXAMINE>
+        <TELL "It's paint, and it's purple." CR>)
+    (<VERB? DROP>
       <QUEST-TWO-R>)
     (<VERB? USE>
       <COND
@@ -1149,7 +1167,20 @@ stupid cow." CR>)>>
   <PRINTN ,SCORE>
   <TELL " of a possible ">
   <PRINTN ,MAX-SCORE>
-  <TELL "." CR>
+  <TELL ", granting you the rank: ">
+  <COND
+    (<==? ,SCORE 0>
+      <BOLDIZE "MOO-ZER">)
+    (<L? ,SCORE 42>
+      <BOLDIZE "BABY KALF">)
+    (<L? ,SCORE 69>
+      <BOLDIZE "MOO-STLY HARMLESS">)
+    (<L? ,SCORE 110>
+      <BOLDIZE "MAGICIAN">)
+    (T
+      <BOLDIZE "GRAND MOO-STER WIZARD">)>
+  <TELL ".">
+  <CRLF>
   <TELL "PRESS ENTER TO QUIT.">
   <QUIT>>
 
