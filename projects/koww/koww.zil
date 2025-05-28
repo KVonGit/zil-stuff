@@ -145,7 +145,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
         <TELL "The ugly statuette is a waste of jade." CR>)
-    (DROP>
+    (<VERB? DROP>
       <QUEST-TWO-R>)
     (<VERB? GIVE>
       <COND
