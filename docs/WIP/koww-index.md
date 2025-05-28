@@ -2,15 +2,18 @@
 
 [View the ZIL file in the KVonGit/zil-stuff repo](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/koww.zil)
 
+---
 [Play the Alpha pre-release in Parchment (in your browser)](KOWW.z5.html)
 
-[Download the story file](https://github.com/KVonGit/zil-stuff/raw/refs/heads/main/projects/koww/KOWW.z5) [^1]
+---
+[Download the story file](https://github.com/KVonGit/zil-stuff/raw/refs/heads/main/projects/koww/KOWW.z5)
 
+---
 [View the Manual](KOWW%20Manual.html)
 
+---
 [ZIL Port Walkthrough](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/koww-z-walkthrough.txt)
 
-[^1]: If you download the Z5 file, check its version against the version in the ZIL file from the first link. The Z5 file upload updates slowly sometimes for some reason. v0.1.6-alpha is the current version as of this writing.
 
 ---
 [Original Quest 2 Source Code](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/quest_v2/KOWW1.ASL)
@@ -24,6 +27,4 @@
 
 ---
 ### More source code
-[Source Code in the "projects/koww" directory in the KVonGit/zil-stuff repo](https://github.com/KVonGit/zil-stuff/tree/main/projects/koww)
-
----
+[Source Code in the "projects/koww" directory in the KVonGit/zil-stuff repo](https://github.com/KVonGit/zil-stuff/tree/main/projects/koww)-
