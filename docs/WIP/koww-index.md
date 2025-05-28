@@ -5,6 +5,8 @@
 ---
 [Play the Alpha pre-release in Parchment (in your browser)](KOWW.z5.html)
 
+[alt](https://iplayif.com/?story=https://raw.githubusercontent.com/KVonGit/zil-stuff/refs/heads/main/projects/koww/KOWW.z5)
+
 ---
 [Download the story file](https://github.com/KVonGit/zil-stuff/raw/refs/heads/main/projects/koww/KOWW.z5)
 
