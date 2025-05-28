@@ -1258,10 +1258,14 @@ stupid cow." CR>)>>
 
 <ROUTINE FARMER-SMELL-R ()
   <COND
-    (<==? <LOC, ZEKE> ,HERE>
-      <TELL "He smells like magic milk." CR>)
-    (T
-      <TELL "He seems to be... in the silo." CR>)>>
+    (<VERB? EXAMINE>
+      <TELL "You can't see him from here." CR>)
+    (<VERB? SMELL>
+      <COND
+        (<==? <LOC, ZEKE> ,HERE>
+          <TELL "He smells like magic milk." CR>)
+        (T
+          <TELL "He seems to be... in the silo." CR>)>)>>
 
 ;"######## Action handler for the player. (MODIFIED) ######## "
 <ROUTINE PLAYER-F ()
