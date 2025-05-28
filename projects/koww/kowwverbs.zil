@@ -284,7 +284,20 @@ from the east." CR>)
   <PRINTN ,SCORE>
   <TELL " of a possible ">
   <PRINTN ,MAX-SCORE>
-  <TELL "." CR>>
+  <TELL ", granting you the rank: ">
+  <COND
+    (<==? ,SCORE 0>
+      <BOLDIZE "MOO-ZER">)
+    (<L? ,SCORE 42>
+      <BOLDIZE "BABY KALF">)
+    (<L? ,SCORE 69>
+      <BOLDIZE "MOO-STLY HARMLESS">)
+    (<L? ,SCORE 110>
+      <BOLDIZE "MAGICIAN">)
+    (T
+      <BOLDIZE "GRAND MOO-STER WIZARD">)>
+  <TELL ".">
+  <CRLF>>
   
 <SYNTAX QUIT = KOWW-QUIT-R>
 
@@ -322,3 +335,10 @@ are ready.) >" >
                   <TELL "You have no items." CR>)>)
           (ELSE
            <TELL "It's too dark to see any items you may have." CR>)>>
+
+<ROUTINE V-THINK-ABOUT ()
+    <COND (<PRSO? ,WINNER>
+           <TELL "You are Koww the Magician. You can do anything!" CR>)
+          (ELSE
+           <TELL 
+"You contemplate " T ,PRSO " for a bit, but nothing helpful comes to mind." CR>)>>

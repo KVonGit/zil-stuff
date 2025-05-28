@@ -3109,13 +3109,6 @@ START::
 	IGRTR? '?TMP,23 \?L1
 	PRINTR " / ZILF 0.9 lib J5"
 
-	.FUNCT V-THINK-ABOUT
-	EQUAL? PRSO,WINNER \?L1
-	PRINTR "Yes, yes, you're very important."
-?L1:	PRINTI "You contemplate "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR " for a bit, but nothing fruitful comes to mind."
-
 	.FUNCT V-OPEN
 	FSET? PRSO,PERSONBIT \?L1
 	ICALL1 YOU-MASHER
@@ -4054,7 +4047,21 @@ START::
 	PRINTN SCORE
 	PRINTI " of a possible "
 	PRINTN MAX-SCORE
-	PRINTR "."
+	PRINTI ", granting you the rank: "
+	ZERO? SCORE \?L1
+	ICALL2 BOLDIZE,STR?38
+	JUMP ?L6
+?L1:	LESS? SCORE,42 \?L3
+	ICALL2 BOLDIZE,STR?39
+	JUMP ?L6
+?L3:	LESS? SCORE,69 \?L4
+	ICALL2 BOLDIZE,STR?40
+	JUMP ?L6
+?L4:	LESS? SCORE,110 \?L5
+	ICALL2 BOLDIZE,STR?41
+	JUMP ?L6
+?L5:	ICALL2 BOLDIZE,STR?42
+?L6:	PRINTR "."
 
 	.FUNCT KOWW-QUIT-R
 	PRINTI "We are about to give you your score. (Press RETURN or ENTER when you are ready.) >"
@@ -4093,6 +4100,13 @@ START::
 	RTRUE
 ?L3:	PRINTR "You have no items."
 ?L1:	PRINTR "It's too dark to see any items you may have."
+
+	.FUNCT V-THINK-ABOUT
+	EQUAL? PRSO,WINNER \?L1
+	PRINTR "You are Koww the Magician. You can do anything!"
+?L1:	PRINTI "You contemplate "
+	ICALL2 PRINT-DEF,PRSO
+	PRINTR " for a bit, but nothing helpful comes to mind."
 
 	.FUNCT PARSER,NOBJ,VAL,DIR,DIR-WN,O-R,KEEP,OW,OH,OHL,RES,W,V
 ?L0:	SET 'OW,WINNER
@@ -4506,7 +4520,7 @@ START::
 	ICALL2 PRINT-DEF,PRSO
 	PRINTR "."
 ?L1:	EQUAL? PRSA,V?DROP \FALSE
-	CALL2 POINTLESS,STR?38 >STACK
+	CALL2 POINTLESS,STR?43 >STACK
 	RSTACK
 
 	.FUNCT MILK-R
@@ -4647,7 +4661,7 @@ START::
 	PRINTI "You spread the purple paint on yourself. Suddenly Farmer Zeke bursts into song!"
 	CRLF
 	PRINTI """"
-	ICALL2 ITALICIZE,STR?39
+	ICALL2 ITALICIZE,STR?44
 	PRINTI """"
 	CRLF
 	PRINTI "Wonderful!  You have just activated the scenario's secret feature!  That's it.  Return to your home. There's nothing more to do here."
@@ -4658,23 +4672,23 @@ START::
 	.FUNCT KOWWS-CHASM-R,RARG
 	EQUAL? RARG,M-LOOK \?L1
 	PRINTI "You are outside in a pasture of pure, pure green. Green as far as the eye can see. But you, Koww the Magician, are not satisfied. The grass may be even greener on the other side of the "
-	ICALL2 BOLDIZE,STR?40
+	ICALL2 BOLDIZE,STR?45
 	PRINTI "... you must know!  Also in the area is a very undramatic "
-	ICALL2 BOLDIZE,STR?41
+	ICALL2 BOLDIZE,STR?46
 	PRINTI "."
 	CRLF
 	CRLF
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?42
+	ICALL2 BOLDIZE,STR?47
 	PRINTR "."
 
 	.FUNCT CHASM-SIGN-R
 	EQUAL? PRSA,V?EXAMINE /?L3
 	EQUAL? PRSA,V?READ \?L1
 ?L3:	PRINTI "It reads: '"
-	ICALL2 ITALICIZE,STR?43
+	ICALL2 ITALICIZE,STR?48
 	PRINTR "'"
 ?L1:	EQUAL? PRSA,V?TAKE \FALSE
 	PRINTI "You yank the sign out of the ground and try to fit it in your Koww-pack. But it just doesn't fit. Frustrated, you put it back."
@@ -4693,31 +4707,31 @@ START::
 	.FUNCT ZEKES-FARM-R,RARG
 	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You stand outside of a small "
-	ICALL2 BOLDIZE,STR?44
+	ICALL2 BOLDIZE,STR?49
 	PRINTI " with a "
-	ICALL2 BOLDIZE,STR?45
+	ICALL2 BOLDIZE,STR?50
 	PRINTI " beside it. There is a "
-	ICALL2 BOLDIZE,STR?46
+	ICALL2 BOLDIZE,STR?51
 	PRINTI " and a "
-	ICALL2 BOLDIZE,STR?47
+	ICALL2 BOLDIZE,STR?52
 	PRINTI " here."
 	CRLF
 	CRLF
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?48
+	ICALL2 BOLDIZE,STR?53
 	PRINTI ", "
-	ICALL2 BOLDIZE,STR?49
+	ICALL2 BOLDIZE,STR?54
 	PRINTI ", "
-	ICALL2 BOLDIZE,STR?42
+	ICALL2 BOLDIZE,STR?47
 	PRINTI ", or "
-	ICALL2 BOLDIZE,STR?50
+	ICALL2 BOLDIZE,STR?55
 	PRINTI "."
 	CRLF
 	CRLF
 	PRINTI "You can go to "
-	ICALL2 BOLDIZE,STR?51
+	ICALL2 BOLDIZE,STR?56
 	PRINTI ", or "
-	ICALL2 BOLDIZE,STR?52
+	ICALL2 BOLDIZE,STR?57
 	PRINTR "."
 
 	.FUNCT ZEKES-FARMHOUSE-ENTRANCE-R
@@ -4787,14 +4801,14 @@ START::
 	PRINTI "You're inside Farmer Zeke's rather cramped home. No one's here at the moment. Perhaps you should go away.
 
 There is a "
-	ICALL2 BOLDIZE,STR?53
+	ICALL2 BOLDIZE,STR?58
 	PRINTI " here.
 
 "
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?54
+	ICALL2 BOLDIZE,STR?59
 	PRINTR "."
 
 	.FUNCT TABLE-R
@@ -4803,7 +4817,7 @@ There is a "
 	SET 'EXAMINED-TABLE,1
 	PRINTI "Hmmm, what's a table doing here?  Cool!  "
 ?L3:	PRINTI "It has a "
-	ICALL2 BOLDIZE,STR?55
+	ICALL2 BOLDIZE,STR?60
 	PRINTI " on it!"
 	CRLF
 	ICALL2 THIS-IS-IT,TREASURE-CHEST
@@ -4837,12 +4851,12 @@ There is a "
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "Standing in the silo, grinning like the idiot that he is, is Farmer "
-	ICALL2 BOLDIZE,STR?56
+	ICALL2 BOLDIZE,STR?61
 	PRINTI "."
 	CRLF
 	CRLF
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?54
+	ICALL2 BOLDIZE,STR?59
 	PRINTR "."
 
 	.FUNCT ZEKE-R
@@ -4875,9 +4889,9 @@ There is a "
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?50
+	ICALL2 BOLDIZE,STR?55
 	PRINTI " or "
-	ICALL2 BOLDIZE,STR?49
+	ICALL2 BOLDIZE,STR?54
 	PRINTR "."
 
 	.FUNCT ROAD-R
@@ -4894,7 +4908,7 @@ There is a "
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?50
+	ICALL2 BOLDIZE,STR?55
 	PRINTR "."
 
 	.FUNCT CLIFF-R
@@ -4931,14 +4945,14 @@ There is a "
 	.FUNCT INSIDE-GOBLIN-LAIR-R,RARG
 	EQUAL? RARG,M-LOOK \?L1
 	PRINTI "You are escorted to the Goblin King's throne room, a large chamber ornamented with "
-	ICALL2 BOLDIZE,STR?57
+	ICALL2 BOLDIZE,STR?62
 	PRINTI " of nude female goblins. You try hard to avoid puking."
 	CRLF
 	CRLF
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?54
+	ICALL2 BOLDIZE,STR?59
 	PRINTR "."
 
 	.FUNCT STATUES-R
@@ -4979,15 +4993,15 @@ There is a "
 	.FUNCT LAND-OF-NECROYAKS-R,RARG
 	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?50
+	ICALL2 BOLDIZE,STR?55
 	PRINTI " or "
-	ICALL2 BOLDIZE,STR?49
+	ICALL2 BOLDIZE,STR?54
 	PRINTR "."
 
 	.FUNCT NECROYAKS-SIGN-R
 	EQUAL? PRSA,V?EXAMINE,V?READ \?L1
 	PRINTI "It reads: "
-	ICALL2 ITALICIZE,STR?58
+	ICALL2 ITALICIZE,STR?63
 	CRLF
 	RTRUE
 ?L1:	EQUAL? PRSA,V?TAKE \FALSE
@@ -4996,14 +5010,14 @@ There is a "
 	.FUNCT AMBUSH-POINT-R,RARG
 	EQUAL? RARG,M-LOOK \?L1
 	PRINTI "A cliff face blocks your way here. It's steep -- you can't climb. If you want to continue, you'll have to "
-	ICALL2 BOLDIZE,STR?59
+	ICALL2 BOLDIZE,STR?64
 	PRINTI " the face."
 	CRLF
 	CRLF
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?49
+	ICALL2 BOLDIZE,STR?54
 	PRINTR "."
 
 	.FUNCT YAKS-KILL-R
@@ -5042,9 +5056,9 @@ There is a "
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?48
+	ICALL2 BOLDIZE,STR?53
 	PRINTI " or "
-	ICALL2 BOLDIZE,STR?42
+	ICALL2 BOLDIZE,STR?47
 	PRINTR "."
 
 	.FUNCT MOUNTAINS-R
@@ -5071,12 +5085,12 @@ There is a "
 	.FUNCT PHOENIX-PEAK-R,RARG
 	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "After hard hours of climbing, you finally reach the summit of Phoenix Peak.  Here, in all its glory, sits the "
-	ICALL2 BOLDIZE,STR?60
+	ICALL2 BOLDIZE,STR?65
 	PRINTI "."
 	CRLF
 	CRLF
 	PRINTI "You can go "
-	ICALL2 BOLDIZE,STR?48
+	ICALL2 BOLDIZE,STR?53
 	PRINTR "."
 
 	.FUNCT PHOENIX-R
@@ -5088,14 +5102,14 @@ There is a "
 	ZERO? STACK /?L4
 	PRINTR "does not reply."
 ?L4:	PRINTI "demands to know "
-	ICALL2 ITALICIZE,STR?61
+	ICALL2 ITALICIZE,STR?66
 	PRINTI " such a weakling as you has come here!  ""If you do not have my wing feather with you, I'm afraid I must ask you to leave "
-	ICALL2 ITALICIZE,STR?62
+	ICALL2 ITALICIZE,STR?67
 	PRINTI "  Now, do you have my wing feather or not?"" -- "
 	CRLF
-	ICALL2 BOLDIZE,STR?63
+	ICALL2 BOLDIZE,STR?68
 	PRINTI " or "
-	ICALL2 BOLDIZE,STR?64
+	ICALL2 BOLDIZE,STR?69
 	PRINTI "? "
 	CALL1 YES? >STACK
 	ZERO? STACK /?L7
@@ -5111,7 +5125,7 @@ There is a "
 
 	.FUNCT PHOENIX-PROC-R
 	PRINTI """Thank you; you have found my wing feather. In the wrong hands, that could have been very dangerous. I will give you this 'fly' scroll to compensate you for your hard work. "
-	ICALL2 BOLDIZE,STR?65
+	ICALL2 BOLDIZE,STR?70
 	PRINTI " the scroll to fly, but it will only work once."""
 	CRLF
 	MOVE FLY-SCROLL,PLAYER

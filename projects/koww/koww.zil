@@ -6,9 +6,10 @@
 <CONSTANT GAME-BANNER
 "The Adventures of Koww the Magician|
 (ZIL Port of the Quest 2 Classic)|
-An Interactive Fantasy by Brian the Great|
+Quest Interactive Fiction - A Fantasy Story|
+by Brian the Great|
 Copyright (c) 1999 Brian the Great. All rights reserved.|
-v0.1.6 alpha">
+v0.1.7 alpha">
 
 <ROUTINE GO ()
   <CRLF>

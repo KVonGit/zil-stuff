@@ -4,7 +4,7 @@
 
 [Play the Alpha pre-release in Parchment (in your browser)](KOWW.z5.html)
 
-[Download the story file](KOWW.z5) [^1]
+[Download the story file](https://github.com/KVonGit/zil-stuff/raw/refs/heads/main/projects/koww/KOWW.z5) [^1]
 
 [View the Manual](KOWW%20Manual.html)
 
