@@ -140,7 +140,7 @@
                       ;"Word not in vocabulary"
                       <STORE-OOPS .I>
                       <SETG P-CONT 0>
-                      <TELL "What the hell is a " WORD .I "?" CR>
+                      <TELL "I don't know the word '" WORD .I "'." CR>
                       <RFALSE>)
                      (<=? .W ,W?THEN ,W?\.>
                       ;"End of command, maybe start of a new one"

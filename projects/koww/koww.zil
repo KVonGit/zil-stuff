@@ -180,9 +180,12 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 
 <ROUTINE NOTHING-ITEM-R ()
   <COND
-    (<VERB? EXAMINE DROP>
-      <QUEST-TWO-R>
-    )
+    (<VERB? SMELL>
+      <TELL "You smell nothing." CR>)
+    (<VERB? EXAMINE>
+      <TELL "It doesn't look like much of anything!" CR>)
+    (<VERB? DROP>
+      <TELL "Are you serious?" CR>)
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-GUARD>
@@ -1274,14 +1277,13 @@ stupid cow." CR>)>>
               (<VERB? DROP>
                 <COND
                   (<PRSO? ,KOWW-PACK>
-                    <KOWW-PACK-R>)>
-                    <RTRUE>)
+                    <KOWW-PACK-R>
+                    <RTRUE>)>)
               (T
                 <RFALSE>)>)
           (<VERB? EXAMINE>
-           
-           <COND
-            (<==? ,PAINTED ,T>
-              <PRINTR "You are covered in purple paint.">)
-            (T
-              <PRINTR "You look like you're up for an adventure.">)>)>>
+            <COND
+             (<==? ,PAINTED ,T>
+               <PRINTR "You are covered in purple paint.">)
+             (T
+               <PRINTR "You look like you're up for an adventure.">)>)>>

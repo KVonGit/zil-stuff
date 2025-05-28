@@ -296,3 +296,29 @@ are ready.) >" >
     (<READLINE>
     <V-SCORE>
     <V-QUIT>)>>
+
+<SYNTAX MOO = V-MOO>
+
+<ROUTINE V-MOO ()
+  <TELL "You moo." CR>>
+
+
+<ROUTINE V-INVENTORY ()
+    ;"check for light first"
+    <COND (,HERE-LIT
+           <COND (<FIRST? ,WINNER>
+                  <TELL "Items:" CR>
+                  <MAP-CONTENTS (I ,WINNER)
+                      <TELL "  - " A .I>
+                      <AND <FSET? .I ,WORNBIT> <TELL " (worn)">>
+                      <AND <FSET? .I ,LIGHTBIT> <TELL " (providing light)">>
+                      <COND (<FSET? .I ,CONTBIT>
+                             <COND (<FSET? .I ,OPENABLEBIT>
+                                    <COND (<FSET? .I ,OPENBIT> <TELL " (open)">)
+                                          (ELSE <TELL " (closed)">)>)>
+                             <COND (<SEE-INSIDE? .I> <INV-DESCRIBE-CONTENTS .I>)>)>
+                      <CRLF>>)
+                 (ELSE
+                  <TELL "You have no items." CR>)>)
+          (ELSE
+           <TELL "It's too dark to see any items you may have." CR>)>>
