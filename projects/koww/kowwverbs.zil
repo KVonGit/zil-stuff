@@ -342,3 +342,8 @@ are ready.) >" >
           (ELSE
            <TELL 
 "You contemplate " T ,PRSO " for a bit, but nothing helpful comes to mind." CR>)>>
+
+<SYNTAX DON\'T OBJECT (FIND KLUDGEBIT) = V-DONT>
+
+<ROUTINE V-DONT ()
+  <TELL "You don't " D ,PRSO ".">>

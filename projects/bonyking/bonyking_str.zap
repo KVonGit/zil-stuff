@@ -1,4 +1,4 @@
-	; Strings to accompany .\projects\bonyking\bonyking.zap
+	; Strings to accompany .\bonyking.zap
 
 	.GSTR STR?6," are"
 	.GSTR STR?26," doesn't"

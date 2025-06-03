@@ -26,6 +26,8 @@
 
 <INSERT-FILE "parser">
 
+<SET REDEFINE T>
+
 ;----------------------------------------------------------------------
 ;"#################### COMMANDS ####################"
 ;----------------------------------------------------------------------
@@ -428,6 +430,115 @@
   >
 >
 
+<SYNTAX RIDE OBJECT = V-RIDE>
+
+<ROUTINE V-RIDE ()
+  <TELL "You can't ride that." CR>>
+
+<OBJECT HORSE
+  (DESC "horse")
+  (IN HOVEL)
+  (FLAGS VEHBIT CONTBIT SURFACEBIT SEARCHBIT OPENBIT)
+  (SYNONYM HORSE)
+  (ACTION HORSE-R)>
+
+<GLOBAL HORSEBACK <>>
+
+<ROUTINE HORSE-R ()
+  <COND 
+  (<VERB? EXAMINE>
+        <TELL "A perfectly ordinary horse." CR>)
+  (<VERB? RIDE>
+    <SETG ,HORSEBACK ,T>
+    <FSET ,HORSE ,NDESCBIT>
+    <TELL "You mount the horse." CR>
+    <RTRUE>)>>
+
+<ROUTINE DESCRIBE-ROOM (RM "OPT" LONG "AUX" P)
+    <COND (<AND <==? .RM ,HERE> <NOT ,HERE-LIT>>
+           <DARKNESS-F ,M-LOOK>
+           <RFALSE>)>
+    ;"Print the room's real name."
+    <VERSION? (ZIP) (ELSE <HLIGHT ,H-BOLD>)>
+    <TELL D .RM>
+    <COND
+      (<==? ,HORSEBACK ,T>
+        <TELL " (on the horse)">)>
+    <CRLF>
+    <VERSION? (ZIP) (ELSE <HLIGHT ,H-NORMAL>)>
+    ;"If this is an implicit LOOK, check briefness."
+    <COND (<NOT .LONG>
+           <COND (<EQUAL? ,MODE ,SUPERBRIEF>
+                  <RFALSE>)
+                 (<AND <FSET? .RM ,TOUCHBIT>
+                       <NOT <EQUAL? ,MODE ,VERBOSE>>>
+                  ;"Call the room's ACTION with M-FLASH even in brief mode."
+                  <APPLY <GETP .RM ,P?ACTION> ,M-FLASH>
+                  <RTRUE>)>)>
+    ;"The room's ACTION can print a description with M-LOOK.
+      Otherwise, print the LDESC if present."
+    <COND (<APPLY <GETP .RM ,P?ACTION> ,M-LOOK>)
+          (<SET P <GETP .RM ,P?LDESC>>
+           <TELL .P CR>)>
+    ;"Call the room's ACTION again with M-FLASH for important descriptions."
+    <APPLY <GETP .RM ,P?ACTION> ,M-FLASH>
+    ;"Mark the room visited."
+    <FSET .RM ,TOUCHBIT>
+    <RTRUE>>
+
+
+<ROUTINE V-WALK ("AUX" PT PTS RM D)
+    <COND (<NOT ,PRSO-DIR>
+           <PRINTR "You must give a direction to walk in.">)
+          (<0? <SET PT <GETPT ,HERE ,PRSO>>>
+           <COND (<OR ,HERE-LIT <NOT <DARKNESS-F ,M-DARK-CANT-GO>>>
+                  <TELL ,CANT-GO-THAT-WAY CR>)>
+           <SETG P-CONT 0>
+           <RTRUE>)
+          (<==? <SET PTS <PTSIZE .PT>> ,UEXIT>
+           <SET RM <GET/B .PT ,EXIT-RM>>)
+          (<==? .PTS ,NEXIT>
+           <TELL <GET .PT ,NEXIT-MSG> CR>
+           <SETG P-CONT 0>
+           <RTRUE>)
+          (<==? .PTS ,FEXIT>
+           <COND (<0? <SET RM <APPLY <GET .PT ,FEXIT-RTN>>>>
+                  <SETG P-CONT 0>
+                  <RTRUE>)>)
+          (<==? .PTS ,CEXIT>
+           <COND (<VALUE <GETB .PT ,CEXIT-VAR>>
+                  <SET RM <GET/B .PT ,EXIT-RM>>)
+                 (ELSE
+                  <COND (<SET RM <GET .PT ,CEXIT-MSG>>
+                         <TELL .RM CR>)
+                        (<AND <NOT ,HERE-LIT> <DARKNESS-F ,M-DARK-CANT-GO>>
+                         ;"DARKNESS-F printed a message")
+                        (ELSE
+                         <TELL ,CANT-GO-THAT-WAY CR>)>
+                  <SETG P-CONT 0>
+                  <RTRUE>)>)
+          (<==? .PTS ,DEXIT>
+           <COND (<FSET? <SET D <GET/B .PT ,DEXIT-OBJ>> ,OPENBIT>
+                  <SET RM <GET/B .PT ,EXIT-RM>>)
+                 (<SET RM <GET .PT ,DEXIT-MSG>>
+                  <TELL .RM CR>
+                  <SETG P-CONT 0>
+                  <RTRUE>)
+                 (ELSE
+                  <THIS-IS-IT .D>
+                  <TELL "You'll have to open " T .D
+                        " first." CR>
+                  <SETG P-CONT 0>
+                  <RTRUE>)>)
+          (ELSE
+           <TELL "Broken exit (" N .PTS ")." CR>
+           <SETG P-CONT 0>
+           <RTRUE>)>
+    <COND
+      (<==? ,HORSEBACK ,T>
+        <MOVE ,HORSE .RM>)>
+    <GOTO .RM>>
+
 ;----------------------------------------------------------------------
 ;"###################### NORTHERN MEADOW ######################"
 ;----------------------------------------------------------------------
@@ -442,6 +553,12 @@
 
 <ROUTINE NMEADOW-R (RARG)
   <COND
+    (<==? .RARG ,M-BEG>
+     <COND
+       (<AND <VERB? WALK>
+       <==? ,HORSEBACK ,T>>
+        <TELL "You can't enter the hovel on the horse." CR>
+        <RTRUE>)>)
     (<==? .RARG ,M-ENTER>
      <MOVE ,DYLAN ,HERE>
     )
@@ -510,3 +627,7 @@
   <TELL .TEXT>
   <HLIGHT 0>
 >
+
+;"CRAP"
+<ROUTINE V-ENJOY ()
+	 <TELL "Not difficult at all, considering how enjoyable" T, PRSO " is." CR>>
