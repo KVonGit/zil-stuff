@@ -359,14 +359,21 @@
 
 
 <ROUTINE V-EXIT ()
-     <COND (<FSET? ,PRSO ,VEHBIT>
-        <MOVE ,PLAYER ,HERE>
-        <FCLEAR ,PRSO ,NDESCBIT>
-        <TELL "Done." CR>
-        <RTRUE>)
-           (T
+     <COND
+       (<OR <AND <NOT ,PRSO> <IN? ,PLAYER ,VEHICLE>> <FSET? ,PRSO ,VEHBIT>>
+         <MOVE ,PLAYER ,HERE>
+          <FCLEAR ,PRSO ,NDESCBIT>
+          <TELL "Done." CR CR>
+          <V-LOOK>
+          <RTRUE>)
+      (T
         <DO-WALK ,P?OUT>)>>
 
+
+
+;-------------------------------------------------------------------------------
+;"NOTE: The horse won't be in the hovel. It's just here now for testing."
+;-------------------------------------------------------------------------------
 <OBJECT HORSE
   (DESC "horse")
   (IN HOVEL)
