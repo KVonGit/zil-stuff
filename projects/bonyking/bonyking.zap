@@ -4467,9 +4467,24 @@ START::
 ?L1:	CALL2 DO-WALK,P?OUT >STACK
 	RSTACK
 
-	.FUNCT HORSE-R,RARG
-	EQUAL? PRSA,V?EXAMINE \FALSE
+	.FUNCT HORSE-R
+	EQUAL? PRSA,V?TAKE,V?OPEN,V?CLOSE /?L3
+	EQUAL? PRSA,V?LOCK,V?UNLOCK,V?PUSH /?L3
+	EQUAL? PRSA,V?PULL,V?SEARCH \?L1
+?L3:	EQUAL? PRSO,HORSE \?L4
+	CALL1 SILLY >STACK
+	RSTACK
+?L4:	IN? PLAYER,HORSE \FALSE
+	IN? PRSO,HORSE /FALSE
+	PRINTI "You can't reach "
+	ICALL2 PRINT-DEF,PRSO
+	PRINTR " from the horse."
+?L1:	EQUAL? PRSA,V?EXAMINE \?L8
 	PRINTR "A perfectly ordinary horse."
+?L8:	EQUAL? PRSA,V?PET \FALSE
+	PRINTI "You pet the horse, and he seems just a "
+	ICALL2 ITALICIZE,STR?36
+	PRINTR " bit happier with you now."
 
 	.FUNCT NMEADOW-R,RARG
 	EQUAL? RARG,M-ENTER \?L1
@@ -4504,7 +4519,7 @@ START::
 ?L3:	EQUAL? PRSA,V?EXAMINE \?L4
 	PRINTI "The letter is addressed to the Bony King of Nowhere, at his palace in the capital Lost, many miles to the south. On the reverse is written:
 """
-	ICALL2 ITALICIZE,STR?36
+	ICALL2 ITALICIZE,STR?37
 	PRINTR """
 
 Well that's just perfect you think, you've always hated a) the capital, b) the monarchy, and c) the south in general."

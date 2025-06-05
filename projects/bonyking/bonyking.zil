@@ -5,8 +5,8 @@
 
 <CONSTANT GAME-BANNER
   "The Bony King of Nowhere (ZIL Port)|
-  An Interactive Adventure by Luke A. Jones|
-  Copyright (c) 2017 Luke A. Jones. All rights reserved.">
+An Interactive Adventure by Luke A. Jones|
+Copyright (c) 2017 Luke A. Jones. All rights reserved.">
 
 <ROUTINE GO ()
   <CRLF> <CRLF>
@@ -384,10 +384,19 @@
 <GLOBAL VEHICLE <>>
 
 
-<ROUTINE HORSE-R (RARG)
+<ROUTINE HORSE-R ()
   <COND 
-  (<VERB? EXAMINE>
-        <TELL "A perfectly ordinary horse." CR>)>>
+    (<VERB? TAKE OPEN CLOSE LOCK UNLOCK PUSH PULL SEARCH>
+      <COND
+        (<PRSO? ,HORSE><SILLY>)
+        (<AND <IN? ,PLAYER ,HORSE> <NOT <IN? ,PRSO ,HORSE>>>
+          <TELL "You can't reach " T ,PRSO " from the horse." CR>)>)
+    (<VERB? EXAMINE>
+        <TELL "A perfectly ordinary horse." CR>)
+    (<VERB? PET>
+      <TELL "You pet the horse, and he seems just a ">
+      <ITALICIZE "little">
+      <TELL " bit happier with you now." CR>)>>
 
 ;----------------------------------------------------------------------
 ;"###################### NORTHERN MEADOW ######################"
