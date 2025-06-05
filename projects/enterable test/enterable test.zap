@@ -30,30 +30,17 @@
 	.WORD 0
 	.WORD 0
 	.WORD 0
-	.INSERT ".\bonyking_freq"
-	.INSERT ".\bonyking_data"
+	.INSERT ".\enterable test_freq"
+	.INSERT ".\enterable test_data"
 
 	.FUNCT GO
 START::
 	CRLF
 	CRLF
-	PRINTI "You are a citizen of the land of Nowhere, and you are given an urgent letter to deliver to the King. Navigate your way through the strange and twisted landscape to the capital city of Lost and gain access to the King's castle."
-	CRLF
-	CRLF
-	PRINTI "This is a casual text adventure game in the classic parser style."
-	CRLF
-	CRLF
-	PRINTI "Note: This game was an entry in The 2017 Spring Thing Festival of Interactive Fiction (springthing.net)"
-	CRLF
-	CRLF
-	ICALL2 ITALICIZE,STR?3
-	CRLF
-	CRLF
 	ICALL1 V-VERSION
 	CRLF
-	SET 'HERE,HOVEL
+	SET 'HERE,TEST-ROOM
 	MOVE PLAYER,HERE
-	ICALL QUEUE,I-DYLAN,-1
 	ICALL1 V-LOOK
 	ICALL1 MAIN-LOOP
 	QUIT
@@ -2613,6 +2600,34 @@ START::
 	CALL2 DESCRIBE-OBJECTS,HERE >STACK
 	RSTACK
 
+	.FUNCT DESCRIBE-ROOM,RM,LONG,P
+	EQUAL? RM,HERE \?L1
+	ZERO? HERE-LIT \?L1
+	ICALL2 DARKNESS-F,M-LOOK
+	RFALSE
+?L1:	HLIGHT H-BOLD
+	PRINTD RM
+	CRLF
+	HLIGHT H-NORMAL
+	ZERO? LONG \?L8
+	EQUAL? MODE,SUPERBRIEF /FALSE
+	FSET? RM,TOUCHBIT \?L8
+	EQUAL? MODE,VERBOSE /?L8
+	GETP RM,P?ACTION >STACK
+	ICALL2 STACK,M-FLASH
+	RTRUE
+?L8:	GETP RM,P?ACTION >STACK
+	CALL2 STACK,M-LOOK >STACK
+	ZERO? STACK \?L13
+	GETP RM,P?LDESC >P
+	ZERO? P /?L13
+	PRINT P
+	CRLF
+?L13:	GETP RM,P?ACTION >STACK
+	ICALL2 STACK,M-FLASH
+	FSET RM,TOUCHBIT
+	RTRUE
+
 	.FUNCT DARKNESS-F,ARG
 	EQUAL? ARG,M-LOOK \?L1
 	PRINTR "It is pitch black. You can't see a thing."
@@ -3014,12 +3029,85 @@ START::
 ?L14:	ICALL2 PRINT-INDEF,O
 	RTRUE
 
+	.FUNCT V-WALK,PT,PTS,RM,D
+	ZERO? PRSO-DIR \?L1
+	PRINTR "You must give a direction to walk in."
+?L1:	GETPT HERE,PRSO >PT
+	ZERO? PT \?L3
+	ZERO? HERE-LIT \?L6
+	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
+	ZERO? STACK \?L4
+?L6:	PRINT CANT-GO-THAT-WAY
+	CRLF
+?L4:	SET 'P-CONT,0
+	RTRUE
+?L3:	PTSIZE PT >PTS
+	EQUAL? PTS,UEXIT \?L8
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L8:	EQUAL? PTS,NEXIT \?L9
+	GET PT,NEXIT-MSG >STACK
+	PRINT STACK
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L9:	EQUAL? PTS,FEXIT \?L10
+	GET PT,FEXIT-RTN >STACK
+	CALL1 STACK >RM
+	ZERO? RM \?L27
+	SET 'P-CONT,0
+	RTRUE
+?L10:	EQUAL? PTS,CEXIT \?L14
+	GETB PT,CEXIT-VAR >STACK
+	VALUE STACK >STACK
+	ZERO? STACK /?L15
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L15:	GET PT,CEXIT-MSG >RM
+	ZERO? RM /?L18
+	PRINT RM
+	CRLF
+	JUMP ?L21
+?L18:	ZERO? HERE-LIT \?L20
+	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
+	ZERO? STACK \?L21
+?L20:	PRINT CANT-GO-THAT-WAY
+	CRLF
+?L21:	SET 'P-CONT,0
+	RTRUE
+?L14:	EQUAL? PTS,DEXIT \?L22
+	GET PT,DEXIT-OBJ >D
+	FSET? D,OPENBIT \?L23
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L23:	GET PT,DEXIT-MSG >RM
+	ZERO? RM /?L25
+	PRINT RM
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L25:	ICALL2 THIS-IS-IT,D
+	PRINTI "You'll have to open "
+	ICALL2 PRINT-DEF,D
+	PRINTI " first."
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L22:	PRINTI "Broken exit ("
+	PRINTN PTS
+	PRINTI ")."
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L27:	CALL2 GOTO,RM >STACK
+	RSTACK
+
 	.FUNCT V-ENTER
 	FSET? PRSO,DOORBIT \?L1
 	CALL2 DOOR-DIR,PRSO >STACK
 	ICALL2 DO-WALK,STACK
 	RTRUE
-?L1:	ICALL2 NOT-POSSIBLE,STR?4
+?L1:	ICALL2 NOT-POSSIBLE,STR?3
 	RTRUE
 
 	.FUNCT DO-WALK,DIR,ORIG?PRSO-DIR,?RESULT
@@ -3103,24 +3191,24 @@ START::
 	CALL1 YOU-MASHER >STACK
 	RSTACK
 ?L3:	FSET? PRSO,CONTBIT /?L4
-	CALL2 NOT-POSSIBLE,STR?5 >STACK
+	CALL2 NOT-POSSIBLE,STR?4 >STACK
 	RSTACK
 ?L4:	FSET? PRSO,OPENABLEBIT \?L5
 	CALL2 SEE-INSIDE?,PRSO >STACK
 	ZERO? STACK \?L5
 	ICALL2 PRINT-CDEF,PRSO
 	FSET? PRSO,PLURALBIT \?L6
-	PUSH STR?6
+	PUSH STR?5
 	JUMP ?L8
-?L6:	PUSH STR?7
+?L6:	PUSH STR?6
 ?L8:	PRINT STACK
 	PRINTR " closed."
 ?L5:	FIRST? PRSO >STACK /?L9
 	ICALL2 PRINT-CDEF,PRSO
 	FSET? PRSO,PLURALBIT \?L10
-	PUSH STR?6
+	PUSH STR?5
 	JUMP ?L12
-?L10:	PUSH STR?7
+?L10:	PUSH STR?6
 ?L12:	PRINT STACK
 	PRINTR " empty."
 ?L9:	CALL2 DESCRIBE-CONTENTS,PRSO >STACK
@@ -3179,7 +3267,7 @@ START::
 	RFALSE
 ?L9:	FSET? OBJ,TAKEBIT /?L12
 	ZERO? SILENT \FALSE
-	ICALL2 NOT-POSSIBLE,STR?8
+	ICALL2 NOT-POSSIBLE,STR?7
 	RFALSE
 ?L12:	IN? OBJ,WINNER \?L15
 	ZERO? SILENT \FALSE
@@ -3361,7 +3449,7 @@ START::
 	RTRUE
 ?L1:	FSET? PRSI,CONTBIT \?L4
 	FSET? PRSI,SURFACEBIT /?L3
-?L4:	ICALL2 NOT-POSSIBLE,STR?9
+?L4:	ICALL2 NOT-POSSIBLE,STR?8
 	RTRUE
 ?L3:	IN? PRSO,WINNER /?L5
 	PRINTR "You don't have that."
@@ -3415,7 +3503,7 @@ START::
 	RTRUE
 ?L1:	FSET? PRSI,CONTBIT \?L4
 	FSET? PRSI,SURFACEBIT \?L3
-?L4:	ICALL2 NOT-POSSIBLE,STR?10
+?L4:	ICALL2 NOT-POSSIBLE,STR?9
 	RTRUE
 ?L3:	FSET? PRSI,OPENBIT /?L6
 	FSET? PRSI,OPENABLEBIT \?L5
@@ -3485,7 +3573,7 @@ START::
 	FSET? PRSO,WEARBIT \?L1
 	ICALL PERFORM,V?TAKE,PRSO
 	RTRUE
-?L1:	ICALL2 NOT-POSSIBLE,STR?11
+?L1:	ICALL2 NOT-POSSIBLE,STR?10
 	RTRUE
 
 	.FUNCT V-UNWEAR
@@ -3537,7 +3625,7 @@ START::
 	ICALL1 YOU-MASHER
 	RTRUE
 ?L1:	FSET? PRSO,OPENABLEBIT /?L3
-	ICALL2 NOT-POSSIBLE,STR?12
+	ICALL2 NOT-POSSIBLE,STR?11
 	RTRUE
 ?L3:	FSET? PRSO,OPENBIT \?L4
 	PRINTR "It's already open."
@@ -3565,7 +3653,7 @@ START::
 	ICALL1 YOU-MASHER
 	RTRUE
 ?L1:	FSET? PRSO,OPENABLEBIT /?L3
-	ICALL2 NOT-POSSIBLE,STR?13
+	ICALL2 NOT-POSSIBLE,STR?12
 	RTRUE
 ?L3:	FSET? PRSO,OPENBIT /?L4
 	PRINTR "It's already closed."
@@ -3583,11 +3671,11 @@ START::
 	RSTACK
 
 	.FUNCT V-LOCK
-	ICALL2 NOT-POSSIBLE,STR?14
+	ICALL2 NOT-POSSIBLE,STR?13
 	RTRUE
 
 	.FUNCT V-UNLOCK
-	ICALL2 NOT-POSSIBLE,STR?15
+	ICALL2 NOT-POSSIBLE,STR?14
 	RTRUE
 
 	.FUNCT V-WAIT,T,INTERRUPT,ENDACT
@@ -3641,7 +3729,7 @@ START::
 
 	.FUNCT V-READ,T
 	FSET? PRSO,READBIT /?L1
-	ICALL2 NOT-POSSIBLE,STR?16
+	ICALL2 NOT-POSSIBLE,STR?15
 	RTRUE
 ?L1:	GETP PRSO,P?TEXT >T
 	ZERO? T /?L3
@@ -3663,7 +3751,7 @@ START::
 	ICALL1 TSD
 	RTRUE
 ?L1:	FSET? PRSO,DEVICEBIT /?L3
-	ICALL2 NOT-POSSIBLE,STR?17
+	ICALL2 NOT-POSSIBLE,STR?16
 	RTRUE
 ?L3:	FSET? PRSO,ONBIT \?L4
 	PRINTR "It's already on."
@@ -3676,12 +3764,12 @@ START::
 
 	.FUNCT V-TURN-OFF
 	EQUAL? PRSO,WINNER \?L1
-	CALL2 PICK-ONE-R,T?119 >STACK
+	CALL2 PICK-ONE-R,T?110 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
 ?L1:	FSET? PRSO,DEVICEBIT /?L3
-	ICALL2 NOT-POSSIBLE,STR?17
+	ICALL2 NOT-POSSIBLE,STR?16
 	RTRUE
 ?L3:	FSET? PRSO,ONBIT /?L4
 	PRINTR "It's already off."
@@ -3695,9 +3783,9 @@ START::
 	.FUNCT V-FLIP
 	FSET? PRSO,DEVICEBIT /?L1
 	FSET? PRSO,SURFACEBIT \?L3
-	ICALL2 POINTLESS,STR?18
+	ICALL2 POINTLESS,STR?17
 	RTRUE
-?L3:	ICALL2 NOT-POSSIBLE,STR?17
+?L3:	ICALL2 NOT-POSSIBLE,STR?16
 	RTRUE
 ?L1:	FSET? PRSO,ONBIT \?L6
 	ICALL PERFORM,V?TURN-OFF,PRSO
@@ -3711,7 +3799,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	ICALL1 YOU-MASHER
 	RTRUE
-?L3:	ICALL2 POINTLESS,STR?19
+?L3:	ICALL2 POINTLESS,STR?18
 	RTRUE
 
 	.FUNCT V-PULL
@@ -3720,7 +3808,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	ICALL1 YOU-MASHER
 	RTRUE
-?L3:	ICALL2 POINTLESS,STR?20
+?L3:	ICALL2 POINTLESS,STR?19
 	RTRUE
 
 	.FUNCT V-YES
@@ -3733,7 +3821,7 @@ START::
 
 	.FUNCT V-DRINK
 	PRINTI "You aren't "
-	ICALL2 ITALICIZE,STR?21
+	ICALL2 ITALICIZE,STR?20
 	PRINTR " thirsty."
 
 	.FUNCT V-FILL
@@ -3753,22 +3841,22 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	ICALL1 YOU-MASHER
 	RTRUE
-?L3:	ICALL2 POINTLESS,STR?18
+?L3:	ICALL2 POINTLESS,STR?17
 	RTRUE
 
 	.FUNCT V-THROW-AT
 	EQUAL? PRSO,WINNER \?L1
 	PRINTI "Get "
 	FSET? PRSO,PLURALBIT \?L3
-	PUSH STR?22
+	PUSH STR?21
 	JUMP ?L5
-?L3:	PUSH STR?23
+?L3:	PUSH STR?22
 ?L5:	PRINT STACK
 	PRINTR " yourself."
 ?L1:	FSET? PRSI,PERSONBIT \?L6
 	ICALL2 YOU-MASHER,PRSI
 	RTRUE
-?L6:	ICALL POINTLESS,STR?18,0,1
+?L6:	ICALL POINTLESS,STR?17,0,1
 	RTRUE
 
 	.FUNCT V-GIVE
@@ -3778,9 +3866,9 @@ START::
 	PRINTR "You already have that."
 ?L3:	PRINTI "Get "
 	FSET? PRSO,PLURALBIT \?L6
-	PUSH STR?22
+	PUSH STR?21
 	JUMP ?L8
-?L6:	PUSH STR?23
+?L6:	PUSH STR?22
 ?L8:	PRINT STACK
 	PRINTR " yourself."
 ?L1:	EQUAL? PRSO,WINNER \?L9
@@ -3790,13 +3878,13 @@ START::
 	CALL1 YOU-MASHER >STACK
 	RSTACK
 ?L10:	FSET? PRSI,PERSONBIT /?L11
-	CALL2 NOT-POSSIBLE,STR?24 >STACK
+	CALL2 NOT-POSSIBLE,STR?23 >STACK
 	RSTACK
 ?L11:	ICALL2 PRINT-CDEF,PRSI
 	FSET? PRSI,PLURALBIT \?L13
-	PUSH STR?25
+	PUSH STR?24
 	JUMP ?L15
-?L13:	PUSH STR?26
+?L13:	PUSH STR?25
 ?L15:	PRINT STACK
 	PRINTI " take "
 	ICALL2 PRINT-DEF,PRSO
@@ -3826,7 +3914,7 @@ START::
 	RTRUE
 
 	.FUNCT V-WAVE-HANDS
-	ICALL2 POINTLESS,STR?27
+	ICALL2 POINTLESS,STR?26
 	RTRUE
 
 	.FUNCT V-WAVE
@@ -3835,7 +3923,7 @@ START::
 
 	.FUNCT V-CLIMB
 	ZERO? PRSO /?L1
-	ICALL2 NOT-POSSIBLE,STR?28
+	ICALL2 NOT-POSSIBLE,STR?27
 	RTRUE
 ?L1:	ICALL1 SILLY
 	RTRUE
@@ -3845,7 +3933,7 @@ START::
 	RTRUE
 
 	.FUNCT V-JUMP
-	ICALL2 POINTLESS,STR?29
+	ICALL2 POINTLESS,STR?28
 	RTRUE
 
 	.FUNCT V-SING
@@ -3860,7 +3948,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	CALL1 YOU-MASHER >STACK
 	RSTACK
-?L3:	CALL2 NOT-POSSIBLE,STR?30 >STACK
+?L3:	CALL2 NOT-POSSIBLE,STR?29 >STACK
 	RSTACK
 
 	.FUNCT V-RUB
@@ -3870,7 +3958,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	CALL1 YOU-MASHER >STACK
 	RSTACK
-?L3:	CALL2 POINTLESS,STR?31 >STACK
+?L3:	CALL2 POINTLESS,STR?30 >STACK
 	RSTACK
 
 	.FUNCT V-BURN
@@ -3879,7 +3967,7 @@ START::
 ?L1:	FSET? PRSO,PERSONBIT \?L3
 	CALL1 YOU-MASHER >STACK
 	RSTACK
-?L3:	CALL2 POINTLESS,STR?32 >STACK
+?L3:	CALL2 POINTLESS,STR?31 >STACK
 	RSTACK
 
 	.FUNCT V-UNDO
@@ -4265,382 +4353,10 @@ START::
 	EQUAL? PRSA,V?EXAMINE \FALSE
 	PRINTR "You look like you're up for an adventure."
 
-	.FUNCT V-SHARPEN
-	PRINTI "You can't sharpen "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
+	.FUNCT STAGE-R
+	EQUAL? PRSA,V?ENTER \FALSE
+	MOVE PLAYER,STAGE
+	PRINTR "You enter the stage."
 
-	.FUNCT V-HACK
-	PRINTI "You can't hack "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-
-	.FUNCT V-LIGHT
-	PRINTI "You can't light "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-
-	.FUNCT V-SPEAK
-	PRINTR "There is no reply."
-
-	.FUNCT PET-F,WORD
-	PRINTI "You can't "
-	PRINT WORD
-	PRINTI " "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-
-	.FUNCT V-PET
-	CALL2 PET-F,STR?33 >STACK
-	RSTACK
-
-	.FUNCT V-PAT
-	CALL2 PET-F,STR?34 >STACK
-	RSTACK
-
-	.FUNCT V-STROKE
-	CALL2 PET-F,STR?35 >STACK
-	RSTACK
-
-	.FUNCT HOVEL-R,RARG
-	EQUAL? RARG,M-ENTER \FALSE
-	MOVE DYLAN,HERE
-	RTRUE
-
-	.FUNCT CHEST-R
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "An ancient wooden chest that has been repeatedly patched and repaired. You'll be pleased to know there is no lock."
-
-	.FUNCT BLUNT-AXE-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "An axe with an arms length wooden haft and a steel head with the letter L and the pattern of a rose embossed on it. It is your prized (and only) possession given to you by your father. It's blade is a sharp as Jack after a busy day."
-?L1:	EQUAL? PRSA,V?SHARPEN \FALSE
-	IN? BLUNT-AXE,PLAYER /?L4
-	PRINTR "You don't have that."
-?L4:	IN? PLAYER,HOVEL \?L6
-	REMOVE BLUNT-AXE
-	MOVE AXE,PLAYER
-	ICALL2 THIS-IS-IT,AXE
-	PRINTR "You walk over to the hearthstones and sharpen the axe blade on one of them. After a minute or so, it gleams with a wicked edge. It is now an axe-is of evil."
-?L6:	PRINTR "There is nothing here to sharpen it on."
-
-	.FUNCT AXE-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "An axe with an arms length wooden haft and a sharpened steel head with the letter L and the pattern of a rose embossed on it. It is your prized (and only) possession given to you by your father. It's blade is sharp as frost."
-?L1:	EQUAL? PRSA,V?SHARPEN \?L3
-	PRINTR "It's already sharp."
-?L3:	EQUAL? PRSA,V?DROP \FALSE
-	PRINTI "You drop the useful looking axe, a wise move I'm sure."
-	CRLF
-	MOVE AXE,HERE
-	RTRUE
-
-	.FUNCT SHOVEL-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "A small wooden shovel that you use for removing ashes. It's a ground-breaking design."
-?L1:	EQUAL? PRSA,V?TAKE \FALSE
-	CALL2 HELD?,SHOVEL >STACK
-	ZERO? STACK /?L4
-	PRINTR "You already have the shovel."
-?L4:	IN? SHOVEL,HERE \FALSE
-	FCLEAR SHOVEL,NDESCBIT
-	MOVE SHOVEL,PLAYER
-	PRINTR "Taken."
-
-	.FUNCT RAGS-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	CALL2 HELD?,RAGS >STACK
-	ZERO? STACK /?L3
-	PRINTR "A few rags of cloth."
-?L3:	PRINTR "A pile of rags that were once clothes, now too threadbare to wear."
-?L1:	EQUAL? PRSA,V?TAKE \?L6
-	CALL2 HELD?,RAGS >STACK
-	ZERO? STACK /?L7
-	PRINTR "You already have the rags."
-?L7:	FCLEAR RAGS,NDESCBIT
-	MOVE RAGS,PLAYER
-	PRINTR "Taken."
-?L6:	EQUAL? PRSA,V?HACK \FALSE
-	PRINTR "That would be axe-zessive!"
-
-	.FUNCT FIREPLACE-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTI "A round circle of flat stones with the ashen remains of last night's fire smouldering in the middle."
-	IN? SHOVEL,HOVEL \?L3
-	PRINTI " Leaning against the fireplace is a shovel."
-?L3:	CRLF
-	RTRUE
-?L1:	EQUAL? PRSA,V?LIGHT \FALSE
-	PRINTR "You could rekindle the fire but you decide not to as you are low on fuel. Besides, you need to get out and about."
-
-	.FUNCT DYLAN-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "It's your faithful canine companion. He's an ageing Boxer mongrel of some sort. He has tan brown fur with a white patch on his chest. He's seen a few too many scrapes and doesn't smell too sweet, but you love him dearly and he's called Dylan."
-?L1:	EQUAL? PRSA,V?TAKE \?L3
-	PRINTR "You don't need to carry him. He'll follow you anywhere."
-?L3:	EQUAL? PRSA,V?HACK,V?ATTACK \?L4
-	PRINTR "He's your only friend in the world. You'd never hurt him."
-?L4:	EQUAL? PRSA,V?PET,V?PAT,V?STROKE \?L5
-	PRINTI "Dylan nuzzles against your leg and looks up to you with doleful eyes, his tail wagging expectantly."
-	FSET? HAIR-OF-DOG,TOUCHBIT /?L6
-	PRINTI " Some of his moulting hair collects in your hand. You shove it in your pocket."
-	CRLF
-	MOVE HAIR-OF-DOG,PLAYER
-	FSET HAIR-OF-DOG,TOUCHBIT
-?L6:	CRLF
-	RTRUE
-?L5:	EQUAL? PRSA,V?SPEAK \FALSE
-	PRINTR "Dylan looks up to you and barks excitedly."
-
-	.FUNCT HAIR-OF-DOG-R
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "A few strands of Dylan's brown and white hair."
-
-	.FUNCT I-DYLAN,RARG
-	MOVE DYLAN,HERE
-	EQUAL? PRSA,V-WALK \FALSE
-	PRINTR "Your dog is here."
-
-	.FUNCT FURNITURE-R
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "Furniture might be a rather grand term what consists of a filthy straw bed and a battered wooden chest."
-
-	.FUNCT STONES-R
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "A circle of flat whetstones bearing heavy scratch marks."
-
-	.FUNCT STRAW-BED-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	PRINTR "Several large rectangular bales of hay lashed together. It is blackened with grime and splattered with mud."
-?L1:	EQUAL? PRSA,V?HACK \FALSE
-	PRINTR "That would be axe-zessive!"
-
-	.FUNCT ROOF-R
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "The circular roof is made from straw thatch, with a small hole in the centre to let out the smoke from the fire."
-
-	.FUNCT HOLE-R
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "A small hole in the centre of the roof. You made it to let out the smoke from the fire."
-
-	.FUNCT SCRATCH-MARKS-R
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "Heavy scratch marks made from the repetitive action of sharpening tools."
-
-	.FUNCT HAY-R
-	EQUAL? PRSA,V?TAKE \FALSE
-	PRINTR "You decide to leave the filthy hay where it is."
-
-	.FUNCT V-BOARD
-	FSET? PRSO,VEHBIT /?L1
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR " can't be boarded."
-?L1:	EQUAL? PRSO,VEHICLE \?L3
-	PRINTI "You're already on "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-?L3:	IN? PRSO,PLAYER \?L4
-	PRINTR "You can't ride something you're already holding."
-?L4:	CALL2 ACCESSIBLE?,PRSO >STACK
-	ZERO? STACK \?L5
-	PRINTI "You can't reach "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-?L5:	MOVE PLAYER,PRSO
-	SET 'VEHICLE,PRSO
-	PRINTI "Done."
-	CRLF
-	CALL1 V-LOOK >STACK
-	RSTACK
-
-	.FUNCT V-EXIT
-	FSET? PRSO,VEHBIT \?L1
-	MOVE PLAYER,HERE
-	FCLEAR PRSO,NDESCBIT
-	PRINTR "Done."
-?L1:	CALL2 DO-WALK,P?OUT >STACK
-	RSTACK
-
-	.FUNCT HORSE-R,RARG
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "A perfectly ordinary horse."
-
-	.FUNCT NMEADOW-R,RARG
-	EQUAL? RARG,M-ENTER \?L1
-	MOVE DYLAN,HERE
-?L1:	EQUAL? RARG,M-LOOK \FALSE
-	PRINTI "You are in the meadow outside your hovel, several acres of wild grassland and wild flowers. You may be dirt poor, but the beauty of the landscape is some consolation."
-	CRLF
-	FSET? HERE,TOUCHBIT /FALSE
-	CRLF
-	PRINTI "As you step out of your home there is a beating of wings above your head. Looking up, you see a pigeon rapidly disappearing out of sight, and a letter flutters to your feet. You pick it up."
-	CRLF
-	CRLF
-	PRINTI "On the wind, you can hear a distant shout of what sounds like, ""fuck yooouuuu..."" coming from the pigeon's direction before it disappears from sight."
-	CRLF
-	MOVE LETTER,PLAYER
-	RTRUE
-
-	.FUNCT ENTER-HOVEL-R
-	IN? PLAYER,VEHICLE \?L1
-	PRINTI "You can't enter while on horseback."
-	CRLF
-	CRLF
-	SET 'P-CONT,0
-	RETURN HERE
-?L1:	RETURN HOVEL
-
-	.FUNCT LETTER-R
-	EQUAL? PRSA,V?DROP \?L1
-	PRINTR "Remembering the threat of execution, you decide not to drop the letter."
-?L1:	EQUAL? PRSA,V?READ \?L3
-	PRINTR "You're dying to know what's in the letter, but the instructions written on it forbid you from doing so. You can examine it."
-?L3:	EQUAL? PRSA,V?EXAMINE \?L4
-	PRINTI "The letter is addressed to the Bony King of Nowhere, at his palace in the capital Lost, many miles to the south. On the reverse is written:
-"""
-	ICALL2 ITALICIZE,STR?36
-	PRINTR """
-
-Well that's just perfect you think, you've always hated a) the capital, b) the monarchy, and c) the south in general."
-?L4:	EQUAL? PRSA,V?OPEN \?L5
-	PRINTR "You can't open it, the King will have you killed!"
-?L5:	EQUAL? PRSA,V?CLOSE \?L6
-	PRINTI "It's already closed."
-	RTRUE
-?L6:	EQUAL? PRSA,V?HACK \FALSE
-	CALL2 HELD?,AXE >STACK
-	ZERO? STACK /?L8
-	PRINTR "You consider chopping the letter into pieces, but the King has spies everywhere and you value your life."
-?L8:	CALL2 HELD?,BLUNT-AXE >STACK
-	ZERO? STACK /?L10
-	PRINTR "Your axe is too blunt (and it's probably not a good idea)."
-?L10:	PRINTR "You need a tool for that."
-
-	.FUNCT DESCRIBE-ROOM,RM,LONG,P
-	EQUAL? RM,HERE \?L1
-	ZERO? HERE-LIT \?L1
-	ICALL2 DARKNESS-F,M-LOOK
-	RFALSE
-?L1:	HLIGHT H-BOLD
-	PRINTD RM
-	IN? PLAYER,VEHICLE \?L8
-	FSET? VEHICLE,SURFACEBIT \?L6
-	PRINTI " (on "
-	ICALL2 PRINT-DEF,VEHICLE
-	PRINTI ")"
-	JUMP ?L8
-?L6:	PRINTI " (in "
-	ICALL2 PRINT-DEF,VEHICLE
-	PRINTI ")"
-?L8:	CRLF
-	HLIGHT H-NORMAL
-	ZERO? LONG \?L14
-	EQUAL? MODE,SUPERBRIEF /FALSE
-	FSET? RM,TOUCHBIT \?L14
-	EQUAL? MODE,VERBOSE /?L14
-	GETP RM,P?ACTION >STACK
-	ICALL2 STACK,M-FLASH
-	RTRUE
-?L14:	GETP RM,P?ACTION >STACK
-	CALL2 STACK,M-LOOK >STACK
-	ZERO? STACK \?L19
-	GETP RM,P?LDESC >P
-	ZERO? P /?L19
-	PRINT P
-	CRLF
-?L19:	GETP RM,P?ACTION >STACK
-	ICALL2 STACK,M-FLASH
-	FSET RM,TOUCHBIT
-	RTRUE
-
-	.FUNCT V-WALK,PT,PTS,RM,D
-	ZERO? PRSO-DIR \?L1
-	PRINTR "You must give a direction to walk in."
-?L1:	GETPT HERE,PRSO >PT
-	ZERO? PT \?L3
-	ZERO? HERE-LIT \?L6
-	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
-	ZERO? STACK \?L4
-?L6:	PRINT CANT-GO-THAT-WAY
-	CRLF
-?L4:	SET 'P-CONT,0
-	RTRUE
-?L3:	PTSIZE PT >PTS
-	EQUAL? PTS,UEXIT \?L8
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L8:	EQUAL? PTS,NEXIT \?L9
-	GET PT,NEXIT-MSG >STACK
-	PRINT STACK
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L9:	EQUAL? PTS,FEXIT \?L10
-	GET PT,FEXIT-RTN >STACK
-	CALL1 STACK >RM
-	ZERO? RM \?L27
-	SET 'P-CONT,0
-	RTRUE
-?L10:	EQUAL? PTS,CEXIT \?L14
-	GETB PT,CEXIT-VAR >STACK
-	VALUE STACK >STACK
-	ZERO? STACK /?L15
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L15:	GET PT,CEXIT-MSG >RM
-	ZERO? RM /?L18
-	PRINT RM
-	CRLF
-	JUMP ?L21
-?L18:	ZERO? HERE-LIT \?L20
-	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
-	ZERO? STACK \?L21
-?L20:	PRINT CANT-GO-THAT-WAY
-	CRLF
-?L21:	SET 'P-CONT,0
-	RTRUE
-?L14:	EQUAL? PTS,DEXIT \?L22
-	GET PT,DEXIT-OBJ >D
-	FSET? D,OPENBIT \?L23
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L23:	GET PT,DEXIT-MSG >RM
-	ZERO? RM /?L25
-	PRINT RM
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L25:	ICALL2 THIS-IS-IT,D
-	PRINTI "You'll have to open "
-	ICALL2 PRINT-DEF,D
-	PRINTI " first."
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L22:	PRINTI "Broken exit ("
-	PRINTN PTS
-	PRINTI ")."
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L27:	IN? PLAYER,VEHICLE \?L28
-	MOVE VEHICLE,RM
-	SET 'HERE,RM
-	CALL2 DESCRIBE-ROOM,RM >STACK
-	RSTACK
-?L28:	CALL2 GOTO,RM >STACK
-	RSTACK
-
-	.FUNCT BOLDIZE,TEXT
-	HLIGHT H-BOLD
-	PRINT TEXT
-	HLIGHT 0
-	RTRUE
-
-	.FUNCT V-ENJOY
-	PRINTI "Not difficult at all, considering how enjoyable"
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR " is."
-
-	.INSERT ".\bonyking_str"
+	.INSERT ".\enterable test_str"
 	.END
