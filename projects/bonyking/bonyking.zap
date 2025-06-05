@@ -4481,10 +4481,18 @@ START::
 	PRINTR " from the horse."
 ?L1:	EQUAL? PRSA,V?EXAMINE \?L8
 	PRINTR "A perfectly ordinary horse."
-?L8:	EQUAL? PRSA,V?PET \FALSE
+?L8:	EQUAL? PRSA,V?PET \?L9
 	PRINTI "You pet the horse, and he seems just a "
 	ICALL2 ITALICIZE,STR?36
 	PRINTR " bit happier with you now."
+?L9:	EQUAL? PRSA,V?BOARD \FALSE
+	IN? PLAYER,HORSE \?L11
+	PRINTR "You're already on it!"
+?L11:	PRINTI "You mount the horse."
+	CRLF
+	MOVE PLAYER,PRSO
+	SET 'VEHICLE,PRSO
+	RETURN VEHICLE
 
 	.FUNCT NMEADOW-R,RARG
 	EQUAL? RARG,M-ENTER \?L1

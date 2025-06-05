@@ -6,7 +6,8 @@
 <CONSTANT GAME-BANNER
   "The Bony King of Nowhere (ZIL Port)|
 An Interactive Adventure by Luke A. Jones|
-Copyright (c) 2017 Luke A. Jones. All rights reserved.">
+Copyright (c) 2017, 2025 Luke A. Jones. All rights reserved.|
+v0.4-alpha">
 
 <ROUTINE GO ()
   <CRLF> <CRLF>
@@ -396,7 +397,15 @@ Copyright (c) 2017 Luke A. Jones. All rights reserved.">
     (<VERB? PET>
       <TELL "You pet the horse, and he seems just a ">
       <ITALICIZE "little">
-      <TELL " bit happier with you now." CR>)>>
+      <TELL " bit happier with you now." CR>)
+    (<VERB? BOARD>
+      <COND
+        (<IN? ,PLAYER ,HORSE>
+          <TELL "You're already on it!" CR>)
+        (T
+          <TELL "You mount the horse." CR>
+        <MOVE ,PLAYER ,PRSO>
+        <SETG VEHICLE ,PRSO>)>)>>
 
 ;----------------------------------------------------------------------
 ;"###################### NORTHERN MEADOW ######################"

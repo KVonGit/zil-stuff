@@ -55,7 +55,8 @@
 	.GSTR STR?21,"that"
 	.GSTR STR?0,"The Bony King of Nowhere (ZIL Port)
 An Interactive Adventure by Luke A. Jones
-Copyright (c) 2017 Luke A. Jones. All rights reserved."
+Copyright (c) 2017, 2025 Luke A. Jones. All rights reserved.
+v0.4-alpha"
 	.GSTR STR?22,"them"
 	.GSTR STR?59,"TOOLBIT"
 	.GSTR STR?60,"TOUCHBIT"
