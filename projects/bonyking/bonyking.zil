@@ -77,7 +77,11 @@ v0.4-alpha">
     (IN ROOMS)
     (DESC "Your Hovel")
     (FLAGS LIGHTBIT)
-    (LDESC "You are in your hovel in the northernmost borderlands of the Kingdom of Nowhere. It is a round wattle and daub hut. There is a fireplace in the middle with a hole in the thatch roof above it acting as a chimney.||Around the circumference of the room there are a few sticks of furniture and rags that represent the totality of your worldly possessions.")
+    (LDESC 
+"You are in your hovel in the northernmost borderlands of the Kingdom of Nowhere. It is a round
+wattle and daub hut. There is a fireplace in the middle with a hole in the thatch roof above it
+acting as a chimney.||Around the circumference of the room there are a few sticks of furniture and
+rags that represent the totality of your worldly possessions.")
     (OUT TO NMEADOW)
     (ACTION HOVEL-R)>
 
@@ -96,7 +100,9 @@ v0.4-alpha">
 <ROUTINE CHEST-R ()
     <COND
       (<VERB? EXAMINE>
-        <TELL "An ancient wooden chest that has been repeatedly patched and repaired. You'll be pleased to know there is no lock." CR>)>>
+        <TELL 
+"An ancient wooden chest that has been repeatedly patched and repaired. You'll bepleased to know
+there is no lock." CR>)>>
 
 <OBJECT BLUNT-AXE
     (DESC "axe")
@@ -108,7 +114,10 @@ v0.4-alpha">
 <ROUTINE BLUNT-AXE-R ()
   <COND 
     (<VERB? EXAMINE>
-      <TELL "An axe with an arms length wooden haft and a steel head with the letter L and the pattern of a rose embossed on it. It is your prized (and only) possession given to you by your father. It's blade is a sharp as Jack after a busy day." CR>)
+      <TELL 
+"An axe with an arms length wooden haft and a steel head with the letter L and the pattern of a rose
+embossed on it. It is your prized (and only) possession given to you by your father. It's blade is a
+sharp as Jack after a busy day." CR>)
     (<VERB? SHARPEN>
       <COND
         (<NOT <IN? ,BLUNT-AXE ,PLAYER>>
@@ -117,7 +126,9 @@ v0.4-alpha">
           <REMOVE ,BLUNT-AXE>
           <MOVE , AXE ,PLAYER>
           <THIS-IS-IT ,AXE>
-          <TELL "You walk over to the hearthstones and sharpen the axe blade on one of them. After a minute or so, it gleams with a wicked edge. It is now an axe-is of evil." CR>)
+          <TELL 
+"You walk over to the hearthstones and sharpen the axe blade on one of them. After aminute or so, it
+gleams with a wicked edge. It is now an axe-is of evil." CR>)
         (T
           <TELL "There is nothing here to sharpen it on." CR>)>)>>
 
@@ -130,7 +141,10 @@ v0.4-alpha">
 <ROUTINE AXE-R ()
   <COND 
     (<VERB? EXAMINE>
-      <TELL "An axe with an arms length wooden haft and a sharpened steel head with the letter L and the pattern of a rose embossed on it. It is your prized (and only) possession given to you by your father. It's blade is sharp as frost." CR>)
+      <TELL 
+"An axe with an arms length wooden haft and a sharpened steel head with the letter L and the pattern
+of a rose embossed on it. It is your prized (and only) possession given to you by your father. It's
+blade is sharp as frost." CR>)
     (<VERB? SHARPEN>
       <TELL "It's already sharp." CRLF>)
     (<VERB? DROP>
@@ -192,13 +206,16 @@ v0.4-alpha">
 <ROUTINE FIREPLACE-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL "A round circle of flat stones with the ashen remains of last night's fire smouldering in the middle.">
+      <TELL 
+"A round circle of flat stones with the ashen remains of last night's fire smouldering in the middle.">
       <COND
         (<IN?, SHOVEL, HOVEL>
           <TELL " Leaning against the fireplace is a shovel.">)>
       <CRLF>)
     (<VERB? LIGHT>
-      <TELL "You could rekindle the fire but you decide not to as you are low on fuel. Besides, you need to get out and about." CR>)>>
+      <TELL 
+"You could rekindle the fire but you decide not to as you are low on fuel. Besides, you need to get
+out and about." CR>)>>
 
 <OBJECT DYLAN
   (IN HOVEL)
@@ -210,13 +227,17 @@ v0.4-alpha">
 <ROUTINE DYLAN-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL "It's your faithful canine companion. He's an ageing Boxer mongrel of some sort. He has tan brown fur with a white patch on his chest. He's seen a few too many scrapes and doesn't smell too sweet, but you love him dearly and he's called Dylan." CR>)
+      <TELL 
+"It's your faithful canine companion. He's an ageing Boxer mongrel of some sort. He has tan brown
+fur with a white patch on his chest. He's seen a few too many scrapes and doesn't smell too sweet,
+but you love him dearly and he's called Dylan." CR>)
     (<VERB? TAKE>
       <TELL "You don't need to carry him. He'll follow you anywhere." CR>)
     (<VERB? HACK ATTACK>
       <TELL "He's your only friend in the world. You'd never hurt him." CR>)
     (<VERB? PET PAT STROKE>
-      <TELL "Dylan nuzzles against your leg and looks up to you with doleful eyes, his tail wagging expectantly.">
+      <TELL 
+"Dylan nuzzles against your leg and looks up to you with doleful eyes, his tail wagging expectantly.">
       <COND
         (<NOT <FSET? ,HAIR-OF-DOG ,TOUCHBIT>>
           <TELL " Some of his moulting hair collects in your hand. You shove it in your pocket." CR>
@@ -254,7 +275,9 @@ v0.4-alpha">
 <ROUTINE FURNITURE-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL "Furniture might be a rather grand term what consists of a filthy straw bed and a battered wooden chest." CR>)>>
+      <TELL 
+"Furniture might be a rather grand term what consists of a filthy straw bed and a battered wooden
+chest." CR>)>>
 
 <OBJECT STONES
   (IN HOVEL)
@@ -279,7 +302,9 @@ v0.4-alpha">
 <ROUTINE STRAW-BED-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL "Several large rectangular bales of hay lashed together. It is blackened with grime and splattered with mud." CR>)
+      <TELL 
+"Several large rectangular bales of hay lashed together. It is blackened with grime and splattered
+with mud." CR>)
     (<VERB? HACK>
       <TELL "That would be axe-zessive!" CR>)>>
 
@@ -293,7 +318,9 @@ v0.4-alpha">
 <ROUTINE ROOF-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL "The circular roof is made from straw thatch, with a small hole in the centre to let out the smoke from the fire." CR>)>>
+      <TELL 
+"The circular roof is made from straw thatch, with a small hole in the centre to let out the smoke
+from the fire." CR>)>>
 
 <OBJECT HOLE
   (IN HOVEL)
@@ -305,7 +332,8 @@ v0.4-alpha">
 <ROUTINE HOLE-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL "A small hole in the centre of the roof. You made it to let out the smoke from the fire." CR>)>>
+      <TELL 
+"A small hole in the centre of the roof. You made it to let out the smoke from the fire." CR>)>>
 
 <OBJECT SCRATCH-MARKS
   (IN HOVEL)
@@ -424,10 +452,16 @@ v0.4-alpha">
      <MOVE ,DYLAN ,HERE>)>
   <COND
     (<==? .RARG ,M-LOOK>
-      <TELL "You are in the meadow outside your hovel, several acres of wild grassland and wild flowers. You may be dirt poor, but the beauty of the landscape is some consolation." CR>
+      <TELL 
+"You are in the meadow outside your hovel, several acres of wild grassland and wild flowers. You may
+be dirt poor, but the beauty of the landscape is some consolation." CR>
       <COND
         (<NOT <FSET? ,HERE ,TOUCHBIT>>
-          <TELL CR "As you step out of your home there is a beating of wings above your head. Looking up, you see a pigeon rapidly disappearing out of sight, and a letter flutters to your feet. You pick it up." CR CR "On the wind, you can hear a distant shout of what sounds like, \"fuck yooouuuu...\" coming from the pigeon's direction before it disappears from sight." CR>
+          <TELL CR 
+"As you step out of your home there is a beating of wings above your head. Looking up, you see a
+pigeon rapidly disappearing out of sight, and a letter flutters to your feet. You pick it up." CR CR 
+"On the wind, you can hear a distant shout of what sounds like, \"fuck yooouuuu...\" coming from the
+pigeon's direction before it disappears from sight." CR>
           <MOVE ,LETTER ,PLAYER>)>)>>
 
 <ROUTINE ENTER-HOVEL-R ()
@@ -450,11 +484,19 @@ v0.4-alpha">
     (<VERB? DROP>
       <TELL "Remembering the threat of execution, you decide not to drop the letter." CR>)
     (<VERB? READ>
-      <TELL "You're dying to know what's in the letter, but the instructions written on it forbid you from doing so. You can examine it." CR>)
+      <TELL 
+"You're dying to know what's in the letter, but the instructions written on it forbid you from doing
+so. You can examine it." CR>)
     (<VERB? EXAMINE>
-      <TELL "The letter is addressed to the Bony King of Nowhere, at his palace in the capital Lost, many miles to the south. On the reverse is written:|\"">
-      <ITALICIZE "If found please deliver personally to the King, the contents are confidential and you are forbidden from reading them. Failure to comply with either of these requests will result in summary execution.">
-      <TELL "\"||Well that's just perfect you think, you've always hated a) the capital, b) the monarchy, and c) the south in general." CR>)
+      <TELL 
+"The letter is addressed to the Bony King of Nowhere, at his palace in the capital Lost, many miles
+to the south. On the reverse is written:|\"">
+      <ITALICIZE 
+"If found please deliver personally to the King, the contents are confidential and you are forbidden
+from reading them. Failure to comply with either of these requests will result in summary execution.">
+      <TELL 
+"\"||Well that's just perfect you think, you've always hated a) the capital, b) the monarchy, and c)
+the south in general." CR>)
     (<VERB? OPEN>
       <TELL "You can't open it, the King will have you killed!" CR>)
     (<VERB? CLOSE>
@@ -462,7 +504,9 @@ v0.4-alpha">
     (<VERB? HACK>
       <COND
         (<HELD? AXE>
-          <TELL "You consider chopping the letter into pieces, but the King has spies everywhere and you value your life." CR>)
+          <TELL 
+"You consider chopping the letter into pieces, but the King has spies everywhere and you value your
+life." CR>)
         (<HELD? BLUNT-AXE>
           <TELL "Your axe is too blunt (and it's probably not a good idea)." CR>)
         (T

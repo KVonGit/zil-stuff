@@ -4309,7 +4309,7 @@ START::
 
 	.FUNCT CHEST-R
 	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "An ancient wooden chest that has been repeatedly patched and repaired. You'll be pleased to know there is no lock."
+	PRINTR "An ancient wooden chest that has been repeatedly patched and repaired. You'll bepleased to know there is no lock."
 
 	.FUNCT BLUNT-AXE-R
 	EQUAL? PRSA,V?EXAMINE \?L1
@@ -4321,7 +4321,7 @@ START::
 	REMOVE BLUNT-AXE
 	MOVE AXE,PLAYER
 	ICALL2 THIS-IS-IT,AXE
-	PRINTR "You walk over to the hearthstones and sharpen the axe blade on one of them. After a minute or so, it gleams with a wicked edge. It is now an axe-is of evil."
+	PRINTR "You walk over to the hearthstones and sharpen the axe blade on one of them. After aminute or so, it gleams with a wicked edge. It is now an axe-is of evil."
 ?L6:	PRINTR "There is nothing here to sharpen it on."
 
 	.FUNCT AXE-R
