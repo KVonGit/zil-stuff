@@ -4,13 +4,13 @@
 <CONSTANT RELEASEID 0>
 
 <CONSTANT GAME-BANNER
-"The Adventures of Koww the Magician|
-(ZIL Port of the Quest 2 Classic)|
-Quest Interactive - Fantasy|
-by Brian the Great|
-Copyright (c) 1999 Brian the Great. All rights reserved.|
-v0.1.9 alpha|
-IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
+"The Adventures of Koww the Magician
+|(ZIL Port of the Quest 2 Classic)
+|Quest Interactive - Fantasy
+|by Brian the Great
+|Copyright (c) 1999 Brian the Great. All rights reserved.
+|v0.1.9 alpha
+|IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
   <CRLF>

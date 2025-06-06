@@ -4,10 +4,10 @@
 <CONSTANT RELEASEID 1>
 
 <CONSTANT GAME-BANNER
-  "The Bony King of Nowhere (ZIL Port)|
-An Interactive Adventure by Luke A. Jones|
-Copyright (c) 2017, 2025 Luke A. Jones. All rights reserved.|
-v0.4-alpha">
+  "The Bony King of Nowhere (ZIL Port)
+|An Interactive Adventure by Luke A. Jones
+|Copyright (c) 2017, 2025 Luke A. Jones. All rights reserved.
+|v0.4-alpha">
 
 <ROUTINE GO ()
   <CRLF> <CRLF>
@@ -24,7 +24,7 @@ v0.4-alpha">
   <MAIN-LOOP>
   >
 <COMPILATION-FLAG DEBUGGING-VERBS T>
-<INSERT-FILE "parser">
+<INSERT-FILE "parsermod">
 
 <SET REDEFINE T>
 
@@ -379,6 +379,7 @@ from the fire." CR>)>>
     (T
      <MOVE ,PLAYER ,PRSO>
      <SETG VEHICLE ,PRSO>
+     <FSET ,VEHICLE ,NDESCBIT>
      <TELL "Done." CR>
      <V-LOOK>)>>
 
@@ -392,7 +393,6 @@ from the fire." CR>)>>
        (<OR <AND <NOT ,PRSO> <IN? ,PLAYER ,VEHICLE>> <FSET? ,PRSO ,VEHBIT>>
          <MOVE ,PLAYER ,HERE>
           <FCLEAR ,PRSO ,NDESCBIT>
-          <TELL "Done." CR CR>
           <V-LOOK>
           <RTRUE>)
       (T
@@ -401,11 +401,11 @@ from the fire." CR>)>>
 
 
 ;-------------------------------------------------------------------------------
-;"NOTE: The horse won't be in the hovel. It's just here now for testing."
+;"NOTE: The horse won't be in the Northern Meadow. It's just here now for testing."
 ;-------------------------------------------------------------------------------
 <OBJECT HORSE
   (DESC "horse")
-  (IN HOVEL)
+  (IN NMEADOW)
   (FLAGS VEHBIT CONTBIT SURFACEBIT SEARCHBIT OPENBIT)
   (SYNONYM HORSE)
   (ACTION HORSE-R)>
@@ -433,6 +433,7 @@ from the fire." CR>)>>
         (T
           <TELL "You mount the horse." CR>
         <MOVE ,PLAYER ,PRSO>
+        <FSET ,HORSE ,NDESCBIT>
         <SETG VEHICLE ,PRSO>)>)>>
 
 ;----------------------------------------------------------------------
@@ -444,6 +445,7 @@ from the fire." CR>)>>
   (IN ROOMS)
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (IN PER ENTER-HOVEL-R)
+  (SOUTH SMEADOW)
   (ACTION NMEADOW-R)>
 
 <ROUTINE NMEADOW-R (RARG)
@@ -512,6 +514,99 @@ life." CR>)
         (T
           <TELL "You need a tool for that." CR>)>)>>
 
+
+;----------------------------------------------------------------------
+;"###################### SOUTHERN MEADOW ######################"
+;----------------------------------------------------------------------
+
+<OBJECT SMEADOW
+  (DESC "Southern Meadow")
+  (IN ROOMS)
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (NORTH NMEADOW)
+  (SOUTH NWOODS)
+  (ACTION SMEADOW-R)>
+
+<ROUTINE SMEADOW-R (RARG)
+  <COND
+    (<==? .RARG ,M-ENTER>
+     <MOVE ,DYLAN ,HERE>)>
+  <COND
+    (<==? .RARG ,M-LOOK>
+      <TELL 
+"You are in the Southern Meadow, on the edge of the Northern Woods." CR>)>>
+
+
+;----------------------------------------------------------------------
+;"###################### NORTHERN WOODS ######################"
+;----------------------------------------------------------------------
+
+<OBJECT NWOODS
+  (DESC "Northern Woods")
+  (IN ROOMS)
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (NORTH SMEADOW)
+  (SOUTH WOODLAND-CLEARING)
+  (ACTION NWOODS-R)>
+
+
+<ROUTINE NWOODS-R (RARG)
+  <COND
+    (<==? .RARG ,M-ENTER>
+     <MOVE ,DYLAN ,HERE>)>
+  <COND
+    (<==? .RARG ,M-LOOK>
+      <TELL 
+"You are on a path in the woods that runs North to South, the trees are densely packed, shards of
+sunlight stab through the small gaps in the canopy, it is humid in here. The floor of the forest is
+thick with leaf litter from countless autumns." CR>)>>
+
+;----------------------------------------------------------------------
+;"###################### WOODLAND CLEARING ######################"
+;----------------------------------------------------------------------
+
+<OBJECT WOODLAND-CLEARING
+  (DESC "Woodland Clearing")
+  (IN ROOMS)
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (NORTH NWOODS)
+  (SOUTH NORTH-BANK)
+  (ACTION WOODLAND-CLEARING-R)>
+
+
+<ROUTINE WOODLAND-CLEARING-R (RARG)
+  <COND
+    (<==? .RARG ,M-ENTER>
+     <MOVE ,DYLAN ,HERE>)>
+  <COND
+    (<==? .RARG ,M-LOOK>
+      <TELL 
+"A clearing in the wood, looks like it was once a small holding. There is a carpet of thyme
+underfoot that releases a sweet tang into the air as you walk across it." CR>)>>
+
+
+;----------------------------------------------------------------------
+;"###################### NORTH BANK OF THE RIVER VOID ######################"
+;----------------------------------------------------------------------
+
+<OBJECT NORTH-BANK
+  (DESC "North Bank of the River Void")
+  (IN ROOMS)
+  (FLAGS LIGHTBIT OUTSIDEBIT)
+  (NORTH WOODLAND-CLEARING)
+  (ACTION NORTH-BANK-R)>
+
+
+<ROUTINE NORTH-BANK-R (RARG)
+  <COND
+    (<==? .RARG ,M-ENTER>
+     <MOVE ,DYLAN ,HERE>)>
+  <COND
+    (<==? .RARG ,M-LOOK>
+      <TELL 
+"You are on the Northbank of the River Void. The river is roaring past with a fierce current." CR>)>>
+
+
 ;----------------------------------------------------------------------
 ;"###################### DIRTY HACKS ######################"
 ;----------------------------------------------------------------------
@@ -524,11 +619,13 @@ life." CR>)
     <TELL D .RM>
     <COND
       (<IN? ,PLAYER ,VEHICLE>
+        <TELL " (">
         <COND
           (<FSET? ,VEHICLE ,SURFACEBIT>
-            <TELL " (on " T, VEHICLE ")" >)
+            <TELL "o">)
           (T
-            <TELL " (in " T, VEHICLE ")" >)>)>
+            <TELL "i" >)>
+        <TELL "n " T, VEHICLE ")" >)>
     <CRLF>
     <VERSION? (ZIP) (ELSE <HLIGHT ,H-NORMAL>)>
     ;"If this is an implicit LOOK, check briefness."
@@ -606,6 +703,7 @@ life." CR>)
         <DESCRIBE-ROOM .RM>)
       (T
         <GOTO .RM>)>>
+
 
 
 ;----------------------------------------------------------------------
