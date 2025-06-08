@@ -4,7 +4,7 @@
 <CONSTANT RELEASEID 1>
 
 <CONSTANT GAME-BANNER
-  "The Bony King of Nowhere (ZIL Port)
+"The Bony King of Nowhere (ZIL Port)
 |An Interactive Adventure by Luke A. Jones
 |Copyright (c) 2017, 2025 Luke A. Jones. All rights reserved.
 |v0.4-alpha">
@@ -63,7 +63,7 @@
 <SYNTAX STROKE OBJECT = V-STROKE>
 
 <ROUTINE PET-F (WORD)
-  <TELL "You can't " .WORD " " T ,PRSO "." CR>>
+  <TELL "You can't " .WORD " " <ARTICLE ,PRSO> "." CR>>
 
 <ROUTINE V-PET () <PET-F "pet">>
 <ROUTINE V-PAT () <PET-F "pat">>

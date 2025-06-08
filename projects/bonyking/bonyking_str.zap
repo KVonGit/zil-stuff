@@ -1,4 +1,4 @@
-	; Strings to accompany .\bonyking.zap
+	; Strings to accompany bonyking.zap
 
 	.GSTR STR?6," are"
 	.GSTR STR?26," doesn't"
@@ -53,9 +53,9 @@
 	.GSTR STR?58,"TAKEBIT"
 	.GSTR STR?18,"Taking your frustration out on"
 	.GSTR STR?21,"that"
-	.GSTR STR?0,"The Bony King of Nowhere (ZIL Port)
-An Interactive Adventure by Luke A. Jones
-Copyright (c) 2017, 2025 Luke A. Jones. All rights reserved.
+	.GSTR STR?0,"The Bony King of Nowhere (ZIL Port) 
+An Interactive Adventure by Luke A. Jones 
+Copyright (c) 2017, 2025 Luke A. Jones. All rights reserved. 
 v0.4-alpha"
 	.GSTR STR?22,"them"
 	.GSTR STR?59,"TOOLBIT"
