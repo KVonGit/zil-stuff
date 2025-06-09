@@ -13,6 +13,7 @@
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
+  <SETG MODE ,VERBOSE>
   <CRLF>
   <CRLF>
   <BOLDIZE "*** DEBUGGING ENABLED ***">
@@ -594,6 +595,12 @@ moment.  Perhaps you should go away.||There is a ">
   <COND
     (<VERB? OPEN>
       <CALL GET-NOTHING-R>)
+    (<VERB? CLOSE>
+      <COND
+        (<FSET? ,TREASURE-CHEST ,OPENBIT>
+          <TELL "It appears to be stuck open, but that's okay. We're done with it now." CR>)
+        (ELSE
+          <TELL "It's already closed." CR>)>)
     (<VERB? TAKE>
       <TELL
 "It's too big.">
@@ -603,13 +610,18 @@ moment.  Perhaps you should go away.||There is a ">
       <CRLF>)>>
 
 <ROUTINE GET-NOTHING-R ()
-  <TELL
+  <COND
+    (<NOT <FSET? ,NOTHING-ITEM ,TOUCHBIT>>
+        <TELL
 "Ooooo!  There's nothing inside!  Told ya you should have gone away." CR>
-  <MOVE ,NOTHING-ITEM ,PLAYER>
-  <THIS-IS-IT ,NOTHING-ITEM>
+      <MOVE ,NOTHING-ITEM ,PLAYER>
+      <FSET ,NOTHING-ITEM ,TOUCHBIT>
+      <THIS-IS-IT ,NOTHING-ITEM>
   <INCREMENT-SCORE 5>
-  <FSET ,TREASURE-CHEST ,OPENBIT>
-  <RTRUE>>
+      <FSET ,TREASURE-CHEST ,OPENBIT>
+      <RTRUE>)
+    (ELSE
+      <RFALSE>)>>
 
 
 ; ************************** ZEKE'S SILO ***************************************

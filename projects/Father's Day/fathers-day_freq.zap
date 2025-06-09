@@ -1,4 +1,4 @@
-	; Dummy frequent words file for .\drumsticks.zap
+	; Dummy frequent words file for .\fathers-day.zap
 	.FSTR FSTR?DUMMY,""
 WORDS::
 	FSTR?DUMMY

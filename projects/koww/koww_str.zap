@@ -1,11 +1,11 @@
-	; Strings to accompany koww.zap
+	; Strings to accompany .\koww.zap
 
 	.GSTR STR?10," are"
 	.GSTR STR?30," doesn't"
 	.GSTR STR?29," don't"
-	.GSTR STR?115," I was just kidding about that."
+	.GSTR STR?114," I was just kidding about that."
 	.GSTR STR?11," is"
-	.GSTR STR?116," That was just a joke."
+	.GSTR STR?115," That was just a joke."
 	.GSTR STR?1," Try rephrasing the command."
 	.GSTR STR?62,"""Unless you own a vial of acid that you can give to the NecroYaks for their sinister experiments, do not proceed on pain of Death!"""
 	.GSTR STR?6,"*** DEBUGGING ENABLED ***"
@@ -15,11 +15,11 @@
 	.GSTR STR?71,"About what you'd expect from a hole."
 	.GSTR STR?83,"ATTACKBIT"
 	.GSTR STR?39,"BABY KALF"
-	.GSTR STR?111,"Baseball."
+	.GSTR STR?110,"Baseball."
 	.GSTR STR?44,"chasm"
 	.GSTR STR?31,"climb"
 	.GSTR STR?17,"close"
-	.GSTR STR?112,"Cold showers."
+	.GSTR STR?111,"Cold showers."
 	.GSTR STR?4,"Congratulations, you have found out that you were better off where you started anyway. The grass here is brown and crackly. Too bad!  And... OH NO!  Now you're trapped here, alone with the NecroYaks!  Stay tuned for ""The Adventures of Koww the Magician II -- Escape from the NecroYaks!"""
 	.GSTR STR?84,"CONTBIT"
 	.GSTR STR?85,"DEVICEBIT"
@@ -85,17 +85,17 @@
 	.GSTR STR?22,"Taking your frustration out on"
 	.GSTR STR?25,"that"
 	.GSTR STR?3,"That command doesn't work here. Be more specific about what you wish to do with"
-	.GSTR STR?0,"The Adventures of Koww the Magician
-(ZIL Port of the Quest 2 Classic)
-Quest Interactive - Fantasy
-by Brian the Great
-Copyright (c) 1999 Brian the Great. All rights reserved.
-v0.1.9 alpha
+	.GSTR STR?0,"The Adventures of Koww the Magician 
+(ZIL Port of the Quest 2 Classic) 
+Quest Interactive - Fantasy 
+by Brian the Great 
+Copyright (c) 1999 Brian the Great. All rights reserved. 
+v0.1.9 alpha 
 IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1"
 	.GSTR STR?80,"The greenness of the farmland dissolves into gray bleakness as you pass into the land of the NecroYaks. Yaks are the sworn enemies of cows -- you'd better stay on your toes!
 "
 	.GSTR STR?26,"them"
-	.GSTR STR?114,"There is no KOWW-pack in this game."
+	.GSTR STR?113,"There is no KOWW-pack in this game."
 	.GSTR STR?103,"TOOLBIT"
 	.GSTR STR?104,"TOUCHBIT"
 	.GSTR STR?105,"TRANSBIT"
@@ -107,21 +107,20 @@ IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1"
 	.GSTR STR?106,"TRYTAKEBIT"
 	.GSTR STR?19,"unlock"
 	.GSTR STR?69,"Use"
-	.GSTR STR?107,"VEHBIT"
-	.GSTR STR?108,"VOWELBIT"
+	.GSTR STR?107,"VOWELBIT"
 	.GSTR STR?33,"wake"
 	.GSTR STR?37,"Wasting your"
 	.GSTR STR?15,"wear"
-	.GSTR STR?109,"WEARBIT"
+	.GSTR STR?108,"WEARBIT"
 	.GSTR STR?52,"west"
 	.GSTR STR?65,"why"
-	.GSTR STR?110,"WORNBIT"
+	.GSTR STR?109,"WORNBIT"
 	.GSTR STR?67,"Yes"
 	.GSTR STR?78,"You can enter the Cave."
 	.GSTR STR?79,"You can go Inside the Goblin Lair."
 	.GSTR STR?2,"You can't go that way."
 	.GSTR STR?82,"You can't see your cud, it's regurgitated into your mouth!"
-	.GSTR STR?113,"You don't have a KOWW-pack."
+	.GSTR STR?112,"You don't have a KOWW-pack."
 	.GSTR STR?60,"Zeke"
 	.GSTR STR?55,"Zeke's Farmhouse"
 	.GSTR STR?56,"Zeke's Silo"

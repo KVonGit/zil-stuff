@@ -133,6 +133,7 @@
       (ELSE
         <SET P <LOC .P>>)>>>
 
+;"TODO - Check out UNTOUCHABLE? instead!!!"
 <ROUTINE ACCESSIBLE? (OBJ "AUX" L PL)
   <TELL "ACCESSIBLE?" CR>
   <TELL "OBJ: " T .OBJ "" CR>

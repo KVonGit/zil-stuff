@@ -10,6 +10,7 @@
 |v0.4-alpha">
 
 <ROUTINE GO ()
+  <SETG MODE ,VERBOSE>
   <CRLF> <CRLF>
   <TELL "You are a citizen of the land of Nowhere, and you are given an urgent letter to deliver to the King. Navigate your way through the strange and twisted landscape to the capital city of Lost and gain access to the King's castle." CR CR "This is a casual text adventure game in the classic parser style." CR CR "Note: This game was an entry in The 2017 Spring Thing Festival of Interactive Fiction (springthing.net)" CR CR>
   <ITALICIZE "*** Type 'hints' at any time for help. ***">
