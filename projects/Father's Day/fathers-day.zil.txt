@@ -26,7 +26,7 @@
 ;"<COMPILATION-FLAG DEBUGGING-VERBS T>"
 
 ;"----------------------- UNCOMMENT TO ADD FLAGS --------------------------------------------------"
-<SETG EXTRA-FLAGS (VEHBIT NALLBIT)>
+<SETG EXTRA-FLAGS (VEHBIT)>
 
 
 <INSERT-FILE "parser">
@@ -55,8 +55,7 @@ surround you, except to the northwest (towards the front yard).")
       <COND
         (<AND <VERB? WALK> <==? ,ZOMBIE-HAND-GOT-YA 1>>
           <TELL "You can't go anywhere! The hand is holding onto you and you can't walk!!!" CR>
-          <SETG P-CONT -1>
-          <RFATAL>)>)>>
+          <SETG P-CONT -1>)>)>>
 
 
 <OBJECT YOUR-DADS-GRAVE
@@ -67,14 +66,6 @@ surround you, except to the northwest (towards the front yard).")
     (SYNONYM GRAVE)
     (ADJECTIVE YOUR DADS FATHER DAD\'S FATHER\'S)
     (FLAGS NARTICLEBIT)>
-
-<OBJECT FROB
-  (SYNONYM FROB)
-  (DESC "frob")
-  (FDESC "A frob is somewhere in this location.")
-  (LDESC "The frob is lying on the ground.")
-  (FLAGS TAKEBIT NALLBIT)
-  (IN CEMETERY)>
 
 <OBJECT HEADSTONE
   (IN CEMETERY)
@@ -341,7 +332,7 @@ living room or north to the dining room.")
 
 <ROOM WOODS
     (DESC "Woods")
-    (LDESC "The woods are lovely, dark, and deep. You can go north, west, or east.")
+    (LDESC "You can go north, east, or west.")
     (IN ROOMS)
     (NORTH TO FRONT-YARD)
     (EAST TO CEMETERY)
@@ -351,7 +342,7 @@ living room or north to the dining room.")
 
 <ROOM WOODS-TWO
     (DESC "Woods")
-    (LDESC "The woods are dark, deep, and lovely. You can go north or west.")
+    (LDESC "You can go north or west.")
     (IN ROOMS)
     (NORTH TO WOODS-THREE)
     (WEST TO CEMETERY)
@@ -401,7 +392,7 @@ but the VEHBIT kit was added recently." CR>)
 
 <ROOM WOODS-THREE
     (DESC "Woods")
-    (LDESC "The woods are lovely, deep, and dark. You can go south, west, or southwest.")
+    (LDESC "You can go south, west, or southwest.")
     (IN ROOMS)
     (SOUTH TO WOODS-TWO)
     (WEST TO FRONT-YARD)
@@ -411,7 +402,7 @@ but the VEHBIT kit was added recently." CR>)
 
 <ROOM WOODS-FOUR
     (DESC "Woods")
-    (LDESC "The woods are lovely, dark, and deep. You can go north, east, or northeast.")
+    (LDESC "You can go north, east, or northeast.")
     (IN ROOMS)
     (NORTH TO DRIVEWAY)
     (EAST TO WOODS)
@@ -479,7 +470,7 @@ but the VEHBIT kit was added recently." CR>)
                         (<==? .I ,PANTS>
                           <COND
                             (<FIRST? ,PANTS-POCKET>
-                              <TELL CR "   In your pants pockets:" CR>
+                              <TELL CR "   In your pants pocket:" CR>
                               <MAP-CONTENTS (J ,PANTS-POCKET)
                                 <TELL "      " A .J>>)>)>
                       <AND <FSET? .I ,LIGHTBIT> <TELL " (providing light)">>
@@ -512,182 +503,3 @@ but the VEHBIT kit was added recently." CR>)
   (SYNONYM THING YOUR AUNT GAVE YOU)
   (DESC "the thing your aunt gave you")
   (FLAGS NARTICLEBIT TAKEBIT CONTBIT OPENBIT)>
-
-<ROUTINE ALL-INCLUDES? (OBJ)
-  <NOT
-    <OR
-      <FSET? .OBJ ,INVISIBLE>
-      <FSET? .OBJ ,NALLBIT>
-      <=? .OBJ ,WINNER>
-      <AND
-        <VERB? TAKE>
-        <==? <LOC .OBJ> ,WINNER>
-      >
-      <AND
-        <VERB? DROP>
-        <NOT
-          <==? <LOC .OBJ> ,WINNER>
-        >
-      >
-      <AND
-        <VERB? TAKE DROP>
-        <NOT
-          <AND
-            <OR
-              <FSET? .OBJ ,TAKEBIT>
-              <FSET? .OBJ ,TRYTAKEBIT>
-            >
-          >
-        >
-      >
-    >
-  >
->
-
-<ROUTINE MATCH-NOUN-PHRASE (NP OUT BITS "AUX" F NY NN SPEC MODE NOUT OBITS ONOUT BEST Q)
-    <SET NY <NP-YCNT .NP>>
-    <SET NN <NP-NCNT .NP>>
-    <SET MODE <NP-MODE .NP>>
-    <SET OBITS .BITS>
-    <COND (<0? .MODE>
-           <SET .BITS <ORB .BITS ;"<ORB" ,SF-HELD ,SF-CARRIED ,SF-ON-GROUND ,SF-IN-ROOM ;">" >>)>
-    <TRACE 3 "[MATCH-NOUN-PHRASE: NY=" N .NY " NN=" N .NN " MODE=" N .MODE
-             " BITS=" N .BITS " OBITS=" N .OBITS "]" CR>
-    <TRACE-IN>
-    <PROG BITS-SET ()
-        ;"Look for matching objects"
-        <SET NOUT 0>
-        <COND (<0? .NY>
-               ;"ALL with no YSPECs matches all objects, or if the action is TAKE/DROP,
-                 all objects with TAKEBIT/TRYTAKEBIT, skipping generic/global objects."
-               <TRACE 4 "[applying ALL rules]" CR>
-               <MAP-SCOPE (I [BITS .BITS])
-                   <COND (<SCOPE-STAGE? GENERIC GLOBALS>)
-                         (<NOT <ALL-INCLUDES? .I>>)
-                         (<AND .NN <NP-EXCLUDES? .NP .I>>)
-                         (<G=? .NOUT ,P-MAX-OBJECTS>
-                          <TELL "[too many objects!]" CR>
-                          <TRACE-OUT>
-                          <RETURN>)
-                         (ELSE
-                          <SET NOUT <+ .NOUT 1>>
-                          <PUT/B .OUT .NOUT .I>)>>)
-              (ELSE
-               ;"Go through all YSPECs and find matching objects for each one.
-                 Give an error if any YSPEC has no matches, but it's OK if all
-                 the matches for some YSPEC are excluded by NSPECs. Keep track of
-                 the match quality and only select the best matches."
-               <DO (J 1 .NY)
-                   <SET SPEC <NP-YSPEC .NP .J>>
-                   <TRACE 4 "[SPEC=" OBJSPEC .SPEC "]" CR>
-                   <SET F <>>
-                   <SET ONOUT .NOUT>
-                   <SET BEST 1>
-                   <MAP-SCOPE (I [BITS .BITS])
-                       <TRACE 5 "[considering " T .I "]" CR>
-                       <COND (<AND <NOT <FSET? .I ,INVISIBLE>>
-                                   <SET Q <REFERS? .SPEC .I>>
-                                   <G=? .Q .BEST>>
-                              <TRACE 4 "[matches " T .I "(" N .I "), Q=" N .Q "]" CR>
-                              <SET F T>
-                              ;"Erase previous matches if this is better"
-                              <COND (<G? .Q .BEST>
-                                     <TRACE 4 "[clearing match list]" CR>
-                                     <SET NOUT .ONOUT>
-                                     <SET .BEST .Q>)>
-                              <COND (<AND .NN <NP-EXCLUDES? .NP .I>>
-                                     <TRACE 4 "[excluded]" CR>)
-                                    (<G=? .NOUT ,P-MAX-OBJECTS>
-                                     <TELL "[too many objects!]" CR>
-                                     <TRACE-OUT>
-                                     <RETURN>)
-                                    (ELSE
-                                     <TRACE 4 "[accepted]" CR>
-                                     <SET NOUT <+ .NOUT 1>>
-                                     <PUT/B .OUT .NOUT .I>)>)>>
-                   ;"Look for a pseudo-object if we didn't find a real one."
-                   <COND (<AND <NOT .F>
-                               <BTST .BITS ,SF-ON-GROUND>
-                               <SET Q <GETP ,HERE ,P?THINGS>>>
-                          <TRACE 4 "[looking for pseudo]" CR>
-                          <SET F <MATCH-PSEUDO .SPEC .Q>>
-                          <COND (.F
-                                 <COND (<AND .NN <NP-EXCLUDES-PSEUDO? .NP .F>>)
-                                       (<G=? .NOUT ,P-MAX-OBJECTS>
-                                        <TELL "[too many objects!]" CR>
-                                        <TRACE-OUT>
-                                        <RETURN>)
-                                       (ELSE
-                                        <SET NOUT <+ .NOUT 1>>
-                                        <PUT/B .OUT .NOUT <MAKE-PSEUDO .F>>)>)>)>
-                   <COND (<NOT .F>
-                          ;"Try expanding the search if we can."
-                          <COND (<N=? .BITS -1>
-                                 <TRACE 4 "[expanding to ludicrous scope]" CR>
-                                 <SET BITS -1>
-                                 <SET OBITS -1>    ;"Avoid bouncing between <1 and >1 matches"
-                                 <AGAIN .BITS-SET>)>
-                          <COND (<=? ,MAP-SCOPE-STATUS ,MS-NO-LIGHT>
-                                 <TELL "It's too dark to see anything here." CR>)
-                                (ELSE
-                                 <TELL "You don't see that here." CR>)>
-                          <TRACE-OUT>
-                          <RFALSE>)
-                         (<G=? .NOUT ,P-MAX-OBJECTS>
-                          <TRACE-OUT>
-                          <RETURN>)>>)>
-        ;"Check the number of objects"
-        <PUTB .OUT 0 .NOUT>
-        <COND (<0? .NOUT>
-               ;"This means ALL matched nothing, or BUT excluded everything.
-                 Try expanding the search if we can."
-               <SET F <ORB .BITS ;"<ORB" ,SF-HELD ,SF-CARRIED ,SF-ON-GROUND ,SF-IN-ROOM ;">" >>
-               <COND (<=? .BITS .F>
-                      <TELL "There is no 'all' available">
-                      <COND
-                        (<VERB? TAKE>
-                          <TELL " to take">)
-                      >
-                      <COND
-                        (<VERB? DROP>
-                          <TELL " to drop">)
-                      >
-                      <TELL "!" CR>
-                      <TRACE-OUT>
-                      <RFALSE>)>
-               <TRACE 4 "[expanding to reasonable scope]" CR>
-               <SET BITS .F>
-               <SET OBITS .F>    ;"Avoid bouncing between <1 and >1 matches"
-               <AGAIN .BITS-SET>)
-              (<1? .NOUT>
-               <TRACE-OUT>
-               <RETURN <GET/B .OUT 1>>)
-              (<OR <=? .MODE ,MCM-ALL> <G? .NY 1>>
-               <TRACE-OUT>
-               <RETURN ,MANY-OBJECTS>)
-              (<=? .MODE ,MCM-ANY>
-               ;"Pick a random object"
-               <PUT/B .OUT 1 <SET F <GET/B .OUT <RANDOM .NOUT>>>>
-               <PUTB .OUT 0 1>
-               <TELL "[" T .F "]" CR>
-               <TRACE-OUT>
-               <RETURN .F>)
-              (ELSE
-               ;"TODO: Do this check when we're matching YSPECs, so each YSPEC can be
-                 disambiguated individually."
-               ;"Try narrowing the search if we can."
-               <COND (<N=? .BITS .OBITS>
-                      <TRACE 4 "[narrowing scope to BITS=" N .OBITS "]" CR>
-                      <SET BITS .OBITS>
-                      <AGAIN .BITS-SET>)>
-               <COND (<SET F <APPLY-GENERIC-FCN .OUT>>
-                      <TRACE 4 "[GENERIC chose " T .F "]" CR>
-                      <PUT/B .OUT 1 .F>
-                      <PUTB .OUT 0 1>
-                      <TRACE-OUT>
-                      <RETURN .F>)>
-               <WHICH-DO-YOU-MEAN .OUT>
-               <COND (<=? .NP ,P-NP-DOBJ> <ORPHAN T AMBIGUOUS PRSO>)
-                     (ELSE <ORPHAN T AMBIGUOUS PRSI>)>
-               <TRACE-OUT>
-               <RFALSE>)>>>

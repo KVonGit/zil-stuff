@@ -333,7 +333,7 @@ greener on the other side of the ">
   (SYNONYM SIGN)
   (ADJECTIVE VERY UNDRAMATIC)
   (IN KOWWS-CHASM)
-  (FLAGS TRYTAKEBIT NDESCBIT)
+  (FLAGS NDESCBIT)
   (ACTION CHASM-SIGN-R)>
 
 <OBJECT CHASM
@@ -346,7 +346,7 @@ greener on the other side of the ">
 
 <ROUTINE CHASM-SIGN-R ()
     <COND
-      (<OR <VERB? EXAMINE><VERB? READ>>
+      (<VERB? EXAMINE READ>
         <TELL "It reads: '">
         <ITALICIZE "Got milk?  Come to Farmer Zeke's mag-NIFicent silo!">
         <TELL "'" CR>)
@@ -559,6 +559,7 @@ moment.  Perhaps you should go away.||There is a ">
 <OBJECT TABLE
   (IN ZEKES-FARMHOUSE)
   (DESC "the table")
+  (FDESC "Hmmm, what's a table doing here?  Cool!  It has a TREASURE CHEST on it!")
   (SYNONYM TABLE)
   (FLAGS CONTBIT SURFACEBIT NDESCBIT NARTICLEBIT)
   (ACTION TABLE-R)>
@@ -567,17 +568,6 @@ moment.  Perhaps you should go away.||There is a ">
 
 <ROUTINE TABLE-R ()
   <COND
-    (<VERB? EXAMINE>
-      <COND
-        (<NOT<==? ,EXAMINED-TABLE ,T>>
-        <SETG EXAMINED-TABLE T>
-        <TELL
-"Hmmm, what's a table doing here?  Cool!  ">)>
-      <TELL "It has a ">
-      <BOLDIZE "treasure chest">
-      <TELL " on it!" CR>
-      <THIS-IS-IT ,TREASURE-CHEST>
-      <RTRUE>)
     (<VERB? TAKE>
       <TELL
 "Farmer Zeke took the wise precaution of bolting his table to the floor." CR>)>>

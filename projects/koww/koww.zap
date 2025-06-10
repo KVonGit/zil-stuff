@@ -30,8 +30,8 @@
 	.WORD 0
 	.WORD 0
 	.WORD 0
-	.INSERT ".\koww_freq"
-	.INSERT ".\koww_data"
+	.INSERT "koww_freq"
+	.INSERT "koww_data"
 
 	.FUNCT GO
 START::
@@ -4711,9 +4711,8 @@ START::
 	PRINTR "."
 
 	.FUNCT CHASM-SIGN-R
-	EQUAL? PRSA,V?EXAMINE /?L3
-	EQUAL? PRSA,V?READ \?L1
-?L3:	PRINTI "It reads: '"
+	EQUAL? PRSA,V?EXAMINE,V?READ \?L1
+	PRINTI "It reads: '"
 	ICALL2 ITALICIZE,STR?47
 	PRINTR "'"
 ?L1:	EQUAL? PRSA,V?TAKE \FALSE
@@ -4838,17 +4837,7 @@ There is a "
 	PRINTR "."
 
 	.FUNCT TABLE-R
-	EQUAL? PRSA,V?EXAMINE \?L1
-	EQUAL? EXAMINED-TABLE,1 /?L3
-	SET 'EXAMINED-TABLE,1
-	PRINTI "Hmmm, what's a table doing here?  Cool!  "
-?L3:	PRINTI "It has a "
-	ICALL2 BOLDIZE,STR?59
-	PRINTI " on it!"
-	CRLF
-	ICALL2 THIS-IS-IT,TREASURE-CHEST
-	RTRUE
-?L1:	EQUAL? PRSA,V?TAKE \FALSE
+	EQUAL? PRSA,V?TAKE \FALSE
 	PRINTR "Farmer Zeke took the wise precaution of bolting his table to the floor."
 
 	.FUNCT TREASURE-CHEST-R
@@ -4883,7 +4872,7 @@ There is a "
 	RTRUE
 ?L1:	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "Standing in the silo, grinning like the idiot that he is, is Farmer "
-	ICALL2 BOLDIZE,STR?60
+	ICALL2 BOLDIZE,STR?59
 	PRINTI "."
 	CRLF
 	CRLF
@@ -4977,7 +4966,7 @@ There is a "
 	.FUNCT INSIDE-GOBLIN-LAIR-R,RARG
 	EQUAL? RARG,M-LOOK \?L1
 	PRINTI "You are escorted to the Goblin King's throne room, a large chamber ornamented with "
-	ICALL2 BOLDIZE,STR?61
+	ICALL2 BOLDIZE,STR?60
 	PRINTI " of nude female goblins. You try hard to avoid puking."
 	CRLF
 	CRLF
@@ -5033,7 +5022,7 @@ There is a "
 	.FUNCT NECROYAKS-SIGN-R
 	EQUAL? PRSA,V?EXAMINE,V?READ \?L1
 	PRINTI "It reads: "
-	ICALL2 ITALICIZE,STR?62
+	ICALL2 ITALICIZE,STR?61
 	CRLF
 	RTRUE
 ?L1:	EQUAL? PRSA,V?TAKE \FALSE
@@ -5042,7 +5031,7 @@ There is a "
 	.FUNCT AMBUSH-POINT-R,RARG
 	EQUAL? RARG,M-LOOK \?L1
 	PRINTI "A cliff face blocks your way here. It's steep -- you can't climb. If you want to continue, you'll have to "
-	ICALL2 BOLDIZE,STR?63
+	ICALL2 BOLDIZE,STR?62
 	PRINTI " the face."
 	CRLF
 	CRLF
@@ -5117,7 +5106,7 @@ There is a "
 	.FUNCT PHOENIX-PEAK-R,RARG
 	EQUAL? RARG,M-FLASH \FALSE
 	PRINTI "After hard hours of climbing, you finally reach the summit of Phoenix Peak.  Here, in all its glory, sits the "
-	ICALL2 BOLDIZE,STR?64
+	ICALL2 BOLDIZE,STR?63
 	PRINTI "."
 	CRLF
 	CRLF
@@ -5134,14 +5123,14 @@ There is a "
 	ZERO? STACK /?L4
 	PRINTR "does not reply."
 ?L4:	PRINTI "demands to know "
-	ICALL2 ITALICIZE,STR?65
+	ICALL2 ITALICIZE,STR?64
 	PRINTI " such a weakling as you has come here!  ""If you do not have my wing feather with you, I'm afraid I must ask you to leave "
-	ICALL2 ITALICIZE,STR?66
+	ICALL2 ITALICIZE,STR?65
 	PRINTI "  Now, do you have my wing feather or not?"" -- "
 	CRLF
-	ICALL2 BOLDIZE,STR?67
+	ICALL2 BOLDIZE,STR?66
 	PRINTI " or "
-	ICALL2 BOLDIZE,STR?68
+	ICALL2 BOLDIZE,STR?67
 	PRINTI "? "
 	CALL1 YES? >STACK
 	ZERO? STACK /?L7
@@ -5157,7 +5146,7 @@ There is a "
 
 	.FUNCT PHOENIX-PROC-R
 	PRINTI """Thank you; you have found my wing feather. In the wrong hands, that could have been very dangerous. I will give you this 'fly' scroll to compensate you for your hard work. "
-	ICALL2 BOLDIZE,STR?69
+	ICALL2 BOLDIZE,STR?68
 	PRINTI " the scroll to fly, but it will only work once."""
 	CRLF
 	MOVE FLY-SCROLL,PLAYER
@@ -5275,9 +5264,22 @@ The Resplendent Magnificent Phoenix bats you with one claw. You roll back down t
 	PRINTR "You are covered in purple paint."
 ?L10:	PRINTR "You look like you're up for an adventure."
 
+	.FUNCT V-TAKE-BS
+	ZERO? PRSO \?L3
+	PRINTI "DEBUGGING: Player used TAKE ALL."
+	CRLF
+	EQUAL? HERE,ZEKES-FARM /?L5
+	EQUAL? HERE,ZEKES-SILO \?L3
+?L5:	PRINTI "There's nothing obvious to take, or that's what the code is telling me, anyway."
+	CRLF
+	SET 'P-CONT,-1
+	RETURN 2
+?L3:	ICALL2 TRY-TAKE,PRSO
+	RTRUE
+
 	.FUNCT PSEUDO-AUTO-ACTION-1
 	EQUAL? PRSA,V?EXAMINE \FALSE
 	PRINTR "It's very, very green."
 
-	.INSERT ".\koww_str"
+	.INSERT "koww_str"
 	.END

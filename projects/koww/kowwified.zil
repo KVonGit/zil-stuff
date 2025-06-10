@@ -382,7 +382,16 @@
                  Try expanding the search if we can."
                <SET F <ORB .BITS ;"<ORB" ,SF-HELD ,SF-CARRIED ,SF-ON-GROUND ,SF-IN-ROOM ;">" >>
                <COND (<=? .BITS .F>
-                      <TELL "There are none at all available!" CR>
+                      <TELL "There is no 'all' available">
+                      <COND
+                        (<VERB? TAKE>
+                          <TELL " to take">)
+                      >
+                      <COND
+                        (<VERB? DROP>
+                          <TELL " to drop">)
+                      >
+                      <TELL "!" CR>
                       <TRACE-OUT>
                       <RFALSE>)>
                <TRACE 4 "[expanding to reasonable scope]" CR>
@@ -421,3 +430,34 @@
                      (ELSE <ORPHAN T AMBIGUOUS PRSI>)>
                <TRACE-OUT>
                <RFALSE>)>>>
+
+<ROUTINE ALL-INCLUDES? (OBJ)
+  <NOT
+    <OR
+      <FSET? .OBJ ,INVISIBLE>
+      <FSET? .OBJ ,NALLBIT>
+      <=? .OBJ ,WINNER>
+      <AND
+        <VERB? TAKE>
+        <==? <LOC .OBJ> ,WINNER>
+      >
+      <AND
+        <VERB? DROP>
+        <NOT
+          <==? <LOC .OBJ> ,WINNER>
+        >
+      >
+      <AND
+        <VERB? TAKE DROP>
+        <NOT
+          <AND
+            <OR
+              <FSET? .OBJ ,TAKEBIT>
+              <FSET? .OBJ ,TRYTAKEBIT>
+            >
+          >
+        >
+      >
+    >
+  >
+>
