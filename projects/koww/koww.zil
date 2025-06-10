@@ -5,10 +5,8 @@
 
 <CONSTANT GAME-BANNER
 "The Adventures of Koww the Magician
-|(ZIL Port of the Quest 2 Classic)
-|Quest Interactive - Fantasy
-|by Brian the Great
-|Copyright (c) 1999 Brian the Great. All rights reserved.
+|Based upon the original Quest 2 game by Brian the Great
+|Copyright (c) 1999-2025 Brian the Great
 |v0.1.9 alpha
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
@@ -19,8 +17,7 @@
   <BOLDIZE "*** DEBUGGING ENABLED ***">
   <CRLF><CRLF>
   <ITALICIZE 
-"*** Find out if the grass is really greener on the other side of the chasm. 
-***">
+"***  Find out if the grass is really greener on the other side of the chasm.  ***">
   <CRLF>
   <CRLF>
   <V-VERSION>
@@ -31,6 +28,9 @@
   <MAIN-LOOP>>
 
 <COMPILATION-FLAG DEBUGGING-VERBS T>
+
+;"----------------------- UNCOMMENT TO ADD FLAGS --------------------------------------------------"
+<SETG EXTRA-FLAGS (NALLBIT)>
 
 <INSERT-FILE "parser">
 
@@ -82,7 +82,9 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
           <REMOVE ,MILK>
           <MOVE ,PITCHFORK ,PLAYER>
           <THIS-IS-IT ,PITCHFORK>
-          <RTRUE>)>)>>
+          <RTRUE>)>)
+    (<VERB? THINK-ABOUT>
+      <TELL "Zeke is quite fond of your magic milk, but you can only GIVE so much each day." CR>)>>
 
 <OBJECT PITCHFORK
   (DESC "pitchfork")
@@ -216,7 +218,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
 <ROUTINE DUCK-TURD-R ()
   <COND
     (<VERB? EXAMINE>
-        <TELL "A fowl bit of potty humour." CR>)
+        <TELL "About what you'd expect, obviously dropped by something fowl." CR>)
     (<VERB? DROP>
       <QUEST-TWO-R>)
     (<VERB? GIVE>
@@ -475,7 +477,7 @@ jade statuette, which you take." CR>
       <MOVE ,JADE-STATUETTE ,PLAYER>
       <FSET ,JADE-STATUETTE ,TOUCHBIT>
       <THIS-IS-IT ,JADE-STATUETTE>
-      <INCREMENT-SCORE 5>)
+      <INCREMENT-SCORE 15>)
     (<FSET? ,JADE-STATUETTE ,TOUCHBIT>
       <TELL
 "You've already done that bit." CR>)

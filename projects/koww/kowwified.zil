@@ -1,4 +1,5 @@
 <ROUTINE PARSER ("AUX" NOBJ VAL DIR DIR-WN O-R KEEP OW OH OHL)
+    <SETG COULDNT-GO 0>
     ;"Need to (re)initialize locals here since we use AGAIN"
     <SET OW ,WINNER>
     <SET OH ,HERE>
@@ -382,7 +383,7 @@
                  Try expanding the search if we can."
                <SET F <ORB .BITS ;"<ORB" ,SF-HELD ,SF-CARRIED ,SF-ON-GROUND ,SF-IN-ROOM ;">" >>
                <COND (<=? .BITS .F>
-                      <TELL "There is no 'all' available">
+                      <TELL "There is no 'all'">
                       <COND
                         (<VERB? TAKE>
                           <TELL " to take">)

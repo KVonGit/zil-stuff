@@ -1,7 +1,0 @@
-! KOWW blurb file
-copyright "Brian the Great 1999"
-release 0
-palette 16 bit
-resolution 600x400
-storyfile "KOWW.z5"
-picture  pattern  "Cover.png"

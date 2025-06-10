@@ -119,11 +119,11 @@ Koww bell!)" CR>>
 <ROUTINE V-DANCE ()
   <SILLY>>
   
-<SYNTAX HINTS = V-HINTS>
+<SYNTAX HELP = V-HELP>
 
-<SYNONYM HINTS HINT HELP>
+<VERB-SYNONYM HELP HINT HINTS>
   
-<ROUTINE V-HINTS ()
+<ROUTINE V-HELP ()
   <TELL
 "If you're really stuck, consult your Koww manual, CONTEMPLATE SOMETHING,
 peruse the feelies, or just check out the walkthrough on IFDB." CR>>
@@ -277,6 +277,65 @@ from the east." CR>)
 <SYNTAX WALK TO OBJECT (FIND DOORBIT) (IN-ROOM) = V-ENTER>
 <SYNTAX WALK INTO OBJECT (FIND DOORBIT) (IN-ROOM) = V-ENTER>
 
+<GLOBAL COULDNT-GO 0>
+
+<ROUTINE V-WALK ("AUX" PT PTS RM D)
+    <COND (<NOT ,PRSO-DIR>
+           <PRINTR "You must give a direction to walk in.">)
+          (<0? <SET PT <GETPT ,HERE ,PRSO>>>
+           <COND (<OR ,HERE-LIT <NOT <DARKNESS-F ,M-DARK-CANT-GO>>>
+                  <TELL ,CANT-GO-THAT-WAY CR>
+                  <SETG COULDNT-GO 1>
+                  <SETG MOVES <- ,MOVES 1>>)>
+           <SETG P-CONT 0>
+           <RTRUE>)
+          (<==? <SET PTS <PTSIZE .PT>> ,UEXIT>
+           <SET RM <GET/B .PT ,EXIT-RM>>)
+          (<==? .PTS ,NEXIT>
+           <TELL <GET .PT ,NEXIT-MSG> CR>
+           <SETG P-CONT 0>
+           <RTRUE>)
+          (<==? .PTS ,FEXIT>
+           <COND (<0? <SET RM <APPLY <GET .PT ,FEXIT-RTN>>>>
+                  <SETG P-CONT 0>
+                  <RTRUE>)>)
+          (<==? .PTS ,CEXIT>
+           <COND (<VALUE <GETB .PT ,CEXIT-VAR>>
+                  <SET RM <GET/B .PT ,EXIT-RM>>)
+                 (ELSE
+                  <COND (<SET RM <GET .PT ,CEXIT-MSG>>
+                         <TELL .RM CR>)
+                        (<AND <NOT ,HERE-LIT> <DARKNESS-F ,M-DARK-CANT-GO>>
+                         ;"DARKNESS-F printed a message")
+                        (ELSE
+                         <TELL ,CANT-GO-THAT-WAY CR>)>
+                  <SETG P-CONT 0>
+                  <SETG COULDNT-GO 1>
+                  <SETG MOVES <- ,MOVES 1>>
+                  <RTRUE>)>)
+          (<==? .PTS ,DEXIT>
+           <COND (<FSET? <SET D <GET/B .PT ,DEXIT-OBJ>> ,OPENBIT>
+                  <SET RM <GET/B .PT ,EXIT-RM>>)
+                 (<SET RM <GET .PT ,DEXIT-MSG>>
+                  <TELL .RM CR>
+                  <SETG P-CONT 0>
+                  <RTRUE>)
+                 (ELSE
+                  <THIS-IS-IT .D>
+                  <TELL "You'll have to open " T .D
+                        " first." CR>
+                  <SETG P-CONT 0>
+                  <SETG COULDNT-GO 1>
+                  <SETG MOVES <- ,MOVES 1>>
+                  <RTRUE>)>)
+          (ELSE
+           <TELL "Broken exit (" N .PTS ")." CR>
+           <SETG P-CONT 0>
+           <SETG COULDNT-GO 1>
+           <SETG MOVES <- ,MOVES 1>>
+           <RTRUE>)>
+    <GOTO .RM>>
+
 <SYNTAX SCORE = V-SCORE>
 
 <ROUTINE V-SCORE ()
@@ -320,7 +379,7 @@ are ready.) >" >
     ;"check for light first"
     <COND (,HERE-LIT
            <COND (<FIRST? ,WINNER>
-                  <TELL "Items:" CR>
+                  <TELL "You have:" CR>
                   <MAP-CONTENTS (I ,WINNER)
                       <TELL "  - " A .I>
                       <AND <FSET? .I ,WORNBIT> <TELL " (worn)">>

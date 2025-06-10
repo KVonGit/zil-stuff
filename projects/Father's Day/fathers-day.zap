@@ -46,6 +46,7 @@ START::
 	ICALL1 V-VERSION
 	CRLF
 	ICALL1 V-LOOK
+	ICALL QUEUE,I-COULDNT-GO,-1
 	ICALL1 MAIN-LOOP
 	QUIT
 
@@ -2810,79 +2811,6 @@ START::
 ?L14:	ICALL2 PRINT-INDEF,O
 	RTRUE
 
-	.FUNCT V-WALK,PT,PTS,RM,D
-	ZERO? PRSO-DIR \?L1
-	PRINTR "You must give a direction to walk in."
-?L1:	GETPT HERE,PRSO >PT
-	ZERO? PT \?L3
-	ZERO? HERE-LIT \?L6
-	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
-	ZERO? STACK \?L4
-?L6:	PRINT CANT-GO-THAT-WAY
-	CRLF
-?L4:	SET 'P-CONT,0
-	RTRUE
-?L3:	PTSIZE PT >PTS
-	EQUAL? PTS,UEXIT \?L8
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L8:	EQUAL? PTS,NEXIT \?L9
-	GET PT,NEXIT-MSG >STACK
-	PRINT STACK
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L9:	EQUAL? PTS,FEXIT \?L10
-	GET PT,FEXIT-RTN >STACK
-	CALL1 STACK >RM
-	ZERO? RM \?L27
-	SET 'P-CONT,0
-	RTRUE
-?L10:	EQUAL? PTS,CEXIT \?L14
-	GETB PT,CEXIT-VAR >STACK
-	VALUE STACK >STACK
-	ZERO? STACK /?L15
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L15:	GET PT,CEXIT-MSG >RM
-	ZERO? RM /?L18
-	PRINT RM
-	CRLF
-	JUMP ?L21
-?L18:	ZERO? HERE-LIT \?L20
-	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
-	ZERO? STACK \?L21
-?L20:	PRINT CANT-GO-THAT-WAY
-	CRLF
-?L21:	SET 'P-CONT,0
-	RTRUE
-?L14:	EQUAL? PTS,DEXIT \?L22
-	GET PT,DEXIT-OBJ >D
-	FSET? D,OPENBIT \?L23
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L23:	GET PT,DEXIT-MSG >RM
-	ZERO? RM /?L25
-	PRINT RM
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L25:	ICALL2 THIS-IS-IT,D
-	PRINTI "You'll have to open "
-	ICALL2 PRINT-DEF,D
-	PRINTI " first."
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L22:	PRINTI "Broken exit ("
-	PRINTN PTS
-	PRINTI ")."
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L27:	CALL2 GOTO,RM >STACK
-	RSTACK
-
 	.FUNCT V-ENTER
 	FSET? PRSO,DOORBIT \?L1
 	CALL2 DOOR-DIR,PRSO >STACK
@@ -3810,19 +3738,22 @@ START::
 	.FUNCT HEADSTONE-R
 	EQUAL? PRSA,V?READ \?L1
 	LOC ZOMBIE-HAND >STACK
-	EQUAL? STACK,YOUR-DADS-GRAVE \?L3
-	PRINTI "Just as you bend down to read it, a HAND bursts out of the ground and grabs you!!!"
+	EQUAL? STACK,FRESHLY-DUG-GRAVE \?L3
+	PRINTI "Just as you bend down to read it, a ZOMBIE HAND bursts out of the ground and grabs you!!!"
 	CRLF
 	MOVE ZOMBIE-HAND,HERE
+	ICALL2 THIS-IS-IT,ZOMBIE-HAND
 	SET 'ZOMBIE-HAND-GOT-YA,1
 	CALL QUEUE,I-ZOMBIE-HAND,-1 >STACK
 	RSTACK
 ?L3:	PRINTR "There's no time for reading that right now!"
 ?L1:	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "The writing on it is so small, you've never even tried to read it."
+	PRINTR "The writing on it is so small, you may not be able to read it."
 
 	.FUNCT ZOMBIE-EMERGES-R
-	PRINTI "A hideous ZOMBIE crawls out of your dad's grave!"
+	PRINTI "
+
+A hideous ZOMBIE crawls out of the grave!"
 	CRLF
 	MOVE ZOMBIE,HERE
 	CALL QUEUE,I-ZOMBIE,-1 >STACK
@@ -3831,6 +3762,7 @@ START::
 	.FUNCT I-ZOMBIE
 	LOC ZOMBIE >STACK
 	EQUAL? STACK,HERE \?L1
+	SET 'ZOMBIE-SHADOW,1
 	DEC 'ZOMBIE-BITE-COUNTDOWN
 	GRTR? ZOMBIE-BITE-COUNTDOWN,1 \?L3
 	PRINTR "
@@ -3842,7 +3774,13 @@ The zombie slowly limps towards you..."
 The zombie is VERY close!!!"
 ?L5:	CALL1 ZOMBIE-BITE-R >STACK
 	RSTACK
-?L1:	LOC ZOMBIE >STACK
+?L1:	EQUAL? ZOMBIE-SHADOW,1 \?L8
+	LOC PLAYER >STACK
+	MOVE ZOMBIE,STACK
+	PRINTR "
+
+The zombie follows closely."
+?L8:	LOC ZOMBIE >STACK
 	CALL2 TEST-ZOMBIE-EXITS,STACK >STACK
 	RSTACK
 
@@ -3861,13 +3799,20 @@ The zombie is VERY close!!!"
 	RANDOM IDX >CHOSEN
 	GETB TABLE?1,CHOSEN >DEST
 	MOVE ZOMBIE,DEST
-	RTRUE
+	EQUAL? DEST,HERE \FALSE
+	PRINTR "
+
+A ZOMBIE suddenly appears!!!"
 
 	.FUNCT ZOMBIE-BITE-R
 	EQUAL? ONCE-BITTEN,1 /?L1
 	SET 'ONCE-BITTEN,1
-	PRINTR "TODO: The zombie BITES YOU!!!"
-?L1:	PRINTR "TODO: The zombie stands silently beside you."
+	PRINTR "
+
+The zombie BITES you!!!"
+?L1:	PRINTR "
+
+The zombie stands silently beside you, mumbling and groaning."
 
 	.FUNCT ZOMBIE-HAND-R
 	EQUAL? PRSA,V?ATTACK \?L1
@@ -3882,13 +3827,16 @@ The zombie is VERY close!!!"
 ?L7:	EQUAL? PRSA,V?TAKE \FALSE
 	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L9
 	PRINTR "You have lost your mind. It's got a hold of YOU, not the other way around!"
-?L9:	FSET? ZOMBIE-HAND,TOUCHBIT /?L12
+?L9:	CALL2 HELD?,ZOMBIE-HAND >STACK
+	ZERO? STACK /?L11
+	PRINTR "The zombie hand taps you on your shoulder, as if to say, ""hello! I'm here already!"""
+?L11:	FSET? ZOMBIE-HAND,TOUCHBIT /?L13
 	FSET ZOMBIE-HAND,TOUCHBIT
-	PRINTI "You get a good, firm hold on the hand and... it breaks off just below the wrist!!! It quickly runs up your arm and perches, palm-down, upon your shoulder."
+	PRINTI "You get a good, firm grip on the hand, and it breaks off at the wrist. It quickly runs up your arm and perches, palm-down, upon your shoulder."
 	CRLF
 	MOVE ZOMBIE-HAND,PLAYER
 	RTRUE
-?L12:	PRINTI "After thumb-wrestling with the stupid hand for half a turn, you finally manage to pick it up. It lets its fingers do the walking up your arm and perches, palm-down, upon your shoulder."
+?L13:	PRINTI "After thumb-wrestling with the stupid hand for half a turn, you finally manage to pick it up. It lets its fingers do the walking up your arm and perches, palm-down, upon your shoulder."
 	CRLF
 	MOVE ZOMBIE-HAND,PLAYER
 	RTRUE
@@ -3896,18 +3844,32 @@ The zombie is VERY close!!!"
 	.FUNCT I-ZOMBIE-HAND
 	IN? ZOMBIE-HAND,PLAYER \?L1
 	EQUAL? PRSO,ZOMBIE-HAND /?L1
+	EQUAL? PRSA,V?WAIT \?L3
 	CRLF
+	PRINTR "The zombie hand taps its fingers impatiently."
+?L3:	EQUAL? COULDNT-GO,1 \?L5
+	CRLF
+	PRINTR "The zombie hand pats your shoulder, as if to say, ""that's okay, Adventurer! You'll learn to walk one day soon!"""
+?L5:	CRLF
 	PRINTR "The zombie hand rests happily on your shoulder."
 ?L1:	LOC ZOMBIE-HAND >STACK
 	EQUAL? STACK,HERE \FALSE
 	EQUAL? PRSO,ZOMBIE-HAND /FALSE
-	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L4
+	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L8
 	CRLF
 	PRINTR "The zombie hand has a firm grip on you!"
-?L4:	FSET? ZOMBIE-HAND,TOUCHBIT \?L7
+?L8:	FSET? ZOMBIE-HAND,TOUCHBIT \?L11
 	PRINTR "The zombie hand flops around helplessly."
-?L7:	CRLF
+?L11:	CRLF
 	PRINTR "The zombie hand flails around aimlessly."
+
+	.FUNCT ZOMBIE-R,RARG
+	EQUAL? RARG,M-END \FALSE
+	EQUAL? PRSA,V?WALK \FALSE
+	LOC ZOMBIE >STACK
+	EQUAL? STACK,HERE \FALSE
+	EQUAL? ZOMBIE-SHADOW,1 \FALSE
+	PRINTR "The zombie follows you."
 
 	.FUNCT BEER-R
 	EQUAL? PRSA,V?LOOK \?L1
@@ -3915,14 +3877,17 @@ The zombie is VERY close!!!"
 	FSET? PRSO,OPENBIT \?L3
 	PRINTI "n open"
 	JUMP ?L5
-?L3:	PRINTI "closed"
+?L3:	PRINTI " closed"
 ?L5:	PRINTR " can of Squiffy beer."
 ?L1:	EQUAL? PRSA,V?DRINK \?L6
 	PRINTR "You don't look old enough."
 ?L6:	EQUAL? PRSA,V?TAKE \FALSE
 	FSET? BEER,TOUCHBIT /FALSE
 	PRINTI "As you take the beer, you hear a strange sound from outside. (Probably unrelated.)"
-	CRLF
+	LOC ZOMBIE-HAND >STACK
+	EQUAL? STACK,PLAYER \?L8
+	PRINTI " The zombie hand squeezes your shoulder."
+?L8:	CRLF
 	MOVE BEER,PLAYER
 	MOVE ZOMBIE,CEMETERY
 	ICALL QUEUE,I-ZOMBIE,-1
@@ -3957,17 +3922,6 @@ The zombie is VERY close!!!"
 	PRINTR " does not reply."
 ?L1:	CALL2 POINTLESS,STR?34 >STACK
 	RSTACK
-
-	.FUNCT TRACTOR-R,RARG
-	EQUAL? RARG,M-BEG \?L1
-	EQUAL? PRSA,V?WALK \FALSE
-	SET 'WINNER,TRACTOR
-	ICALL1 V-WALK
-	SET 'WINNER,PLAYER
-	RETURN WINNER
-?L1:	EQUAL? PRSA,V?ENTER \FALSE
-	MOVE PLAYER,TRACTOR
-	RTRUE
 
 	.FUNCT V-INVENTORY,I,J
 	ZERO? HERE-LIT /?L1
@@ -4004,6 +3958,95 @@ The zombie is VERY close!!!"
 	RTRUE
 ?L3:	PRINTR "You are empty-handed."
 ?L1:	PRINTR "It's too dark to see what you're carrying."
+
+	.FUNCT I-COULDNT-GO,RARG
+	CALL QUEUE,I-RESET-COULDNT-GO,1 >STACK
+	RSTACK
+
+	.FUNCT I-RESET-COULDNT-GO
+	SET 'COULDNT-GO,0
+	RETURN COULDNT-GO
+
+	.FUNCT V-WALK,PT,PTS,RM,D
+	ZERO? PRSO-DIR \?L1
+	PRINTR "You must give a direction to walk in."
+?L1:	GETPT HERE,PRSO >PT
+	ZERO? PT \?L3
+	ZERO? HERE-LIT \?L6
+	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
+	ZERO? STACK \?L4
+?L6:	PRINT CANT-GO-THAT-WAY
+	CRLF
+	SET 'COULDNT-GO,1
+	DEC 'MOVES
+?L4:	SET 'P-CONT,0
+	RTRUE
+?L3:	PTSIZE PT >PTS
+	EQUAL? PTS,UEXIT \?L8
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L8:	EQUAL? PTS,NEXIT \?L9
+	GET PT,NEXIT-MSG >STACK
+	PRINT STACK
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L9:	EQUAL? PTS,FEXIT \?L10
+	GET PT,FEXIT-RTN >STACK
+	CALL1 STACK >RM
+	ZERO? RM \?L27
+	SET 'P-CONT,0
+	RTRUE
+?L10:	EQUAL? PTS,CEXIT \?L14
+	GETB PT,CEXIT-VAR >STACK
+	VALUE STACK >STACK
+	ZERO? STACK /?L15
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L15:	GET PT,CEXIT-MSG >RM
+	ZERO? RM /?L18
+	PRINT RM
+	CRLF
+	JUMP ?L21
+?L18:	ZERO? HERE-LIT \?L20
+	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
+	ZERO? STACK \?L21
+?L20:	PRINT CANT-GO-THAT-WAY
+	CRLF
+?L21:	SET 'P-CONT,0
+	SET 'COULDNT-GO,1
+	DEC 'MOVES
+	RTRUE
+?L14:	EQUAL? PTS,DEXIT \?L22
+	GET PT,DEXIT-OBJ >D
+	FSET? D,OPENBIT \?L23
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L23:	GET PT,DEXIT-MSG >RM
+	ZERO? RM /?L25
+	PRINT RM
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L25:	ICALL2 THIS-IS-IT,D
+	PRINTI "You'll have to open "
+	ICALL2 PRINT-DEF,D
+	PRINTI " first."
+	CRLF
+	SET 'P-CONT,0
+	SET 'COULDNT-GO,1
+	DEC 'MOVES
+	RTRUE
+?L22:	PRINTI "Broken exit ("
+	PRINTN PTS
+	PRINTI ")."
+	CRLF
+	SET 'P-CONT,0
+	SET 'COULDNT-GO,1
+	DEC 'MOVES
+	RTRUE
+?L27:	CALL2 GOTO,RM >STACK
+	RSTACK
 
 	.FUNCT ALL-INCLUDES?,OBJ
 	FSET? OBJ,INVISIBLE /FALSE
