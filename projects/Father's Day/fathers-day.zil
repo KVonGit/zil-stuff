@@ -47,7 +47,7 @@
     (DESC "Cemetery")
     (IN ROOMS)
     (LDESC "Your family cemetery has seen better days, but no one here ever complains.||The front
-yard is to the northeast, and the woods mostly surround you (to the east, west, and northeast).")
+yard is to the northwest, and the woods mostly surround you (to the east, west, and northeast).")
     (EAST TO WOODS-TWO)
     (WEST TO WOODS)
     (NORTHEAST TO WOODS-THREE)
@@ -157,7 +157,7 @@ yard is to the northeast, and the woods mostly surround you (to the east, west, 
       <COND
         (<==? ,ZOMBIE-SHADOW 1>
           <MOVE ,ZOMBIE <LOC ,PLAYER>>
-          <TELL "||The zombie follows closely." CR>
+          <TELL "||The zombie enters" <REVERSE-DIR-STR ,PRSO> "." CR>
         )
         (ELSE
           <TEST-ZOMBIE-EXITS <LOC ,ZOMBIE>>
@@ -187,12 +187,23 @@ yard is to the northeast, and the woods mostly surround you (to the east, west, 
      <MOVE ,ZOMBIE .DEST>
      <COND
       (<==? .DEST ,HERE>
-        <TELL "||A ZOMBIE suddenly appears!!!" CR>
+        <TELL "||A ZOMBIE suddenly enters" <OPPO-DIR .CHOSEN> "!!!" CR>
       )
       >
     )
   >
 >
+
+<ROUTINE OPPO-DIR (IDX)
+  <RETURN
+    <COND
+      (<==? .IDX 0> " from the south")
+      (<==? .IDX 1> " from the north")
+      (<==? .IDX 2> " from the west")
+      (<==? .IDX 3> " from the east")
+      (<==? .IDX 4> " from below")
+      (<==? .IDX 5> " from above")
+      (T ", seemingly out of thin air")>>>
 
 <ROUTINE ZOMBIE-BITE-R ()
   <COND
@@ -205,7 +216,6 @@ yard is to the northeast, and the woods mostly surround you (to the east, west, 
     )
   >
 >
-
 
 <ROUTINE ZOMBIE-HAND-R ()
   <COND
@@ -287,12 +297,24 @@ one day soon!\"" CR>
   (ACTION ZOMBIE-R)
 >
   
-<ROUTINE ZOMBIE-R (RARG)
+<ROUTINE ZOMBIE-R ()
   <COND
-    (<AND <==? .RARG ,M-END> <VERB? WALK> <==? <LOC ,ZOMBIE> ,HERE> <==? ,ZOMBIE-SHADOW 1>>
-      <TELL "The zombie follows you." CR>
+    (<AND <VERB? WALK> <==? <LOC ,ZOMBIE> ,HERE> <==? ,ZOMBIE-SHADOW 1>>
+      <TELL "||The zombie follows you." CR>
     )
   >    
+>
+
+<ROUTINE REVERSE-DIR-STR (DIR)
+  <COND
+    (<==? .DIR ,P?NORTH> " from the south")
+    (<==? .DIR ,P?SOUTH> " from the north")
+    (<==? .DIR ,P?EAST> " from the west")
+    (<==? .DIR ,P?WEST> " from the east")
+    (<==? .DIR ,P?UP> " from below")
+    (<==? .DIR ,P?DOWN> " from above")
+    (T ", seemingly out of thin air")
+  >
 >
 
 <ROOM FRONT-PORCH
@@ -526,6 +548,27 @@ but the VEHBIT kit was added recently." CR>)
     (IN ROOMS)
     (EAST TO DRIVEWAY)
     (FLAGS LIGHTBIT)
+>
+
+<OBJECT SKATEBOARD
+  (IN DRIVEWAY)
+  (SYNONYM SKATEBOARD BOARD)
+  (ADJECTIVE SKATE)
+  (DESC "skateboard")
+  (ACTION SKATE-R)
+  (FLAGS LIGHTBIT SURFACEBIT CONTBIT SEARCHBIT)
+  (OUT PER SKATE-R)
+>
+
+<ROUTINE SKATE-R ("OPT" RARG)
+  <AND 
+    <VERB? ENTER>
+    <MOVE ,PLAYER ,SKATEBOARD>
+    <SETG VEHICLE ,SKATEBOARD>
+  >
+  <AND
+    <==? .RARG ,M-BEG> <VERB? WALK> <TELL "PRSO: " D, PRSO>
+  >
 >
 
 ;"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -996,5 +1039,33 @@ but the VEHBIT kit was added recently." CR>)
         <RFALSE>
       )
     >
+  >
+>
+
+<GLOBAL VEHICLE <>>
+
+;"Action handler for the player."
+<ROUTINE PLAYER-F ("OPT" RARG)
+  <COND
+    (<==? .RARG ,M-BEG>
+      <COND
+        (<IN? ,VEHICLE ,PLAYER>
+          <COND
+            (<VERB? WALK>
+              <SETG WINNER ,VEHICLE>
+              <V-WALK>
+              <V-LOOK>
+              <SETG WINNER ,PLAYER>
+            )
+          >
+        )
+      >
+    )
+    (<N==? ,PLAYER ,PRSO>
+      <RFALSE>
+    )
+    (<VERB? EXAMINE>
+      <PRINTR "You look like you're up for an adventure.">
+    )
   >
 >

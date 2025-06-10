@@ -2,7 +2,7 @@
 
 ### Under Construction
 
-[Flags (BITs)](flags.md)
+[Flags (BITs)](https://github.com/KVonGit/zil-stuff/wiki/Flags)
 
 [Standard Verbs (ZILF)](built-in-commands.md)
 
