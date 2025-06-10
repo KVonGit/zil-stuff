@@ -82,7 +82,7 @@
 "You are in your hovel in the northernmost borderlands of the Kingdom of Nowhere. It is a round
 wattle and daub hut. There is a fireplace in the middle with a hole in the thatch roof above it
 acting as a chimney.||Around the circumference of the room there are a few sticks of furniture and
-rags that represent the totality of your worldly possessions.")
+rags that represent the totality of your worldly possessions.||You can go out.")
     (OUT TO NMEADOW)
     (ACTION HOVEL-R)>
 
@@ -457,7 +457,7 @@ from the fire." CR>)>>
     (<==? .RARG ,M-LOOK>
       <TELL 
 "You are in the meadow outside your hovel, several acres of wild grassland and wild flowers. You may
-be dirt poor, but the beauty of the landscape is some consolation." CR>
+be dirt poor, but the beauty of the landscape is some consolation.||You can go in our south." CR>
       <COND
         (<NOT <FSET? ,HERE ,TOUCHBIT>>
           <TELL CR 

@@ -1,0 +1,91 @@
+<CONSTANT MAX-PATH-LEN 20>
+
+<GLOBAL FOLLOWER-TABLE <ITABLE 10 0>>
+<GLOBAL FOLLOWER-PATH <ITABLE ,MAX-PATH-LEN 0>>
+<GLOBAL FOLLOWER-IDX 0>
+
+; "Find direction from a FROM room to the current room (HERE)"
+<ROUTINE FIND-DIRECTION-FROM (FROM "AUX" L)
+  <MAP-DIRECTIONS (P PT ,HERE)
+    <SET L <PTSIZE .PT>>
+    <COND
+      (<AND <EQUAL? .L ,UEXIT ,DEXIT ,CEXIT>
+        <EQUAL? <GET/B .PT ,EXIT-RM> .FROM>>
+        <RETURN .P>
+      )
+    >
+  >
+>
+
+; "Find a path from START to DEST using BFS and store in FOLLOWER-PATH"
+<ROUTINE FIND-PATH (START DEST "AUX" QUEUE VISITED PARENT IDX CURRENT NEXT EXIT RM)
+  <SET QUEUE <ITABLE 50 0>>
+  <SET VISITED <ITABLE 50 0>>
+  <SET PARENT <ITABLE 50 0>>
+  <PUTB .VISITED 0 .START>
+  <PUTB .QUEUE 0 .START>
+  <SET IDX 1>
+  <REPEAT ()
+    <COND (<0? .IDX> <RETURN 0>)>
+    <SET CURRENT <GETB .QUEUE <- .IDX 1>>>
+    <COND
+      (<==? .CURRENT .DEST>
+        <RETURN 1>
+      )
+    >
+    <MAP-DIRECTIONS (D PT .CURRENT)
+      <SET RM <GET .PT ,REXIT>>
+      <COND
+        (<NOT <IN? .RM .VISITED>>
+             <PUTB .QUEUE .IDX .RM>
+             <PUTB .VISITED .IDX .RM>
+             <PUTB .PARENT .IDX .CURRENT>
+             <SET IDX <+ .IDX 1>>
+        )
+      >
+    >
+  >
+>
+
+; "Build path into FOLLOWER-PATH using PARENT table"
+<ROUTINE BUILD-PATH (START DEST PARENT "AUX" PATH IDX CUR PREV DIR)
+  <SET IDX <- <PTSIZE .PARENT> 1>>
+  <SET CUR .DEST>
+  <SET FOLLOWER-IDX 0>
+  <REPEAT ()
+    <COND
+      (<==? .CUR .START>
+        <RETURN>
+      )
+    >
+    <SET PREV <GETB .PARENT .IDX>>
+    <SET DIR <FIND-DIRECTION-FROM .PREV>>
+    <PUTB ,FOLLOWER-PATH ,FOLLOWER-IDX .DIR>
+    <SET FOLLOWER-IDX <+ ,FOLLOWER-IDX 1>>
+    <SET CUR .PREV>
+    <SET IDX <- .IDX 1>>
+  >
+>
+
+; "Make a follower follow a target"
+<ROUTINE FOLLOW (FOLLOWER TARGET)
+  <SETG FOLLOWER-IDX 0>
+  <SETG FOLLOWER-TABLE <PUTB ,FOLLOWER-TABLE 0 .FOLLOWER>>
+  <COND
+    (<FIND-PATH <LOC .FOLLOWER> <LOC .TARGET>>
+         <BUILD-PATH <LOC .FOLLOWER> <LOC .TARGET> <LOC .FOLLOWER>>
+    )
+  >
+>
+
+; "Each turn, move the follower along the path"
+<ROUTINE FOLLOW-TICK (FOLLOWER "AUX" DIR DEST)
+  <COND
+    (<G=? ,FOLLOWER-IDX 0>
+         <SETG FOLLOWER-IDX <- ,FOLLOWER-IDX 1>>
+         <SET DIR <GETB ,FOLLOWER-PATH <- ,FOLLOWER-IDX 1>>>
+         <SET DEST <GET <LOC .FOLLOWER> .DIR>>
+         <MOVE .FOLLOWER .DEST>
+    )
+  >
+>

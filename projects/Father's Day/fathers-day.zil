@@ -99,7 +99,6 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
   (FLAGS NDESCBIT NALLBIT)
 >
 
-
 <GLOBAL ZOMBIE-BITE-COUNTDOWN 4>
 <GLOBAL ZOMBIE-EXITS <>>
 <GLOBAL ZOMBIE-HAND-GOT-YA <>>
@@ -182,8 +181,6 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
     (T
      <SET CHOSEN <RANDOM .IDX>>
      <SET DEST <GETB .TABLE .CHOSEN>>
-     ;<TELL "The ZOMBIE randomly moves to " D .DEST "." CR>
-     ;"TODO - Make REVERSE-DIRECTION routine to say The ZOMBIE enters from the DIR."
      <MOVE ,ZOMBIE .DEST>
      <COND
       (<==? .DEST ,HERE>
@@ -203,7 +200,10 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
       (<==? .IDX 3> " from the east")
       (<==? .IDX 4> " from below")
       (<==? .IDX 5> " from above")
-      (T ", seemingly out of thin air")>>>
+      (T ", seemingly out of thin air")
+    >
+  >
+>
 
 <ROUTINE ZOMBIE-BITE-R ()
   <COND
