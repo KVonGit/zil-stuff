@@ -62,8 +62,9 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
     (<==? .RARG ,M-BEG>
       <COND
         (<AND <VERB? WALK> <==? ,ZOMBIE-HAND-GOT-YA 1>>
-          <TELL "You can't go anywhere! The hand is holding onto you, and you can't get away!" CR>
-          <RFATAL>)
+          <TELL 
+"The ZOMBIE HAND covers your eyes! You can't go anywhere!" CR>
+          <FUCKING-CLEAR>)
       >)
   >
 >
@@ -89,6 +90,13 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
   (ACTION HEADSTONE-R)
 >
 
+<OBJECT SHOVEL
+  (IN CEMETERY)
+  (SYNONYM SHOVEL)
+  (DESC "shovel")
+  (FDESC "A shovel lies next to the fresh grave.")
+  (FLAGS TAKEBIT TOOLBIT)
+>
 
 <OBJECT ZOMBIE-HAND
   (IN FRESHLY-DUG-GRAVE)
@@ -111,10 +119,12 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
       <COND
         (<==? <LOC ,ZOMBIE-HAND> ,FRESHLY-DUG-GRAVE>
           <TELL
-"Just as you bend down to read it, a ZOMBIE HAND bursts out of the ground and grabs you!!!" CR>
+"Just as you bend down to read it, a ZOMBIE HAND bursts out of the fresh grave and grabs onto
+you!!!" CR>
           <MOVE ,ZOMBIE-HAND ,HERE>
           <THIS-IS-IT ,ZOMBIE-HAND>
           <SETG ZOMBIE-HAND-GOT-YA 1>
+          <SETG HAND-JUST-GRABBED-YOU 1>
           <QUEUE I-ZOMBIE-HAND -1>
         )
         (T
@@ -125,7 +135,7 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
     )
     (<VERB? EXAMINE>
       <TELL 
-"The writing on it is so small, you may not be able to read it." CR>
+"The writing on it is so small, you may not be able to read it..." CR>
     )
   >
 >
@@ -156,7 +166,7 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
       <COND
         (<==? ,ZOMBIE-SHADOW 1>
           <MOVE ,ZOMBIE <LOC ,PLAYER>>
-          <TELL "||The zombie enters" <REVERSE-DIR-STR ,PRSO> "." CR>
+          <TELL "||The zombie shambles along behind you" <REVERSE-DIR-STR ,PRSO> "." CR>
         )
         (ELSE
           <TEST-ZOMBIE-EXITS <LOC ,ZOMBIE>>
@@ -234,8 +244,12 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
       <SETG ONCE-BITTEN 1>
       <TELL "||The zombie BITES you!!!" CR>
     )
+    (<NOT <==? ,TWICE-SHY 1>>
+      <SETG TWICE-SHY 1>
+      <TELL "||The zombie sniffs you, groans unhappily, then just stands beside you and sulks." CR>
+    )
     (T
-      <TELL "||The zombie stands silently beside you, mumbling and groaning." CR>
+      <TELL "||The zombie stands silently beside you, sulking and groaning." CR>
     )
   >
 >
@@ -247,37 +261,50 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
         (<==? ,ZOMBIE-HAND-GOT-YA 1>
           <SETG ZOMBIE-HAND-GOT-YA <>>
           <TELL 
-"After a brief struggle with the zombie hand, you eventually manage to get it off of you." CR>)
+"After a brief struggle with the zombie hand, you eventually manage to get it off of you." CR>
+        )
         (T
           ;"TODO - Create a stooges-style routine for this!"
-          <TELL "Attacking the hand has no obvious effect. It just flops back and forth." CR>)>)
+          <TELL "Attacking the hand has no obvious effect. It just flops back and forth." CR>
+        )
+      >
+    )
     (<VERB? EXAMINE>
-      <TELL "It looks just like every other zombie hand you've ever seen." CR>)
+      <TELL "It looks just like every other zombie hand you've ever seen." CR>
+    )
     (<VERB? SPEAK>
-      <TELL "The zombie hand snaps back at you." CR>)
+      <TELL "The zombie hand snaps back at you." CR>
+    )
     (<VERB? TAKE>
       <COND
         (<==? ,ZOMBIE-HAND-GOT-YA 1>
-          <TELL "You have lost your mind. It's got a hold of YOU, not the other way around!" CR>)
+          <TELL "You have lost your mind. It's got a hold of YOU, not the other way around!" CR>
+        )
         (<HELD? ,ZOMBIE-HAND>
           <TELL
-"The zombie hand taps you on your shoulder, as if to say, \"hello! I'm here already!\"" CR>)
+"The zombie hand taps you on your shoulder, as if to say, \"hello! I'm here already!\"" CR>
+        )
         (T
-          <COND
-            (<NOT <FSET? ,ZOMBIE-HAND ,TOUCHBIT>>
-              <FSET ,ZOMBIE-HAND ,TOUCHBIT>
-              <TELL
-"You get a good, firm grip on the hand, and it breaks off at the wrist. It quickly runs up your arm
-and perches, palm-down, upon your shoulder." CR>
-              <MOVE ,ZOMBIE-HAND ,PLAYER>
-              ;"TODO - CREATE ZOMBIE-ARM and HOLE-IN-GRAVE and MOVE HERE!")
-            (T
-              <TELL 
+          <FSET ,ZOMBIE-HAND ,TOUCHBIT>
+          <TELL 
 "After thumb-wrestling with the stupid hand for half a turn, you finally manage to pick it up. It
 lets its fingers do the walking up your arm and perches, palm-down, upon your shoulder." CR>
-          <MOVE ,ZOMBIE-HAND ,PLAYER>)>)>)>>
+          <MOVE ,ZOMBIE-HAND ,PLAYER>
+        )
+      >
+    )
+  >
+>
+
+<GLOBAL HAND-JUST-GRABBED-YOU 0>
 
 <ROUTINE I-ZOMBIE-HAND ()
+  <COND
+    (<==? ,HAND-JUST-GRABBED-YOU 1>
+      <SETG HAND-JUST-GRABBED-YOU 0>
+      <RFALSE>
+    )
+  >
   <COND
     (<AND <IN? ,ZOMBIE-HAND ,PLAYER> <NOT <==? ,PRSO ,ZOMBIE-HAND>>>
       <COND
@@ -297,14 +324,20 @@ one day soon!\"" CR>
     (<AND <==? <LOC ,ZOMBIE-HAND> ,HERE> <NOT <PRSO? ,ZOMBIE-HAND>>>
       <COND
         (<==? ,ZOMBIE-HAND-GOT-YA 1>
-          <TELL CR "The zombie hand has a firm grip on you!" CR>)
+          <COND
+            (<NOT <VERB? WALK>>
+              <TELL CR "The zombie hand has a firm grip on you!" CR>
+            )
+          >
+        )
         (T
           <COND
             (<FSET? ,ZOMBIE-HAND ,TOUCHBIT>
               <TELL "The zombie hand flops around helplessly." CR>)
             (T
               <TELL CR "The zombie hand flails around aimlessly." CR>)
-          >)
+          >
+        )
       >
     )
   >
@@ -426,6 +459,14 @@ living room or north to the dining room.")
   >
 >
 
+<OBJECT RED-HERRING
+  (DESC "red herring")
+  (SYNONYM HERRING)
+  (ADJECTIVE RED)
+  (IN FRIDGE)
+  (FLAGS TAKEBIT)
+>
+
 <ROOM DINING-ROOM
   (IN ROOMS)
   (DESC "Dining Room")
@@ -480,27 +521,6 @@ living room or north to the dining room.")
   >
 >
 
-<ROOM WOODS
-    (DESC "Woods")
-    (LDESC "The woods are lovely, dark, and deep. You can go north, west, or east.")
-    (IN ROOMS)
-    (NORTH TO FRONT-YARD)
-    (EAST TO CEMETERY)
-    (WEST TO WOODS-FOUR)
-    (FLAGS LIGHTBIT)
->
-
-
-<ROOM WOODS-TWO
-    (DESC "Woods")
-    (LDESC "The woods are dark, deep, and lovely. You can go north or west.")
-    (IN ROOMS)
-    (NORTH TO WOODS-THREE)
-    (WEST TO CEMETERY)
-    (FLAGS LIGHTBIT)
->
-
-
 <ROOM FRONT-YARD
     (DESC "Front Yard")
     (LDESC "You can go north to the porch, west to driveway, southeast to the
@@ -541,18 +561,104 @@ cemetery, or any other direction into the woods.")
       <TELL
 "It's your father's 1977 ZIL-114, with a 6,959 cc V8 engine, the three-speed automatic transmission,
 and a big bumper sticker that reads 'VEHBIT.' He had it imported from Russia back in the nineties,
-but the VEHBIT kit was added recently." CR>)
+but the VEHBIT kit was added recently." CR>
+    )
     (<VERB? TAKE>
-      <TELL "Yeah right!" CR>)>>
+      <TELL "Yeah right!" CR>
+    )
+  >
+>
+
+
+<ROOM WOODS
+    (DESC "Woods")
+    (LDESC "The woods are lovely, dark, and deep. You can go north, west, or east.")
+    (IN ROOMS)
+    (NORTH TO FRONT-YARD)
+    (EAST TO CEMETERY)
+    (WEST TO WOODS-FOUR)
+    (FLAGS LIGHTBIT)
+>
+
+<ROOM WOODS-TWO
+    (DESC "Woods")
+    (LDESC "The woods are dark, deep, and lovely. You can go north or west.")
+    (IN ROOMS)
+    (NORTH TO WOODS-THREE)
+    (WEST TO CEMETERY)
+    (FLAGS LIGHTBIT)
+>
 
 <ROOM WOODS-THREE
     (DESC "Woods")
-    (LDESC "The woods are lovely, deep, and dark. You can go south, west, or southwest.")
+    (LDESC 
+"The wood shed is here.||You can go south, west, or southwest.")
     (IN ROOMS)
     (SOUTH TO WOODS-TWO)
     (WEST TO FRONT-YARD)
     (SOUTHWEST TO CEMETERY)
     (FLAGS LIGHTBIT)
+    (IN TO SHED IF SHED-DOOR IS OPEN)
+    (GLOBAL SHED-DOOR)
+>
+
+<OBJECT SHED-DOOR
+  (IN LOCAL-GLOBALS)
+  (DESC "shed door")
+  (FLAGS DOORBIT OPENBIT OPENABLEBIT NDESCBIT)
+  (SYNONYM SHED DOOR)
+  (ADJECTIVE WOOD)
+>
+
+<ROOM SHED
+  (DESC "Shed")
+  (LDESC "The table in here is so old, it's basically termites holding hands.")
+  (IN ROOMS)
+  (GLOBAL SHED-DOOR)
+  (OUT TO WOODS-THREE IF SHED-DOOR IS OPEN)
+  (FLAGS LIGHTBIT)
+>
+
+<OBJECT SHED-TABLE
+  (DESC "table")
+  (SYNONYM TABLE)
+  (IN SHED)
+  (FLAGS CONTBIT OPENBIT SURFACEBIT)
+>
+
+<OBJECT SHOTGUN
+  (SYNONYM SHOTGUN GUN BOOMSTICK)
+  (DESC "shotgun")
+  (FLAGS TAKEBIT TOOLBIT)
+  (ACTION SHOTGUN-R)
+  (IN SHED-TABLE)
+  (SIZE 25)
+>
+
+<ROUTINE SHOTGUN-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL "It's your dad's old shotgun." CR>
+    )
+  >
+>
+
+<OBJECT CHAIN-SAW
+  (SYNONYM SAW CHAINSA CHAINSAW)
+  (ADJECTIVE CHAIN)
+  (DESC "chain saw")
+  (FLAGS TAKEBIT TOOLBIT DEVICEBIT)
+  (ACTION CHAIN-SAW-R)
+  (IN SHED-TABLE)
+  (SIZE 25)
+>
+
+<ROUTINE CHAIN-SAW-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL "It's your grandpa's battery-powered chainsaw." CR>
+    )
+  >
 >
 
 <ROOM WOODS-FOUR
@@ -573,77 +679,10 @@ but the VEHBIT kit was added recently." CR>)
     (FLAGS LIGHTBIT)
 >
 
-<OBJECT SKATEBOARD
-  (IN DRIVEWAY)
-  (SYNONYM SKATEBOARD BOARD)
-  (ADJECTIVE SKATE)
-  (DESC "skateboard")
-  (ACTION SKATE-R)
-  (FLAGS LIGHTBIT SURFACEBIT CONTBIT SEARCHBIT)
-  (OUT PER SKATE-R)
->
-
-<ROUTINE SKATE-R ("OPT" RARG)
-  <COND 
-    (<VERB? ENTER>
-      <MOVE ,PLAYER ,SKATEBOARD>
-      <SETG VEHICLE ,SKATEBOARD>
-      <SETG HERE <LOC ,SKATEBOARD>>
-      <TELL "Done." CR>
-      <RTRUE>
-    )
-  >
-  <COND
-    (<AND <==? .RARG ,M-BEG> <VERB? WALK>>
-      <SETG HERE <LOC ,SKATEBOARD>>
-      <FSET ,SKATEBOARD ,NDESCBIT>
-      <TELL "(on the skateboard)" CR>
-      <V-WALK>
-      <MOVE ,SKATEBOARD ,HERE>
-      <MOVE ,PLAYER ,SKATEBOARD>
-      <SETG HERE <LOC ,SKATEBOARD>>
-      <FCLEAR ,SKATEBOARD ,NDESCBIT>
-    )
-    (<AND <==? .RARG ,M-BEG> <VERB? LOOK>>
-      <SETG HERE <LOC ,SKATEBOARD>>
-      <FSET ,SKATEBOARD ,NDESCBIT>
-      <V-LOOK>
-      <FCLEAR ,SKATEBOARD ,NDESCBIT>
-    )
-    (<AND <==? .RARG ,M-BEG> <VERB? EXAMINE>>
-      <COND
-        (<PRSO? ,SKATEBOARD>
-          <TELL "" CR>
-        )
-        (ELSE
-          <SETG HERE <LOC ,SKATEBOARD>>
-          <V-EXAMINE>
-        )
-      >
-    )
-    (<AND <==? .RARG ,M-BEG> <VERB? TAKE>>
-      <COND
-        (<PRSO? ,SKATEBOARD>
-          <TELL "You're on it." CR>
-        )
-        (ELSE
-          <SETG HERE <LOC ,SKATEBOARD>>
-          <TELL "You'll have to get off the skateboard first." CR>
-        )
-      >
-    )
-  >
->
 
 ;"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 <ROOM CABIN
   (DESC "Cabin")
-  (IN ROOMS)
->
-
-;"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-<ROOM SHED
-  (DESC "Shed")
   (IN ROOMS)
 >
 
@@ -656,13 +695,71 @@ but the VEHBIT kit was added recently." CR>)
   (ADJECTIVE MY PAIR)
   (DESC "your pants")
   (FLAGS WEARBIT WORNBIT NARTICLEBIT TAKEBIT)
+  (ACTION PANTS-R)
+>
+
+<ROUTINE PANTS-R ()
+  <COND
+    (<AND <VERB? PUT-IN> <PRSI? ,PANTS>>
+      <COND
+        (<OR <PRSO? ,PANTS><PRSO? ,PANTS-POCKET>>
+          <SILLY>
+        )
+      >
+      <SETG ,PRSI ,PANTS-POCKET>
+      <V-PUT-IN>
+    )
+    (<VERB? EXAMINE>
+      <TELL "They're a little worse for wear, but they look okay." CR>
+      <COND
+        (<FIRST? ,PANTS-POCKET>
+          <TELL "In your pants pockets, you have:" CR>
+          <MAP-CONTENTS (J ,PANTS-POCKET)
+            <TELL "  " A .J>
+            <CRLF>
+          >
+        )
+        (ELSE
+          <TELL "The pockets are currently empty." CR>
+        )
+      >
+    )
+  >
 >
 
 <OBJECT PANTS-POCKET
   (IN GLOBAL-OBJECTS)
-  (SYNONYM PANTS POCKET)
-  (DESC "pants pocket")
-  (FLAGS CONTBIT OPENBIT)
+  (SYNONYM POCKET POCKETS)
+  (ADJECTIVE PANTS)
+  (DESC "your pants pocket")
+  (FLAGS CONTBIT OPENBIT NARTICLEBIT)
+  (ACTION PANTS-POCKET-R)
+>
+
+<ROUTINE PANTS-POCKET-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <COND
+        (<FIRST? ,PANTS-POCKET>
+          <TELL "In your pants pockets, you have:" CR>
+          <MAP-CONTENTS (J ,PANTS-POCKET)
+            <TELL "  " A .J>
+            <CRLF>
+          >
+        )
+        (ELSE
+          <TELL "The pockets are currently empty." CR>
+        )
+      >
+    )
+    (<VERB? PUT-IN>
+      <COND
+        (<AND <PRSO? ,BEER><FSET? ,BEER ,OPENBIT>>
+          <TELL "Putting an open can of beer in your pocket isn't the best idea!" CR>
+        )
+      >
+    )
+  >
 >
 
 ;"------------------------------------- NEW COMMANDS ----------------------------------------------"
@@ -685,6 +782,24 @@ but the VEHBIT kit was added recently." CR>)
 
 ;"//////////////////////////////////// HACKS BEGIN \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
 
+;"OG"
+<ROUTINE FUCKING-CLEAR ()
+  <SETG P-CONT -1>
+  <RFATAL>
+>
+
+<GLOBAL VEHICLE <>>
+
+<ROUTINE PLAYER-F ()
+  <COND
+    (<N==? ,PLAYER ,PRSO>
+      <RFALSE>)
+    (<VERB? EXAMINE>
+      <PRINTR "You look like you've seen better days.">
+    )
+  >
+>
+
 ;" Hacked to list contents of PANTS-POCKET in GLOBAL-OBJECTS "
 
 <ROUTINE V-INVENTORY ()
@@ -701,7 +816,7 @@ but the VEHBIT kit was added recently." CR>)
               (<==? .I ,PANTS>
                 <COND
                   (<FIRST? ,PANTS-POCKET>
-                    <TELL CR "   In your pants pockets:" CR>
+                    <TELL CR "   In your pants pockets, you have:" CR>
                     <MAP-CONTENTS (J ,PANTS-POCKET)
                       <TELL "      " A .J>
                     >
@@ -1106,30 +1221,3 @@ but the VEHBIT kit was added recently." CR>)
   >
 >
 
-<GLOBAL VEHICLE <>>
-
-;"Action handler for the player."
-<ROUTINE PLAYER-F ("OPT" RARG)
-  <COND
-    (<==? .RARG ,M-BEG>
-      <COND
-        (<IN? ,VEHICLE ,PLAYER>
-          <COND
-            (<VERB? WALK>
-              <SETG WINNER ,VEHICLE>
-              <V-WALK>
-              <V-LOOK>
-              <SETG WINNER ,PLAYER>
-            )
-          >
-        )
-      >
-    )
-    (<N==? ,PLAYER ,PRSO>
-      <RFALSE>
-    )
-    (<VERB? EXAMINE>
-      <PRINTR "You look like you're up for an adventure.">
-    )
-  >
->

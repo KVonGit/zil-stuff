@@ -30,8 +30,8 @@
 	.WORD 0
 	.WORD 0
 	.WORD 0
-	.INSERT "fathers-day_freq"
-	.INSERT "fathers-day_data"
+	.INSERT "FATHERS-DAY_freq"
+	.INSERT "FATHERS-DAY_data"
 
 	.FUNCT GO
 START::
@@ -3726,24 +3726,26 @@ START::
 	EQUAL? RARG,M-BEG \FALSE
 	EQUAL? PRSA,V?WALK \FALSE
 	EQUAL? ZOMBIE-HAND-GOT-YA,1 \FALSE
-	PRINTI "You can't go anywhere! The hand is holding onto you, and you can't get away!"
+	PRINTI "The ZOMBIE HAND covers your eyes! You can't go anywhere!"
 	CRLF
-	RETURN 2
+	CALL1 FUCKING-CLEAR >STACK
+	RSTACK
 
 	.FUNCT HEADSTONE-R
 	EQUAL? PRSA,V?READ \?L1
 	LOC ZOMBIE-HAND >STACK
 	EQUAL? STACK,FRESHLY-DUG-GRAVE \?L3
-	PRINTI "Just as you bend down to read it, a ZOMBIE HAND bursts out of the ground and grabs you!!!"
+	PRINTI "Just as you bend down to read it, a ZOMBIE HAND bursts out of the fresh grave and grabs onto you!!!"
 	CRLF
 	MOVE ZOMBIE-HAND,HERE
 	ICALL2 THIS-IS-IT,ZOMBIE-HAND
 	SET 'ZOMBIE-HAND-GOT-YA,1
+	SET 'HAND-JUST-GRABBED-YOU,1
 	CALL QUEUE,I-ZOMBIE-HAND,-1 >STACK
 	RSTACK
 ?L3:	PRINTR "There's no time for reading that right now!"
 ?L1:	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "The writing on it is so small, you may not be able to read it."
+	PRINTR "The writing on it is so small, you may not be able to read it..."
 
 	.FUNCT ZOMBIE-EMERGES-R
 	PRINTI "
@@ -3774,7 +3776,7 @@ The zombie is VERY close!!!"
 	MOVE ZOMBIE,STACK
 	PRINTI "
 
-The zombie enters"
+The zombie shambles along behind you"
 	CALL2 REVERSE-DIR-STR,PRSO >STACK
 	PRINT STACK
 	PRINTR "."
@@ -3838,9 +3840,14 @@ A ZOMBIE suddenly enters"
 	PRINTR "
 
 The zombie BITES you!!!"
-?L1:	PRINTR "
+?L1:	EQUAL? TWICE-SHY,1 /?L3
+	SET 'TWICE-SHY,1
+	PRINTR "
 
-The zombie stands silently beside you, mumbling and groaning."
+The zombie sniffs you, groans unhappily, then just stands beside you and sulks."
+?L3:	PRINTR "
+
+The zombie stands silently beside you, sulking and groaning."
 
 	.FUNCT ZOMBIE-HAND-R
 	EQUAL? PRSA,V?ATTACK \?L1
@@ -3858,37 +3865,36 @@ The zombie stands silently beside you, mumbling and groaning."
 ?L9:	CALL2 HELD?,ZOMBIE-HAND >STACK
 	ZERO? STACK /?L11
 	PRINTR "The zombie hand taps you on your shoulder, as if to say, ""hello! I'm here already!"""
-?L11:	FSET? ZOMBIE-HAND,TOUCHBIT /?L13
-	FSET ZOMBIE-HAND,TOUCHBIT
-	PRINTI "You get a good, firm grip on the hand, and it breaks off at the wrist. It quickly runs up your arm and perches, palm-down, upon your shoulder."
-	CRLF
-	MOVE ZOMBIE-HAND,PLAYER
-	RTRUE
-?L13:	PRINTI "After thumb-wrestling with the stupid hand for half a turn, you finally manage to pick it up. It lets its fingers do the walking up your arm and perches, palm-down, upon your shoulder."
+?L11:	FSET ZOMBIE-HAND,TOUCHBIT
+	PRINTI "After thumb-wrestling with the stupid hand for half a turn, you finally manage to pick it up. It lets its fingers do the walking up your arm and perches, palm-down, upon your shoulder."
 	CRLF
 	MOVE ZOMBIE-HAND,PLAYER
 	RTRUE
 
 	.FUNCT I-ZOMBIE-HAND
-	IN? ZOMBIE-HAND,PLAYER \?L1
-	EQUAL? PRSO,ZOMBIE-HAND /?L1
-	EQUAL? PRSA,V?WAIT \?L3
+	EQUAL? HAND-JUST-GRABBED-YOU,1 \?L1
+	SET 'HAND-JUST-GRABBED-YOU,0
+	RFALSE
+?L1:	IN? ZOMBIE-HAND,PLAYER \?L4
+	EQUAL? PRSO,ZOMBIE-HAND /?L4
+	EQUAL? PRSA,V?WAIT \?L6
 	CRLF
 	PRINTR "The zombie hand taps its fingers impatiently."
-?L3:	EQUAL? COULDNT-GO,1 \?L5
+?L6:	EQUAL? COULDNT-GO,1 \?L8
 	CRLF
 	PRINTR "The zombie hand pats your shoulder, as if to say, ""that's okay, Adventurer! You'll learn to walk one day soon!"""
-?L5:	CRLF
+?L8:	CRLF
 	PRINTR "The zombie hand rests happily on your shoulder."
-?L1:	LOC ZOMBIE-HAND >STACK
+?L4:	LOC ZOMBIE-HAND >STACK
 	EQUAL? STACK,HERE \FALSE
 	EQUAL? PRSO,ZOMBIE-HAND /FALSE
-	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L8
+	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L11
+	EQUAL? PRSA,V?WALK /FALSE
 	CRLF
 	PRINTR "The zombie hand has a firm grip on you!"
-?L8:	FSET? ZOMBIE-HAND,TOUCHBIT \?L11
+?L11:	FSET? ZOMBIE-HAND,TOUCHBIT \?L17
 	PRINTR "The zombie hand flops around helplessly."
-?L11:	CRLF
+?L17:	CRLF
 	PRINTR "The zombie hand flails around aimlessly."
 
 	.FUNCT ZOMBIE-R
@@ -3959,44 +3965,53 @@ The zombie follows you."
 ?L1:	EQUAL? PRSA,V?TAKE \FALSE
 	PRINTR "Yeah right!"
 
-	.FUNCT SKATE-R,RARG
-	EQUAL? PRSA,V?ENTER \?L1
-	MOVE PLAYER,SKATEBOARD
-	SET 'VEHICLE,SKATEBOARD
-	LOC SKATEBOARD >HERE
-	PRINTR "Done."
-?L1:	EQUAL? RARG,M-BEG \FALSE
-	EQUAL? PRSA,V?WALK \?L4
-	LOC SKATEBOARD >HERE
-	FSET SKATEBOARD,NDESCBIT
-	PRINTI "(on the skateboard)"
-	CRLF
-	ICALL1 V-WALK
-	MOVE SKATEBOARD,HERE
-	MOVE PLAYER,SKATEBOARD
-	LOC SKATEBOARD >HERE
-	FCLEAR SKATEBOARD,NDESCBIT
-	RTRUE
-?L4:	EQUAL? RARG,M-BEG \FALSE
-	EQUAL? PRSA,V?LOOK \?L6
-	LOC SKATEBOARD >HERE
-	FSET SKATEBOARD,NDESCBIT
-	ICALL1 V-LOOK
-	FCLEAR SKATEBOARD,NDESCBIT
-	RTRUE
-?L6:	EQUAL? RARG,M-BEG \FALSE
-	EQUAL? PRSA,V?EXAMINE \?L7
-	EQUAL? PRSO,SKATEBOARD \?L8
-	PRINTR ""
-?L8:	LOC SKATEBOARD >HERE
-	CALL1 V-EXAMINE >STACK
+	.FUNCT SHOTGUN-R
+	EQUAL? PRSA,V?EXAMINE \FALSE
+	PRINTR "It's your dad's old shotgun."
+
+	.FUNCT CHAIN-SAW-R
+	EQUAL? PRSA,V?EXAMINE \FALSE
+	PRINTR "It's your grandpa's battery-powered chainsaw."
+
+	.FUNCT PANTS-R,J
+	EQUAL? PRSA,V?PUT-IN \?L1
+	EQUAL? PRSI,PANTS \?L1
+	EQUAL? PRSO,PANTS /?L5
+	EQUAL? PRSO,PANTS-POCKET \?L3
+?L5:	ICALL1 SILLY
+?L3:	SET 'PRSI,PANTS-POCKET
+	CALL1 V-PUT-IN >STACK
 	RSTACK
-?L7:	EQUAL? RARG,M-BEG \FALSE
-	EQUAL? PRSA,V?TAKE \FALSE
-	EQUAL? PRSO,SKATEBOARD \?L12
-	PRINTR "You're on it."
-?L12:	LOC SKATEBOARD >HERE
-	PRINTR "You'll have to get off the skateboard first."
+?L1:	EQUAL? PRSA,V?EXAMINE \FALSE
+	PRINTI "They're a little worse for wear, but they look okay."
+	CRLF
+	FIRST? PANTS-POCKET >STACK \?L8
+	PRINTI "In your pants pockets, you have:"
+	CRLF
+	FIRST? PANTS-POCKET >J \TRUE
+?L10:	PRINTI "  "
+	ICALL2 PRINT-INDEF,J
+	CRLF
+	NEXT? J >J /?L10
+	RTRUE
+?L8:	PRINTR "The pockets are currently empty."
+
+	.FUNCT PANTS-POCKET-R,J
+	EQUAL? PRSA,V?EXAMINE \?L1
+	FIRST? PANTS-POCKET >STACK \?L3
+	PRINTI "In your pants pockets, you have:"
+	CRLF
+	FIRST? PANTS-POCKET >J \TRUE
+?L5:	PRINTI "  "
+	ICALL2 PRINT-INDEF,J
+	CRLF
+	NEXT? J >J /?L5
+	RTRUE
+?L3:	PRINTR "The pockets are currently empty."
+?L1:	EQUAL? PRSA,V?PUT-IN \FALSE
+	EQUAL? PRSO,BEER \FALSE
+	FSET? BEER,OPENBIT \FALSE
+	PRINTR "Putting an open can of beer in your pocket isn't the best idea!"
 
 	.FUNCT V-SPEAK
 	FSET? PRSO,PERSONBIT /?L3
@@ -4005,6 +4020,15 @@ The zombie follows you."
 	PRINTR " does not reply."
 ?L1:	CALL2 POINTLESS,STR?41 >STACK
 	RSTACK
+
+	.FUNCT FUCKING-CLEAR
+	SET 'P-CONT,-1
+	RETURN 2
+
+	.FUNCT PLAYER-F
+	EQUAL? PLAYER,PRSO \FALSE
+	EQUAL? PRSA,V?EXAMINE \FALSE
+	PRINTR "You look like you've seen better days."
 
 	.FUNCT V-INVENTORY,I,J
 	ZERO? HERE-LIT /?L1
@@ -4019,7 +4043,7 @@ The zombie follows you."
 ?L8:	EQUAL? I,PANTS \?L16
 	FIRST? PANTS-POCKET >STACK \?L16
 	CRLF
-	PRINTI "   In your pants pockets:"
+	PRINTI "   In your pants pockets, you have:"
 	CRLF
 	FIRST? PANTS-POCKET >J \?L16
 ?L14:	PRINTI "      "
@@ -4299,18 +4323,5 @@ The zombie follows you."
 	SET 'P-O-CONT,P-CONT
 	RFALSE
 
-	.FUNCT PLAYER-F,RARG
-	EQUAL? RARG,M-BEG \?L1
-	IN? VEHICLE,PLAYER \FALSE
-	EQUAL? PRSA,V?WALK \FALSE
-	SET 'WINNER,VEHICLE
-	ICALL1 V-WALK
-	ICALL1 V-LOOK
-	SET 'WINNER,PLAYER
-	RETURN WINNER
-?L1:	EQUAL? PLAYER,PRSO \FALSE
-	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "You look like you're up for an adventure."
-
-	.INSERT "fathers-day_str"
+	.INSERT "FATHERS-DAY_str"
 	.END
