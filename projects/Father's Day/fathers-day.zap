@@ -30,8 +30,8 @@
 	.WORD 0
 	.WORD 0
 	.WORD 0
-	.INSERT "FATHERS-DAY_freq"
-	.INSERT "FATHERS-DAY_data"
+	.INSERT "fathers-day_freq"
+	.INSERT "fathers-day_data"
 
 	.FUNCT GO
 START::
@@ -1695,21 +1695,6 @@ START::
 ?L4:	ADD I,2 >I
 	GRTR? I,MAX \?L1
 	RFALSE
-
-	.FUNCT SEARCH-FOR-LIGHT,I
-	FSET? HERE,LIGHTBIT /TRUE
-	PUT SCOPE-CURRENT-STAGES,0,4
-	PUT SCOPE-CURRENT-STAGES,1,LOCATION-SCOPE-STAGE
-	PUT SCOPE-CURRENT-STAGES,2,INVENTORY-SCOPE-STAGE
-	PUT SCOPE-CURRENT-STAGES,3,GLOBALS-SCOPE-STAGE
-	PUT SCOPE-CURRENT-STAGES,4,LOCAL-GLOBALS-SCOPE-STAGE
-	SET 'MAP-SCOPE-OPTIONS,0
-	CALL1 MAP-SCOPE-START >STACK
-	ZERO? STACK /FALSE
-?L6:	CALL1 MAP-SCOPE-NEXT >I
-	ZERO? I /FALSE
-	FSET? I,LIGHTBIT \?L6
-	RETURN I
 
 	.FUNCT SEE-INSIDE?,OBJ
 	FSET? OBJ,SURFACEBIT /TRUE
@@ -3443,7 +3428,7 @@ START::
 
 	.FUNCT V-TURN-OFF
 	EQUAL? PRSO,WINNER \?L1
-	CALL2 PICK-ONE-R,T?102 >STACK
+	CALL2 PICK-ONE-R,T?103 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
@@ -3726,7 +3711,7 @@ START::
 	EQUAL? RARG,M-BEG \FALSE
 	EQUAL? PRSA,V?WALK \FALSE
 	EQUAL? ZOMBIE-HAND-GOT-YA,1 \FALSE
-	PRINTI "The ZOMBIE HAND covers your eyes! You can't go anywhere!"
+	PRINTI "The ZOMBIE HAND covers your eyes! You can't see to walk!!!"
 	CRLF
 	CALL1 FUCKING-CLEAR >STACK
 	RSTACK
@@ -3784,56 +3769,6 @@ The zombie shambles along behind you"
 	CALL2 TEST-ZOMBIE-EXITS,STACK >STACK
 	RSTACK
 
-	.FUNCT TEST-ZOMBIE-EXITS,ZLOC,TABLE?1,IDX,CHOSEN,DEST,D,P
-	SET 'TABLE?1,T?103
-	SET 'IDX,0
-	SET 'D,64
-?L1:	DLESS? 'D,P?DOWN /?L3
-	GETPT ZLOC,D >P
-	ZERO? P /?L1
-	GET P,REXIT >STACK
-	PUTB TABLE?1,IDX,STACK
-	INC 'IDX
-	JUMP ?L1
-?L3:	ZERO? IDX /TRUE
-	RANDOM IDX >CHOSEN
-	GETB TABLE?1,CHOSEN >DEST
-	MOVE ZOMBIE,DEST
-	EQUAL? DEST,HERE \FALSE
-	PRINTI "
-
-A ZOMBIE suddenly enters"
-	CALL2 OPPO-DIR,CHOSEN >STACK
-	PRINT STACK
-	PRINTR "!!!"
-
-	.FUNCT OPPO-DIR,IDX
-	ZERO? IDX \?L1
-	RETURN STR?33
-?L1:	EQUAL? IDX,1 \?L3
-	RETURN STR?34
-?L3:	EQUAL? IDX,2 \?L4
-	RETURN STR?35
-?L4:	EQUAL? IDX,3 \?L5
-	RETURN STR?36
-?L5:	EQUAL? IDX,4 \?L6
-	RETURN STR?37
-?L6:	EQUAL? IDX,5 \?L7
-	RETURN STR?38
-?L7:	RETURN STR?39
-
-	.FUNCT PRINT-DIRECTION,DIR,CNT,D
-	SET 'CNT,0
-?L1:	GET DIR-NAMES,CNT >D
-	ZERO? D /?L5
-	EQUAL? DIR,D \?L3
-?L5:	ADD CNT,1 >STACK
-	GET DIR-NAMES,STACK >STACK
-	PRINT STACK
-	RTRUE
-?L3:	ADD CNT,2 >CNT
-	JUMP ?L1
-
 	.FUNCT ZOMBIE-BITE-R
 	EQUAL? ONCE-BITTEN,1 /?L1
 	SET 'ONCE-BITTEN,1
@@ -3856,17 +3791,19 @@ The zombie stands silently beside you, sulking and groaning."
 	PRINTR "After a brief struggle with the zombie hand, you eventually manage to get it off of you."
 ?L3:	PRINTR "Attacking the hand has no obvious effect. It just flops back and forth."
 ?L1:	EQUAL? PRSA,V?EXAMINE \?L6
-	PRINTR "It looks just like every other zombie hand you've ever seen."
-?L6:	EQUAL? PRSA,V?SPEAK \?L7
+	IN? ZOMBIE-HAND,PLAYER \?L7
+	PRINTR "The zombie hand rests happily on your shoulder."
+?L7:	PRINTR "It looks just like every other zombie hand you've ever seen."
+?L6:	EQUAL? PRSA,V?SPEAK \?L10
 	PRINTR "The zombie hand snaps back at you."
-?L7:	EQUAL? PRSA,V?TAKE \FALSE
-	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L9
+?L10:	EQUAL? PRSA,V?TAKE \FALSE
+	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L12
 	PRINTR "You have lost your mind. It's got a hold of YOU, not the other way around!"
-?L9:	CALL2 HELD?,ZOMBIE-HAND >STACK
-	ZERO? STACK /?L11
+?L12:	CALL2 HELD?,ZOMBIE-HAND >STACK
+	ZERO? STACK /?L14
 	PRINTR "The zombie hand taps you on your shoulder, as if to say, ""hello! I'm here already!"""
-?L11:	FSET ZOMBIE-HAND,TOUCHBIT
-	PRINTI "After thumb-wrestling with the stupid hand for half a turn, you finally manage to pick it up. It lets its fingers do the walking up your arm and perches, palm-down, upon your shoulder."
+?L14:	FSET ZOMBIE-HAND,TOUCHBIT
+	PRINTI "After thumb-wrestling with the stupid hand for half a turn, you finally manage to pick it up. It crawls up your arm and perches, palm-down, upon your shoulder."
 	CRLF
 	MOVE ZOMBIE-HAND,PLAYER
 	RTRUE
@@ -3882,44 +3819,84 @@ The zombie stands silently beside you, sulking and groaning."
 	PRINTR "The zombie hand taps its fingers impatiently."
 ?L6:	EQUAL? COULDNT-GO,1 \?L8
 	CRLF
-	PRINTR "The zombie hand pats your shoulder, as if to say, ""that's okay, Adventurer! You'll learn to walk one day soon!"""
-?L8:	CRLF
-	PRINTR "The zombie hand rests happily on your shoulder."
+	PRINTR "The zombie hand gently pats your shoulder, as if to say, ""that's okay, Adventurer! You'll learn to play text adventures one day soon!"""
+?L8:	ZERO? HERE-LIT \FALSE
+	EQUAL? HERE,DADS-BEDROOM \FALSE
+	PRINTI "
+You feel the zombie hand slide down your side, then you hear it shuffling around, then a CLICK and...."
+	CRLF
+	CRLF
+	FSET LIGHT-SWITCH,ONBIT
+	ICALL1 NOW-LIT?
+	PRINTR "
+The hand quickly runs back up onto your shoulder, giving you a thumbs-up."
 ?L4:	LOC ZOMBIE-HAND >STACK
 	EQUAL? STACK,HERE \FALSE
 	EQUAL? PRSO,ZOMBIE-HAND /FALSE
-	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L11
+	EQUAL? ZOMBIE-HAND-GOT-YA,1 \?L12
 	EQUAL? PRSA,V?WALK /FALSE
 	CRLF
 	PRINTR "The zombie hand has a firm grip on you!"
-?L11:	FSET? ZOMBIE-HAND,TOUCHBIT \?L17
+?L12:	FSET? ZOMBIE-HAND,TOUCHBIT \?L18
 	PRINTR "The zombie hand flops around helplessly."
-?L17:	CRLF
+?L18:	CRLF
 	PRINTR "The zombie hand flails around aimlessly."
 
 	.FUNCT ZOMBIE-R
-	EQUAL? PRSA,V?WALK \FALSE
+	EQUAL? PRSA,V?WALK \?L1
 	LOC ZOMBIE >STACK
-	EQUAL? STACK,HERE \FALSE
-	EQUAL? ZOMBIE-SHADOW,1 \FALSE
+	EQUAL? STACK,HERE \?L1
+	EQUAL? ZOMBIE-SHADOW,1 \?L1
 	PRINTR "
 
 The zombie follows you."
+?L1:	EQUAL? PRSA,V?GIVE \FALSE
+	EQUAL? PRSO,BEER \?L3
+	PRINTI "The zombie takes the beer and downs it all at once.
 
-	.FUNCT REVERSE-DIR-STR,DIR
-	EQUAL? DIR,P?NORTH \?L1
-	RETURN STR?33
-?L1:	EQUAL? DIR,P?SOUTH \?L3
-	RETURN STR?34
-?L3:	EQUAL? DIR,P?EAST \?L4
-	RETURN STR?35
-?L4:	EQUAL? DIR,P?WEST \?L5
-	RETURN STR?36
-?L5:	EQUAL? DIR,P?UP \?L6
-	RETURN STR?37
-?L6:	EQUAL? DIR,P?DOWN \?L7
-	RETURN STR?38
-?L7:	RETURN STR?39
+""Happy Father's Day,"" you say. The zombie groans happily and gives you a big hug."
+	CRLF
+	IN? ZOMBIE-HAND,PLAYER /?L6
+	IN? ZOMBIE-HAND,HERE \?L4
+?L6:	PRINTI "
+The zombie hand snaps at you and flips you the bird. You say, ""I love you, too, zombie hand."" 
+
+The zombie hand gives you a thumbs-up. The zombie groans and shakes his head."
+?L4:	CALL2 JIGS-UP,STR?33 >STACK
+	RSTACK
+?L3:	EQUAL? PRSA,V?GIVE \FALSE
+	EQUAL? PRSO,RED-HERRING \FALSE
+	PRINTI "The zombie looks at the RED HERRING. ""UUUUHHHHRRRR???"" 
+
+He then smells the stench emanating from it and spirals into a rage! ""RRRRRRRRR!!!!"" He flails wildly at the stinky fish, knocking it out of your hand and howling, ""UUUHHH-UUUUHHHHRRR!!!!"""
+	CRLF
+	MOVE RED-HERRING,HERE
+	IN? ZOMBIE-HAND,PLAYER \FALSE
+	PRINTR "
+The zombie hand hides behind your shoulder, shivering nervously and squeezing just a little bit too tightly."
+
+	.FUNCT TEST-ZOMBIE-EXITS,ZLOC,TABLE?1,IDX,CHOSEN,DEST,D,P
+	SET 'TABLE?1,T?104
+	SET 'IDX,0
+	SET 'D,64
+?L1:	DLESS? 'D,P?DOWN /?L3
+	GETPT ZLOC,D >P
+	ZERO? P /?L1
+	GET P,REXIT >STACK
+	PUTB TABLE?1,IDX,STACK
+	INC 'IDX
+	JUMP ?L1
+?L3:	ZERO? IDX /TRUE
+	RANDOM IDX >CHOSEN
+	GETB TABLE?1,CHOSEN >DEST
+	MOVE ZOMBIE,DEST
+	EQUAL? DEST,HERE \FALSE
+	PRINTI "
+
+A ZOMBIE suddenly enters"
+	CALL2 OPPO-DIR,CHOSEN >STACK
+	PRINT STACK
+	PRINTR "!!!"
 
 	.FUNCT BEER-R
 	EQUAL? PRSA,V?LOOK \?L1
@@ -3951,7 +3928,7 @@ The zombie follows you."
 	.FUNCT MANUAL-R
 	EQUAL? PRSA,V?EXAMINE \?L1
 	PRINTI "It's the manual that I "
-	ICALL2 ITALICIZE,STR?40
+	ICALL2 ITALICIZE,STR?34
 	PRINTR "you read before you started this game."
 ?L1:	EQUAL? PRSA,V?READ \FALSE
 	FSET? MANUAL,OPENBIT \?L4
@@ -3971,7 +3948,7 @@ The zombie follows you."
 
 	.FUNCT CHAIN-SAW-R
 	EQUAL? PRSA,V?EXAMINE \FALSE
-	PRINTR "It's your grandpa's battery-powered chainsaw."
+	PRINTR "It's your grandpa's old chainsaw."
 
 	.FUNCT PANTS-R,J
 	EQUAL? PRSA,V?PUT-IN \?L1
@@ -4018,7 +3995,18 @@ The zombie follows you."
 	FSET? PRSO,FEMALEBIT \?L1
 ?L3:	PRINTD PRSO
 	PRINTR " does not reply."
-?L1:	CALL2 POINTLESS,STR?41 >STACK
+?L1:	CALL2 POINTLESS,STR?35 >STACK
+	RSTACK
+
+	.FUNCT V-DIG
+	CALL1 USELESS >STACK
+	RSTACK
+
+	.FUNCT USELESS
+	PRINTR "A totally unhelpful idea."
+
+	.FUNCT V-DIG-WITH
+	CALL2 NOT-POSSIBLE,STR?36 >STACK
 	RSTACK
 
 	.FUNCT FUCKING-CLEAR
@@ -4050,17 +4038,18 @@ The zombie follows you."
 	ICALL2 PRINT-INDEF,J
 	NEXT? J >J /?L14
 ?L16:	FSET? I,LIGHTBIT \?L19
+	FSET? I,ONBIT \?L19
 	PRINTI " (providing light)"
-?L19:	FSET? I,CONTBIT \?L29
-	FSET? I,OPENABLEBIT \?L27
-	FSET? I,OPENBIT \?L25
+?L19:	FSET? I,CONTBIT \?L30
+	FSET? I,OPENABLEBIT \?L28
+	FSET? I,OPENBIT \?L26
 	PRINTI " (open)"
-	JUMP ?L27
-?L25:	PRINTI " (closed)"
-?L27:	CALL2 SEE-INSIDE?,I >STACK
-	ZERO? STACK /?L29
+	JUMP ?L28
+?L26:	PRINTI " (closed)"
+?L28:	CALL2 SEE-INSIDE?,I >STACK
+	ZERO? STACK /?L30
 	ICALL2 INV-DESCRIBE-CONTENTS,I
-?L29:	CRLF
+?L30:	CRLF
 	NEXT? I >I /?L5
 	RTRUE
 ?L3:	PRINTR "You are empty-handed."
@@ -4323,5 +4312,79 @@ The zombie follows you."
 	SET 'P-O-CONT,P-CONT
 	RFALSE
 
-	.INSERT "FATHERS-DAY_str"
+	.FUNCT OPPO-DIR,IDX
+	ZERO? IDX \?L1
+	RETURN STR?37
+?L1:	EQUAL? IDX,1 \?L3
+	RETURN STR?38
+?L3:	EQUAL? IDX,2 \?L4
+	RETURN STR?39
+?L4:	EQUAL? IDX,3 \?L5
+	RETURN STR?40
+?L5:	EQUAL? IDX,4 \?L6
+	RETURN STR?41
+?L6:	EQUAL? IDX,5 \?L7
+	RETURN STR?42
+?L7:	RETURN STR?43
+
+	.FUNCT REVERSE-DIR-STR,DIR
+	EQUAL? DIR,P?NORTH \?L1
+	RETURN STR?37
+?L1:	EQUAL? DIR,P?SOUTH \?L3
+	RETURN STR?38
+?L3:	EQUAL? DIR,P?EAST \?L4
+	RETURN STR?39
+?L4:	EQUAL? DIR,P?WEST \?L5
+	RETURN STR?40
+?L5:	EQUAL? DIR,P?UP \?L6
+	RETURN STR?41
+?L6:	EQUAL? DIR,P?DOWN \?L7
+	RETURN STR?42
+?L7:	RETURN STR?43
+
+	.FUNCT PRINT-DIRECTION,DIR,CNT,D
+	SET 'CNT,0
+?L1:	GET DIR-NAMES,CNT >D
+	ZERO? D /?L5
+	EQUAL? DIR,D \?L3
+?L5:	ADD CNT,1 >STACK
+	GET DIR-NAMES,STACK >STACK
+	PRINT STACK
+	RTRUE
+?L3:	ADD CNT,2 >CNT
+	JUMP ?L1
+
+	.FUNCT SEARCH-FOR-LIGHT,I
+	FSET? HERE,LIGHTBIT \?L1
+	FSET? HERE,DARKBIT /?L4
+	RTRUE
+?L1:	FSET? HERE,DARKBIT \?L10
+?L4:	PUT SCOPE-CURRENT-STAGES,0,4
+	PUT SCOPE-CURRENT-STAGES,1,LOCATION-SCOPE-STAGE
+	PUT SCOPE-CURRENT-STAGES,2,INVENTORY-SCOPE-STAGE
+	PUT SCOPE-CURRENT-STAGES,3,GLOBALS-SCOPE-STAGE
+	PUT SCOPE-CURRENT-STAGES,4,LOCAL-GLOBALS-SCOPE-STAGE
+	SET 'MAP-SCOPE-OPTIONS,0
+	CALL1 MAP-SCOPE-START >STACK
+	ZERO? STACK /?L10
+?L6:	CALL1 MAP-SCOPE-NEXT >I
+	ZERO? I /?L10
+	FSET? I,LIGHTBIT \?L6
+	FSET? I,ONBIT \?L6
+	RETURN I
+?L10:	PUT SCOPE-CURRENT-STAGES,0,4
+	PUT SCOPE-CURRENT-STAGES,1,LOCATION-SCOPE-STAGE
+	PUT SCOPE-CURRENT-STAGES,2,INVENTORY-SCOPE-STAGE
+	PUT SCOPE-CURRENT-STAGES,3,GLOBALS-SCOPE-STAGE
+	PUT SCOPE-CURRENT-STAGES,4,LOCAL-GLOBALS-SCOPE-STAGE
+	SET 'MAP-SCOPE-OPTIONS,0
+	CALL1 MAP-SCOPE-START >STACK
+	ZERO? STACK /FALSE
+?L20:	CALL1 MAP-SCOPE-NEXT >I
+	ZERO? I /FALSE
+	FSET? I,LIGHTBIT \?L20
+	FSET? I,ONBIT \?L20
+	RETURN I
+
+	.INSERT "fathers-day_str"
 	.END

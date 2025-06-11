@@ -30,7 +30,7 @@
 ;"<COMPILATION-FLAG DEBUGGING-VERBS T>"
 
 ;"----------------------- UNCOMMENT TO ADD FLAGS --------------------------------------------------"
-<SETG EXTRA-FLAGS (VEHBIT NALLBIT)>
+<SETG EXTRA-FLAGS (VEHBIT NALLBIT DARKBIT)>
 
 
 <INSERT-FILE "parser">
@@ -41,6 +41,7 @@
 
 ;"==================================== GAME WORLD ================================================="
 
+<GLOBAL VEHICLE <>>
 
 ;"************************************* OUTSIDE ***************************************************"
 
@@ -63,27 +64,27 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
       <COND
         (<AND <VERB? WALK> <==? ,ZOMBIE-HAND-GOT-YA 1>>
           <TELL 
-"The ZOMBIE HAND covers your eyes! You can't go anywhere!" CR>
+"The ZOMBIE HAND covers your eyes! You can't see to walk!!!" CR>
           <FUCKING-CLEAR>)
-      >)
+      >
+    )
   >
 >
-
 
 <OBJECT FRESHLY-DUG-GRAVE
     (IN CEMETERY)
     (DESC "freshly dug grave")
     (FDESC "There is a fresh grave here.")
     (LDESC "Not much to it, besides the headstone.")
-    (SYNONYM GRAVE)
-    (ADJECTIVE FRESHLY DUG NEW)
+    (SYNONYM GRAVE DIRT)
+    (ADJECTIVE FRESH FRESHLY DUG NEW)
     (FLAGS NARTICLEBIT)
 >
 
 <OBJECT HEADSTONE
   (IN CEMETERY)
   (DESC "headstone")
-  (TEXT "IF YOU CAN READ THIS, THE GAME IS BROKEN.")
+  (TEXT "The name on it is Paula Schultz. You can't see any other writing.")
   (SYNONYM TOMBSTONE HEADSTONE STONE HEADST WRITIN WRITING WORDS)
   (ADJECTIVE HEAD)
   (FLAGS READBIT NDESCBIT)
@@ -96,22 +97,24 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
   (DESC "shovel")
   (FDESC "A shovel lies next to the fresh grave.")
   (FLAGS TAKEBIT TOOLBIT)
+  (SIZE 30)
 >
 
 <OBJECT ZOMBIE-HAND
   (IN FRESHLY-DUG-GRAVE)
-  (DESC "zombie hand")
+  (DESC "the zombie hand")
   (SYNONYM HAND)
   (ADJECTIVE ZOMBIE)
   (ACTION ZOMBIE-HAND-R)
-  (FLAGS NDESCBIT NALLBIT)
+  (PRONOUN IT)
+  (FLAGS NDESCBIT NALLBIT PERSONBIT NARTICLEBIT ATTACKBIT)
 >
 
 <GLOBAL ZOMBIE-BITE-COUNTDOWN 4>
 <GLOBAL ZOMBIE-EXITS <>>
 <GLOBAL ZOMBIE-HAND-GOT-YA <>>
 <GLOBAL ONCE-BITTEN <>>
-<GLOBAL TWICE-SHY <>> ;"unused"
+<GLOBAL TWICE-SHY <>>
 
 <ROUTINE HEADSTONE-R ()
   <COND
@@ -176,68 +179,6 @@ you!!!" CR>
   >
 >
 
-;"Thanks to the ChatGPT Zil setup and Adam Sommerfield for setting it up!"
-<ROUTINE TEST-ZOMBIE-EXITS (ZLOC "AUX" TABLE IDX CHOSEN DEST)
-  <SET TABLE <ITABLE 10>>
-  <SET IDX 0>
-  <MAP-DIRECTIONS (D P .ZLOC)
-    <PUTB .TABLE .IDX <GET .P ,REXIT>>
-    <SET IDX <+ .IDX 1>>
-  >
-  <COND
-    (<0? .IDX>
-      ;<TELL "No exits for the ZOMBIE!" CR>
-    )
-    (T
-     <SET CHOSEN <RANDOM .IDX>>
-     <SET DEST <GETB .TABLE .CHOSEN>>
-     <MOVE ,ZOMBIE .DEST>
-     <COND
-      (<==? .DEST ,HERE>
-        <TELL "||A ZOMBIE suddenly enters" <OPPO-DIR .CHOSEN> "!!!" CR>
-      )
-      >
-    )
-  >
->
-
-<ROUTINE OPPO-DIR (IDX)
-  <RETURN
-    <COND
-      (<==? .IDX 0> " from the south")
-      (<==? .IDX 1> " from the north")
-      (<==? .IDX 2> " from the west")
-      (<==? .IDX 3> " from the east")
-      (<==? .IDX 4> " from below")
-      (<==? .IDX 5> " from above")
-      (T ", seemingly out of thin air")
-    >
-  >
->
-
-<GLOBAL DIR-NAMES
-	<TABLE
-	 P?NORTH	"north"
-	 P?SOUTH	"south"
-	 P?EAST		"east"
-	 P?WEST		"west"
-	 P?NW		"northwest"
-	 P?NE		"northeast"
-	 P?SE		"southeast"
-	 P?SW		"southwest"
-	 P?UP		"above"
-	 P?DOWN		"below"
-	 <>		"out of thin air">>
-
-<ROUTINE PRINT-DIRECTION (DIR "AUX" (CNT 0) D)
-	 <REPEAT ()
-		 <SET D <GET ,DIR-NAMES .CNT>>
-		 <COND (<OR <0? .D>
-			    <EQUAL? .DIR .D>>
-			<TELL <GET ,DIR-NAMES <+ .CNT 1>>>
-			<RETURN>)>
-		 <SET CNT <+ .CNT 2>>>>
-
 <ROUTINE ZOMBIE-BITE-R ()
   <COND
     (<NOT <==? ,ONCE-BITTEN 1>>
@@ -265,12 +206,20 @@ you!!!" CR>
         )
         (T
           ;"TODO - Create a stooges-style routine for this!"
+          ;"<NYUCK-NYUCK-NYUCK>"
           <TELL "Attacking the hand has no obvious effect. It just flops back and forth." CR>
         )
       >
     )
     (<VERB? EXAMINE>
-      <TELL "It looks just like every other zombie hand you've ever seen." CR>
+      <COND
+        (<IN? ,ZOMBIE-HAND ,PLAYER>
+          <TELL "The zombie hand rests happily on your shoulder." CR>
+        )
+        (ELSE
+          <TELL "It looks just like every other zombie hand you've ever seen." CR>
+        )
+      >
     )
     (<VERB? SPEAK>
       <TELL "The zombie hand snaps back at you." CR>
@@ -288,7 +237,7 @@ you!!!" CR>
           <FSET ,ZOMBIE-HAND ,TOUCHBIT>
           <TELL 
 "After thumb-wrestling with the stupid hand for half a turn, you finally manage to pick it up. It
-lets its fingers do the walking up your arm and perches, palm-down, upon your shoulder." CR>
+crawls up your arm and perches, palm-down, upon your shoulder." CR>
           <MOVE ,ZOMBIE-HAND ,PLAYER>
         )
       >
@@ -313,11 +262,16 @@ lets its fingers do the walking up your arm and perches, palm-down, upon your sh
         )
         (<==? ,COULDNT-GO 1>
           <TELL CR 
-"The zombie hand pats your shoulder, as if to say, \"that's okay, Adventurer! You'll learn to walk
-one day soon!\"" CR>
-          ;"<SETG COULDNT-GO 0>")
-        (ELSE
-          <TELL CR "The zombie hand rests happily on your shoulder." CR>
+"The zombie hand gently pats your shoulder, as if to say, \"that's okay, Adventurer! You'll learn to
+play text adventures one day soon!\"" CR>
+        )
+        (<AND <NOT ,HERE-LIT> <==? ,HERE ,DADS-BEDROOM>>
+          <TELL 
+"|You feel the zombie hand slide down your side, then you hear it shuffling around, then a CLICK
+and...." CR CR>
+          <FSET ,LIGHT-SWITCH ,ONBIT>
+          <NOW-LIT?>
+          <TELL "|The hand quickly runs back up onto your shoulder, giving you a thumbs-up." CR>
         )
       >
     )
@@ -358,18 +312,58 @@ one day soon!\"" CR>
     (<AND <VERB? WALK> <==? <LOC ,ZOMBIE> ,HERE> <==? ,ZOMBIE-SHADOW 1>>
       <TELL "||The zombie follows you." CR>
     )
+    (<AND <VERB? GIVE> <PRSO? ,BEER>>
+      <TELL
+"The zombie takes the beer and downs it all at once.||\"Happy Father's Day,\" you say. The zombie
+groans happily and gives you a big hug." CR>
+      <COND
+        (<OR <IN? ,ZOMBIE-HAND ,PLAYER><IN? ,ZOMBIE-HAND ,HERE>>
+          <TELL
+"|The zombie hand snaps at you and flips you the bird. You say, \"I love you, too, zombie hand.\"
+||The zombie hand gives you a thumbs-up. The zombie groans and shakes his head.">
+        )
+      >
+      <JIGS-UP "||*** GAME OVER ***">
+    )
+    (<AND <VERB? GIVE> <PRSO? ,RED-HERRING>>
+      <TELL
+"The zombie looks at the RED HERRING. \"UUUUHHHHRRRR???\"
+||He then smells the stench emanating from it and spirals into a rage! \"RRRRRRRRR!!!!\" He flails
+wildly at the stinky fish, knocking it out of your hand and howling, \"UUUHHH-UUUUHHHHRRR!!!!\"" CR>
+      <MOVE ,RED-HERRING ,HERE>
+      <COND
+        (<IN? ,ZOMBIE-HAND ,PLAYER>
+          <TELL 
+"|The zombie hand hides behind your shoulder, shivering nervously and squeezing just a little bit
+too tightly." CR>
+        )
+      >
+    )
   >    
 >
 
-<ROUTINE REVERSE-DIR-STR (DIR)
+;"Thanks to the custom ZIL GPT and Adam Sommerfield for setting it up!"
+<ROUTINE TEST-ZOMBIE-EXITS (ZLOC "AUX" TABLE IDX CHOSEN DEST)
+  <SET TABLE <ITABLE 10>>
+  <SET IDX 0>
+  <MAP-DIRECTIONS (D P .ZLOC)
+    <PUTB .TABLE .IDX <GET .P ,REXIT>>
+    <SET IDX <+ .IDX 1>>
+  >
   <COND
-    (<==? .DIR ,P?NORTH> " from the south")
-    (<==? .DIR ,P?SOUTH> " from the north")
-    (<==? .DIR ,P?EAST> " from the west")
-    (<==? .DIR ,P?WEST> " from the east")
-    (<==? .DIR ,P?UP> " from below")
-    (<==? .DIR ,P?DOWN> " from above")
-    (T ", seemingly out of thin air")
+    (<0? .IDX>
+      ;<TELL "No exits for the ZOMBIE!" CR>
+    )
+    (T
+     <SET CHOSEN <RANDOM .IDX>>
+     <SET DEST <GETB .TABLE .CHOSEN>>
+     <MOVE ,ZOMBIE .DEST>
+     <COND
+      (<==? .DEST ,HERE>
+        <TELL "||A ZOMBIE suddenly enters" <OPPO-DIR .CHOSEN> "!!!" CR>
+      )
+      >
+    )
   >
 >
 
@@ -404,8 +398,9 @@ one day soon!\"" CR>
 
 <ROOM KITCHEN
   (DESC "Kitchen")
-  (LDESC "Your dad's kitchen is even smaller than yours.||You can go east to the
-living room or north to the dining room.")
+  (LDESC 
+"Your dad's kitchen is even smaller than yours.||You can go east to the living room or north to the
+dining room.")
   (IN ROOMS)
   (EAST TO LIVING-ROOM)
   (NORTH TO DINING-ROOM)
@@ -523,8 +518,9 @@ living room or north to the dining room.")
 
 <ROOM FRONT-YARD
     (DESC "Front Yard")
-    (LDESC "You can go north to the porch, west to driveway, southeast to the
-cemetery, or any other direction into the woods.")
+    (LDESC 
+"You can go north to the porch, west to driveway, southeast to the cemetery, or any other direction
+into the woods.")
     (IN ROOMS)
     (NORTH TO FRONT-PORCH)
     (SOUTH TO WOODS)
@@ -569,10 +565,10 @@ but the VEHBIT kit was added recently." CR>
   >
 >
 
-
+;"------------------------------- THE WOODS -------------------------------------------------------"
 <ROOM WOODS
     (DESC "Woods")
-    (LDESC "The woods are lovely, dark, and deep. You can go north, west, or east.")
+    (LDESC "The woods are lovely, dark, and deep.||You can go north, west, or east.")
     (IN ROOMS)
     (NORTH TO FRONT-YARD)
     (EAST TO CEMETERY)
@@ -582,11 +578,13 @@ but the VEHBIT kit was added recently." CR>
 
 <ROOM WOODS-TWO
     (DESC "Woods")
-    (LDESC "The woods are dark, deep, and lovely. You can go north or west.")
+    (LDESC "Your dad's log cabin is here.||You can go north or west.")
     (IN ROOMS)
     (NORTH TO WOODS-THREE)
     (WEST TO CEMETERY)
+    (IN TO CABIN IF CABIN-DOOR IS OPEN)
     (FLAGS LIGHTBIT)
+    (GLOBAL CABIN-DOOR)
 >
 
 <ROOM WOODS-THREE
@@ -626,6 +624,13 @@ but the VEHBIT kit was added recently." CR>
   (FLAGS CONTBIT OPENBIT SURFACEBIT)
 >
 
+<OBJECT FLASHLIGHT
+  (DESC "flashlight")
+  (SYNONYM FLASHLIGHT LIGHT)
+  (IN SHED-TABLE)
+  (FLAGS TAKEBIT DEVICEBIT LIGHTBIT)
+>
+
 <OBJECT SHOTGUN
   (SYNONYM SHOTGUN GUN BOOMSTICK)
   (DESC "shotgun")
@@ -656,14 +661,14 @@ but the VEHBIT kit was added recently." CR>
 <ROUTINE CHAIN-SAW-R ()
   <COND
     (<VERB? EXAMINE>
-      <TELL "It's your grandpa's battery-powered chainsaw." CR>
+      <TELL "It's your grandpa's old chainsaw." CR>
     )
   >
 >
 
 <ROOM WOODS-FOUR
     (DESC "Woods")
-    (LDESC "The woods are lovely, dark, and deep. You can go north, east, or northeast.")
+    (LDESC "The woods are lovely, dark, and deep.||You can go north, east, or northeast.")
     (IN ROOMS)
     (NORTH TO DRIVEWAY)
     (EAST TO WOODS)
@@ -683,7 +688,68 @@ but the VEHBIT kit was added recently." CR>
 ;"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 <ROOM CABIN
   (DESC "Cabin")
+  (LDESC "Your dad's cabin consists of the main area and the bedroom to the east.")
   (IN ROOMS)
+  (OUT TO WOODS-TWO IF CABIN-DOOR IS OPEN)
+  (EAST TO DADS-BEDROOM IF DADS-BEDROOM-DOOR IS OPEN)
+  (DOWN TO CELLAR IF CELLAR-DOOR IS OPEN)
+  (GLOBAL CABIN-DOOR CELLAR-DOOR DADS-BEDROOM-DOOR)
+>
+
+<OBJECT FIREPLACE
+  (IN CABIN)
+  (FLAGS LIGHTBIT ONBIT FLAMEBIT)
+  (DESC "fireplace")
+  (SYNONYM FIRE FIREPLACE)
+>
+
+<OBJECT DADS-BEDROOM-DOOR
+  (IN LOCAL-GLOBALS)
+  (DESC "bedroom door")
+  (SYNONYM DOOR)
+  (ADJECTIVE BEDROOM)
+  (FLAGS OPENABLEBIT DOORBIT NDESCBIT)
+>
+
+<ROOM DADS-BEDROOM
+  (IN ROOMS)
+  (DESC "Dad's Bedroom")
+  (LDESC "You shouldn't be dicking around in here, or that's what your dad would say, anwyay.")
+  (WEST TO CABIN IF DADS-BEDROOM-DOOR IS OPEN)
+  (GLOBAL DADS-BEDROOM-DOOR LIGHT-SWITCH)
+  (FLAGS DARKBIT)
+>
+
+<OBJECT LIGHT-SWITCH
+  (IN LOCAL-GLOBALS)
+  (DESC "light switch")
+  (SYNONYM SWITCH)
+  (ADJECTIVE LIGHT)
+  (FLAGS DEVICEBIT LIGHTBIT)
+>
+
+
+<OBJECT CELLAR-DOOR
+  (DESC "cellar door")
+  (SYNONYM DOOR)
+  (ADJECTIVE CELLAR)
+  (IN LOCAL-GLOBALS)
+  (FLAGS DOORBIT OPENABLEBIT)
+>
+
+<ROOM CELLAR
+  (DESC "Cellar")
+  (IN ROOMS)
+  (UP TO CABIN IF CELLAR-DOOR IS OPEN)
+  (GLOBAL CELLAR-DOOR)
+>
+
+<OBJECT CABIN-DOOR
+  (IN LOCAL-GLOBALS)
+  (DESC "cabin door")
+  (SYNONYM DOOR)
+  (ADJECTIVE CABIN)
+  (FLAGS DOORBIT OPENABLEBIT NDESCBIT)
 >
 
 ;"#################################### CLOTHES AND SUCH ###########################################"
@@ -780,6 +846,24 @@ but the VEHBIT kit was added recently." CR>
   >
 >
 
+<SYNTAX DIG OBJECT = V-DIG>
+<SYNTAX DIG IN OBJECT = V-DIG>
+
+<ROUTINE V-DIG ()
+  <USELESS>
+>
+
+<ROUTINE USELESS ()
+  <TELL "A totally unhelpful idea." CR>
+>
+
+<SYNTAX DIG OBJECT WITH OBJECT (FIND TOOLBIT) = V-DIG-WITH>
+<SYNTAX DIG IN OBJECT WITH OBJECT (FIND TOOLBIT) = V-DIG-WITH>
+
+<ROUTINE V-DIG-WITH ()
+  <NOT-POSSIBLE "dig">
+>
+
 ;"//////////////////////////////////// HACKS BEGIN \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
 
 ;"OG"
@@ -787,8 +871,6 @@ but the VEHBIT kit was added recently." CR>
   <SETG P-CONT -1>
   <RFATAL>
 >
-
-<GLOBAL VEHICLE <>>
 
 <ROUTINE PLAYER-F ()
   <COND
@@ -824,7 +906,7 @@ but the VEHBIT kit was added recently." CR>
                 >
               )
             >
-            <AND <FSET? .I ,LIGHTBIT> <TELL " (providing light)">>
+            <AND <FSET? .I ,LIGHTBIT> <FSET? .I ,ONBIT> <TELL " (providing light)">>
             <COND
               (<FSET? .I ,CONTBIT>
                 <COND 
@@ -1221,3 +1303,81 @@ but the VEHBIT kit was added recently." CR>
   >
 >
 
+<ROUTINE OPPO-DIR (IDX)
+  <RETURN
+    <COND
+      (<==? .IDX 0> " from the south")
+      (<==? .IDX 1> " from the north")
+      (<==? .IDX 2> " from the west")
+      (<==? .IDX 3> " from the east")
+      (<==? .IDX 4> " from below")
+      (<==? .IDX 5> " from above")
+      (T ", seemingly out of thin air")
+    >
+  >
+>
+
+
+<ROUTINE REVERSE-DIR-STR (DIR)
+  <COND
+    (<==? .DIR ,P?NORTH> " from the south")
+    (<==? .DIR ,P?SOUTH> " from the north")
+    (<==? .DIR ,P?EAST> " from the west")
+    (<==? .DIR ,P?WEST> " from the east")
+    (<==? .DIR ,P?UP> " from below")
+    (<==? .DIR ,P?DOWN> " from above")
+    (T ", seemingly out of thin air")
+  >
+>
+
+<GLOBAL DIR-NAMES
+	<TABLE
+	 P?NORTH	"north"
+	 P?SOUTH	"south"
+	 P?EAST		"east"
+	 P?WEST		"west"
+	 P?NW		"northwest"
+	 P?NE		"northeast"
+	 P?SE		"southeast"
+	 P?SW		"southwest"
+	 P?UP		"above"
+	 P?DOWN		"below"
+	 <>		"out of thin air">>
+
+<ROUTINE PRINT-DIRECTION (DIR "AUX" (CNT 0) D)
+	 <REPEAT ()
+		 <SET D <GET ,DIR-NAMES .CNT>>
+		 <COND (<OR <0? .D>
+			    <EQUAL? .DIR .D>>
+			<TELL <GET ,DIR-NAMES <+ .CNT 1>>>
+			<RETURN>)>
+		 <SET CNT <+ .CNT 2>>>>
+     
+;"Searches scope for a usable light source.
+
+Returns:
+  An object providing light, or false if no light source was found."
+<ROUTINE SEARCH-FOR-LIGHT SFL ()
+  <COND 
+    (<AND <FSET? ,HERE ,LIGHTBIT> <NOT <FSET? ,HERE ,DARKBIT>>>
+      <RTRUE>
+    )
+    (<FSET? ,HERE ,DARKBIT>
+      <MAP-SCOPE (I [STAGES (LOCATION INVENTORY GLOBALS LOCAL-GLOBALS)] [NO-LIGHT])
+        <COND
+          (<AND <FSET? .I ,LIGHTBIT> <FSET? .I ,ONBIT>>
+            <RETURN .I .SFL>
+          )
+        >
+      >
+    )
+  >
+  <MAP-SCOPE(I [STAGES (LOCATION INVENTORY GLOBALS LOCAL-GLOBALS)] [NO-LIGHT])
+      <COND
+        (<AND <FSET? .I ,LIGHTBIT> <FSET? .I ,ONBIT>>
+          <RETURN .I .SFL>
+        )
+      >
+  >
+  <RFALSE>
+>
