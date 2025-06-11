@@ -35,15 +35,15 @@
 
 	.FUNCT GO
 START::
+	SET 'MODE,VERBOSE
 	CRLF
 	CRLF
 	PRINTI "You are a citizen of the land of Nowhere, and you are given an urgent letter to deliver to the King. Navigate your way through the strange and twisted landscape to the capital city of Lost and gain access to the King's castle."
 	CRLF
 	CRLF
-	PRINTI "This is a casual text adventure game in the classic parser style."
-	CRLF
-	CRLF
-	PRINTI "Note: This game was an entry in The 2017 Spring Thing Festival of Interactive Fiction (springthing.net)"
+	PRINTI "This is a casual text adventure game in the classic parser style.
+
+Note: This game was an entry in The 2017 Spring Thing Festival of Interactive Fiction (springthing.net)"
 	CRLF
 	CRLF
 	ICALL2 ITALICIZE,STR?3
@@ -2613,6 +2613,34 @@ START::
 	CALL2 DESCRIBE-OBJECTS,HERE >STACK
 	RSTACK
 
+	.FUNCT DESCRIBE-ROOM,RM,LONG,P
+	EQUAL? RM,HERE \?L1
+	ZERO? HERE-LIT \?L1
+	ICALL2 DARKNESS-F,M-LOOK
+	RFALSE
+?L1:	HLIGHT H-BOLD
+	PRINTD RM
+	CRLF
+	HLIGHT H-NORMAL
+	ZERO? LONG \?L8
+	EQUAL? MODE,SUPERBRIEF /FALSE
+	FSET? RM,TOUCHBIT \?L8
+	EQUAL? MODE,VERBOSE /?L8
+	GETP RM,P?ACTION >STACK
+	ICALL2 STACK,M-FLASH
+	RTRUE
+?L8:	GETP RM,P?ACTION >STACK
+	CALL2 STACK,M-LOOK >STACK
+	ZERO? STACK \?L13
+	GETP RM,P?LDESC >P
+	ZERO? P /?L13
+	PRINT P
+	CRLF
+?L13:	GETP RM,P?ACTION >STACK
+	ICALL2 STACK,M-FLASH
+	FSET RM,TOUCHBIT
+	RTRUE
+
 	.FUNCT DARKNESS-F,ARG
 	EQUAL? ARG,M-LOOK \?L1
 	PRINTR "It is pitch black. You can't see a thing."
@@ -3013,6 +3041,79 @@ START::
 	RTRUE
 ?L14:	ICALL2 PRINT-INDEF,O
 	RTRUE
+
+	.FUNCT V-WALK,PT,PTS,RM,D
+	ZERO? PRSO-DIR \?L1
+	PRINTR "You must give a direction to walk in."
+?L1:	GETPT HERE,PRSO >PT
+	ZERO? PT \?L3
+	ZERO? HERE-LIT \?L6
+	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
+	ZERO? STACK \?L4
+?L6:	PRINT CANT-GO-THAT-WAY
+	CRLF
+?L4:	SET 'P-CONT,0
+	RTRUE
+?L3:	PTSIZE PT >PTS
+	EQUAL? PTS,UEXIT \?L8
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L8:	EQUAL? PTS,NEXIT \?L9
+	GET PT,NEXIT-MSG >STACK
+	PRINT STACK
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L9:	EQUAL? PTS,FEXIT \?L10
+	GET PT,FEXIT-RTN >STACK
+	CALL1 STACK >RM
+	ZERO? RM \?L27
+	SET 'P-CONT,0
+	RTRUE
+?L10:	EQUAL? PTS,CEXIT \?L14
+	GETB PT,CEXIT-VAR >STACK
+	VALUE STACK >STACK
+	ZERO? STACK /?L15
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L15:	GET PT,CEXIT-MSG >RM
+	ZERO? RM /?L18
+	PRINT RM
+	CRLF
+	JUMP ?L21
+?L18:	ZERO? HERE-LIT \?L20
+	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
+	ZERO? STACK \?L21
+?L20:	PRINT CANT-GO-THAT-WAY
+	CRLF
+?L21:	SET 'P-CONT,0
+	RTRUE
+?L14:	EQUAL? PTS,DEXIT \?L22
+	GET PT,DEXIT-OBJ >D
+	FSET? D,OPENBIT \?L23
+	GET PT,EXIT-RM >RM
+	JUMP ?L27
+?L23:	GET PT,DEXIT-MSG >RM
+	ZERO? RM /?L25
+	PRINT RM
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L25:	ICALL2 THIS-IS-IT,D
+	PRINTI "You'll have to open "
+	ICALL2 PRINT-DEF,D
+	PRINTI " first."
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L22:	PRINTI "Broken exit ("
+	PRINTN PTS
+	PRINTI ")."
+	CRLF
+	SET 'P-CONT,0
+	RTRUE
+?L27:	CALL2 GOTO,RM >STACK
+	RSTACK
 
 	.FUNCT V-ENTER
 	FSET? PRSO,DOORBIT \?L1
@@ -3676,7 +3777,7 @@ START::
 
 	.FUNCT V-TURN-OFF
 	EQUAL? PRSO,WINNER \?L1
-	CALL2 PICK-ONE-R,T?119 >STACK
+	CALL2 PICK-ONE-R,T?118 >STACK
 	PRINT STACK
 	CRLF
 	RTRUE
@@ -4287,7 +4388,7 @@ START::
 	PRINTI "You can't "
 	PRINT WORD
 	PRINTI " "
-	PRINT 0
+	ICALL2 PRINT-DEF,PRSO
 	PRINTR "."
 
 	.FUNCT V-PET
@@ -4300,6 +4401,14 @@ START::
 
 	.FUNCT V-STROKE
 	CALL2 PET-F,STR?35 >STACK
+	RSTACK
+
+	.FUNCT V-TIE
+	ICALL2 NOT-POSSIBLE,STR?36
+	RTRUE
+
+	.FUNCT V-THROW
+	CALL1 V-DROP >STACK
 	RSTACK
 
 	.FUNCT HOVEL-R,RARG
@@ -4319,12 +4428,12 @@ START::
 	PRINTR "You don't have that."
 ?L4:	IN? PLAYER,HOVEL \?L6
 	REMOVE BLUNT-AXE
-	MOVE AXE,PLAYER
-	ICALL2 THIS-IS-IT,AXE
+	MOVE SHARP-AXE,PLAYER
+	ICALL2 THIS-IS-IT,SHARP-AXE
 	PRINTR "You walk over to the hearthstones and sharpen the axe blade on one of them. After aminute or so, it gleams with a wicked edge. It is now an axe-is of evil."
 ?L6:	PRINTR "There is nothing here to sharpen it on."
 
-	.FUNCT AXE-R
+	.FUNCT SHARP-AXE-R
 	EQUAL? PRSA,V?EXAMINE \?L1
 	PRINTR "An axe with an arms length wooden haft and a sharpened steel head with the letter L and the pattern of a rose embossed on it. It is your prized (and only) possession given to you by your father. It's blade is sharp as frost."
 ?L1:	EQUAL? PRSA,V?SHARPEN \?L3
@@ -4332,7 +4441,7 @@ START::
 ?L3:	EQUAL? PRSA,V?DROP \FALSE
 	PRINTI "You drop the useful looking axe, a wise move I'm sure."
 	CRLF
-	MOVE AXE,HERE
+	MOVE SHARP-AXE,HERE
 	RTRUE
 
 	.FUNCT SHOVEL-R
@@ -4431,73 +4540,13 @@ START::
 	EQUAL? PRSA,V?TAKE \FALSE
 	PRINTR "You decide to leave the filthy hay where it is."
 
-	.FUNCT V-BOARD
-	FSET? PRSO,VEHBIT /?L1
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR " can't be boarded."
-?L1:	EQUAL? PRSO,VEHICLE \?L3
-	PRINTI "You're already on "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-?L3:	IN? PRSO,PLAYER \?L4
-	PRINTR "You can't ride something you're already holding."
-?L4:	CALL2 ACCESSIBLE?,PRSO >STACK
-	ZERO? STACK \?L5
-	PRINTI "You can't reach "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR "."
-?L5:	MOVE PLAYER,PRSO
-	SET 'VEHICLE,PRSO
-	FSET VEHICLE,NDESCBIT
-	PRINTI "Done."
-	CRLF
-	CALL1 V-LOOK >STACK
-	RSTACK
-
-	.FUNCT V-EXIT
-	ZERO? PRSO \?L4
-	IN? PLAYER,VEHICLE /?L3
-?L4:	FSET? PRSO,VEHBIT \?L1
-?L3:	MOVE PLAYER,HERE
-	FCLEAR PRSO,NDESCBIT
-	ICALL1 V-LOOK
-	RTRUE
-?L1:	CALL2 DO-WALK,P?OUT >STACK
-	RSTACK
-
-	.FUNCT HORSE-R
-	EQUAL? PRSA,V?TAKE,V?OPEN,V?CLOSE /?L3
-	EQUAL? PRSA,V?LOCK,V?UNLOCK,V?PUSH /?L3
-	EQUAL? PRSA,V?PULL,V?SEARCH \?L1
-?L3:	EQUAL? PRSO,HORSE \?L4
-	CALL1 SILLY >STACK
-	RSTACK
-?L4:	IN? PLAYER,HORSE \FALSE
-	IN? PRSO,HORSE /FALSE
-	PRINTI "You can't reach "
-	ICALL2 PRINT-DEF,PRSO
-	PRINTR " from the horse."
-?L1:	EQUAL? PRSA,V?EXAMINE \?L8
-	PRINTR "A perfectly ordinary horse."
-?L8:	EQUAL? PRSA,V?PET \?L9
-	PRINTI "You pet the horse, and he seems just a "
-	ICALL2 ITALICIZE,STR?36
-	PRINTR " bit happier with you now."
-?L9:	EQUAL? PRSA,V?BOARD \FALSE
-	IN? PLAYER,HORSE \?L11
-	PRINTR "You're already on it!"
-?L11:	PRINTI "You mount the horse."
-	CRLF
-	MOVE PLAYER,PRSO
-	FSET HORSE,NDESCBIT
-	SET 'VEHICLE,PRSO
-	RETURN VEHICLE
-
 	.FUNCT NMEADOW-R,RARG
 	EQUAL? RARG,M-ENTER \?L1
 	MOVE DYLAN,HERE
 ?L1:	EQUAL? RARG,M-LOOK \FALSE
-	PRINTI "You are in the meadow outside your hovel, several acres of wild grassland and wild flowers. You may be dirt poor, but the beauty of the landscape is some consolation."
+	PRINTI "You are in the meadow outside your hovel, several acres of wild grassland and wild flowers. You may be dirt poor, but the beauty of the landscape is some consolation.
+
+You can go in our south."
 	CRLF
 	FSET? HERE,TOUCHBIT /FALSE
 	CRLF
@@ -4508,15 +4557,6 @@ START::
 	CRLF
 	MOVE LETTER,PLAYER
 	RTRUE
-
-	.FUNCT ENTER-HOVEL-R
-	IN? PLAYER,VEHICLE \?L1
-	PRINTI "You can't enter while on horseback."
-	CRLF
-	CRLF
-	SET 'P-CONT,0
-	RETURN HERE
-?L1:	RETURN HOVEL
 
 	.FUNCT LETTER-R
 	EQUAL? PRSA,V?DROP \?L1
@@ -4536,7 +4576,7 @@ Well that's just perfect you think, you've always hated a) the capital, b) the m
 	PRINTI "It's already closed."
 	RTRUE
 ?L6:	EQUAL? PRSA,V?HACK \FALSE
-	CALL2 HELD?,AXE >STACK
+	CALL2 HELD?,SHARP-AXE >STACK
 	ZERO? STACK /?L8
 	PRINTR "You consider chopping the letter into pieces, but the King has spies everywhere and you value your life."
 ?L8:	CALL2 HELD?,BLUNT-AXE >STACK
@@ -4544,144 +4584,162 @@ Well that's just perfect you think, you've always hated a) the capital, b) the m
 	PRINTR "Your axe is too blunt (and it's probably not a good idea)."
 ?L10:	PRINTR "You need a tool for that."
 
+	.FUNCT WILD-FLOWERS-R
+	EQUAL? PRSA,V?TAKE \FALSE
+	PRINTR "You decide to leave the flowers for the visiting bees to enjoy."
+
 	.FUNCT SMEADOW-R,RARG
 	EQUAL? RARG,M-ENTER \?L1
 	MOVE DYLAN,HERE
 ?L1:	EQUAL? RARG,M-LOOK \FALSE
 	PRINTR "You are in the Southern Meadow, on the edge of the Northern Woods."
 
+	.FUNCT FALLEN-TREE-R
+	EQUAL? PRSA,V?EXAMINE \?L1
+	PRINTR ""
+?L1:	EQUAL? PRSA,V?TAKE \?L3
+	PRINTR ""
+?L3:	EQUAL? PRSA,V?HACK \FALSE
+	CALL2 HELD?,SHARP-AXE >STACK
+	ZERO? STACK /?L5
+	PRINTI "You swing your trusty axe and reduce the tree to four body-length logs."
+	CRLF
+	FCLEAR LOGS,INVISIBLE
+	ICALL2 THIS-IS-IT,LOGS
+	FSET FALLEN-TREE,INVISIBLE
+	RTRUE
+?L5:	CALL2 HELD?,BLUNT-AXE >STACK
+	ZERO? STACK /?L7
+	PRINTR "You swing your axe at the fallen tree, but it's too blunt to chop it."
+?L7:	PRINTR "You need a tool for that."
+
+	.FUNCT LOGS-R
+	EQUAL? PRSA,V?EXAMINE \?L1
+	PRINTR "Four body-length sized logs from a poplar tree."
+?L1:	EQUAL? PRSA,V?DROP \?L3
+	PRINTI "The four logs strike the ground making a rhythm... a log-a-rhythm."
+	CRLF
+	MOVE LOGS,HERE
+	RTRUE
+?L3:	EQUAL? PRSA,V?TIE \?L4
+	CALL2 HELD?,ROPE >STACK
+	ZERO? STACK /?L5
+	PRINTI "You lash the logs together with the rope, you now have what could very generously be described as a raft. Dylan eyes it suspiciously.."
+	CRLF
+	MOVE RAFT,PLAYER
+	MOVE ROPE,0
+	MOVE LOGS,0
+	RTRUE
+?L5:	CALL2 HELD?,REEDS >STACK
+	ZERO? STACK /?L7
+	PRINTR "The reeds are not strong enough to tie the logs with."
+?L7:	PRINTR "You need something to tie them with."
+?L4:	EQUAL? PRSA,V?HACK \FALSE
+	CALL2 HELD?,SHARP-AXE >STACK
+	ZERO? STACK /?L10
+	PRINTR "You consider reducing the logs to matchwood, but decide they may prove more useful in their current logish formation."
+?L10:	CALL2 HELD?,BLUNT-AXE >STACK
+	ZERO? STACK /?L12
+	PRINTR "You swing your axe at the logs, but it's too blunt to chop them."
+?L12:	PRINTR "You would need a tool for that."
+
+	.FUNCT APPLE-R
+	EQUAL? PRSA,V?EXAMINE \?L1
+	PRINTR "A medium sized apple of the Cox's variety, it is mottled green and red."
+?L1:	EQUAL? PRSA,V?EAT \?L3
+	PRINTR "You detest fruit so you decide to not eat the apple."
+?L3:	EQUAL? PRSA,V?HACK \?L4
+	CALL2 HELD?,SHARP-AXE >STACK
+	ZERO? STACK /?L5
+	PRINTR "That would be fruitless."
+?L5:	CALL2 HELD?,BLUNT-AXE >STACK
+	ZERO? STACK /?L7
+	PRINTR "Your axe is blunt."
+?L7:	PRINTR "You would need a tool for that."
+?L4:	EQUAL? PRSA,V?THROW \?L9
+	PRINTR "You throw the apple, as soon as it's in the air Dylan is off like a shot, he catches it and returns it to you."
+?L9:	EQUAL? PRSA,V?GIVE \FALSE
+	EQUAL? PRSI,HORSE \FALSE
+	PRINTI "You place the apple in the flat palm of your hand and offer it up to the horse. Its lips tickle your hand as it picks it up, it munches it noisily. You smell the tart tang of the apple as it's masticated.
+
+The horse eyes you and gently snorts. You've made a friend."
+	SET 'HORSE-MATES,1
+	MOVE APPLE,0
+	RTRUE
+
 	.FUNCT NWOODS-R,RARG
 	EQUAL? RARG,M-ENTER \?L1
 	MOVE DYLAN,HERE
 ?L1:	EQUAL? RARG,M-LOOK \FALSE
-	PRINTR "You are on a path in the woods that runs North to South, the trees are densely packed, shards of sunlight stab through the small gaps in the canopy, it is humid in here. The floor of the forest is thick with leaf litter from countless autumns."
+	PRINTR "You are on a path in the woods that runs North to South, the trees are densely packed, shards of sunlight stab through the small gaps in the canopy, it is humid in here. The floor of the forest is thick with leaf litter from countless autumns.
+
+You can go north or south."
+
+	.FUNCT GNOME-CHOMPSKY-R
+	EQUAL? PRSA,V?EXAMINE \?L1
+	PRINTR "He's just over a foot tall, including his bright red brimless conical cap. He's wearing a pastel blue jacket with a belt fastened at the middle, black trousers and comically big (relative to his stature) black boots. 
+
+He has a white beard and a mischievous twinkle in his eyes."
+?L1:	EQUAL? PRSA,V?HACK \FALSE
+	CALL2 HELD?,SHARP-AXE >STACK
+	ZERO? STACK /?L4
+	PRINTR "You consider a random axe of violence, but it would seem a little axe-cessive."
+?L4:	CALL2 HELD?,BLUNT-AXE >STACK
+	ZERO? STACK /?L6
+	PRINTR "You couldn't cut butter with this axe."
+?L6:	PRINTR "You need a weapon to do that, now where did you leave your axe?"
 
 	.FUNCT WOODLAND-CLEARING-R,RARG
 	EQUAL? RARG,M-ENTER \?L1
 	MOVE DYLAN,HERE
 ?L1:	EQUAL? RARG,M-LOOK \FALSE
-	PRINTR "A clearing in the wood, looks like it was once a small holding. There is a carpet of thyme underfoot that releases a sweet tang into the air as you walk across it."
+	PRINTR "A clearing in the wood, looks like it was once a small holding. There is a carpet of thyme underfoot that releases a sweet tang into the air as you walk across it.
+
+You can go north or south."
 
 	.FUNCT NORTH-BANK-R,RARG
 	EQUAL? RARG,M-ENTER \?L1
 	MOVE DYLAN,HERE
-?L1:	EQUAL? RARG,M-LOOK \FALSE
-	PRINTR "You are on the Northbank of the River Void. The river is roaring past with a fierce current."
-
-	.FUNCT DESCRIBE-ROOM,RM,LONG,P
-	EQUAL? RM,HERE \?L1
-	ZERO? HERE-LIT \?L1
-	ICALL2 DARKNESS-F,M-LOOK
-	RFALSE
-?L1:	HLIGHT H-BOLD
-	PRINTD RM
-	IN? PLAYER,VEHICLE \?L4
-	PRINTI " ("
-	FSET? VEHICLE,SURFACEBIT \?L6
-	PRINTI "o"
-	JUMP ?L8
-?L6:	PRINTI "i"
-?L8:	PRINTI "n "
-	ICALL2 PRINT-DEF,VEHICLE
-	PRINTI ")"
-?L4:	CRLF
-	HLIGHT H-NORMAL
-	ZERO? LONG \?L14
-	EQUAL? MODE,SUPERBRIEF /FALSE
-	FSET? RM,TOUCHBIT \?L14
-	EQUAL? MODE,VERBOSE /?L14
-	GETP RM,P?ACTION >STACK
-	ICALL2 STACK,M-FLASH
 	RTRUE
-?L14:	GETP RM,P?ACTION >STACK
-	CALL2 STACK,M-LOOK >STACK
-	ZERO? STACK \?L19
-	GETP RM,P?LDESC >P
-	ZERO? P /?L19
-	PRINT P
+?L1:	EQUAL? RARG,M-LOOK \?L3
+	PRINTR "You are on the Northbank of the River Void. The river is roaring past with a fierce current.
+
+You can go north."
+?L3:	EQUAL? RARG,M-BEG \FALSE
+	EQUAL? PRSA,V?SWIM \FALSE
+	PRINTI "It's far too dangerous to swim across."
 	CRLF
-?L19:	GETP RM,P?ACTION >STACK
-	ICALL2 STACK,M-FLASH
-	FSET RM,TOUCHBIT
+	CALL1 FUCKING-CLEAR >STACK
+	RSTACK
+
+	.FUNCT REEDS-R
+	EQUAL? PRSA,V?EXAMINE \?L1
+	PRINTR "They are long and fibrous water reeds."
+?L1:	EQUAL? PRSA,V?TAKE \?L3
+	FSET? REEDS,TOUCHBIT /?L3
+	PRINTI "You pick a large bail of reeds."
+	CRLF
+	MOVE REEDS,PLAYER
+	FSET REEDS,TOUCHBIT
+	RTRUE
+?L3:	EQUAL? PRSA,V?TIE \?L4
+	PRINTR "Nice idea, but you lack the skill."
+?L4:	EQUAL? PRSA,V?GIVE \FALSE
+	EQUAL? PRSI,GNOME-CHOMPSKY \FALSE
+	CALL1 GIVE-CHOMPSKY-REEDS-R >STACK
+	RSTACK
+
+	.FUNCT GIVE-CHOMPSKY-REEDS-R
+	EQUAL? PRSA,V?GIVE \FALSE
+	EQUAL? PRSI,REEDS \FALSE
+	PRINTI """Ah river reeds, perfect for rope making, let me sort that out for you."" With his quick and nimble fingers the Gnome weaves the reeds together with astonishing speed. He hands you a long coil of strong rope."
+	CRLF
+	MOVE REEDS,0
+	MOVE ROPE,PLAYER
 	RTRUE
 
-	.FUNCT V-WALK,PT,PTS,RM,D
-	ZERO? PRSO-DIR \?L1
-	PRINTR "You must give a direction to walk in."
-?L1:	GETPT HERE,PRSO >PT
-	ZERO? PT \?L3
-	ZERO? HERE-LIT \?L6
-	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
-	ZERO? STACK \?L4
-?L6:	PRINT CANT-GO-THAT-WAY
-	CRLF
-?L4:	SET 'P-CONT,0
-	RTRUE
-?L3:	PTSIZE PT >PTS
-	EQUAL? PTS,UEXIT \?L8
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L8:	EQUAL? PTS,NEXIT \?L9
-	GET PT,NEXIT-MSG >STACK
-	PRINT STACK
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L9:	EQUAL? PTS,FEXIT \?L10
-	GET PT,FEXIT-RTN >STACK
-	CALL1 STACK >RM
-	ZERO? RM \?L27
-	SET 'P-CONT,0
-	RTRUE
-?L10:	EQUAL? PTS,CEXIT \?L14
-	GETB PT,CEXIT-VAR >STACK
-	VALUE STACK >STACK
-	ZERO? STACK /?L15
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L15:	GET PT,CEXIT-MSG >RM
-	ZERO? RM /?L18
-	PRINT RM
-	CRLF
-	JUMP ?L21
-?L18:	ZERO? HERE-LIT \?L20
-	CALL2 DARKNESS-F,M-DARK-CANT-GO >STACK
-	ZERO? STACK \?L21
-?L20:	PRINT CANT-GO-THAT-WAY
-	CRLF
-?L21:	SET 'P-CONT,0
-	RTRUE
-?L14:	EQUAL? PTS,DEXIT \?L22
-	GET PT,DEXIT-OBJ >D
-	FSET? D,OPENBIT \?L23
-	GET PT,EXIT-RM >RM
-	JUMP ?L27
-?L23:	GET PT,DEXIT-MSG >RM
-	ZERO? RM /?L25
-	PRINT RM
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L25:	ICALL2 THIS-IS-IT,D
-	PRINTI "You'll have to open "
-	ICALL2 PRINT-DEF,D
-	PRINTI " first."
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L22:	PRINTI "Broken exit ("
-	PRINTN PTS
-	PRINTI ")."
-	CRLF
-	SET 'P-CONT,0
-	RTRUE
-?L27:	IN? PLAYER,VEHICLE \?L28
-	MOVE VEHICLE,RM
-	SET 'HERE,RM
-	CALL2 DESCRIBE-ROOM,RM >STACK
-	RSTACK
-?L28:	CALL2 GOTO,RM >STACK
-	RSTACK
+	.FUNCT BROKEN-BRIDGE-R
+	PRINTR "TODO!"
 
 	.FUNCT BOLDIZE,TEXT
 	HLIGHT H-BOLD
@@ -4693,6 +4751,10 @@ Well that's just perfect you think, you've always hated a) the capital, b) the m
 	PRINTI "Not difficult at all, considering how enjoyable"
 	ICALL2 PRINT-DEF,PRSO
 	PRINTR " is."
+
+	.FUNCT FUCKING-CLEAR
+	SET 'P-CONT,-1
+	RETURN 2
 
 	.INSERT "bonyking_str"
 	.END

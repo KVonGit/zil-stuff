@@ -22,6 +22,7 @@
   <CRLF>
   <V-LOOK>
   <QUEUE I-COULDNT-GO -1>
+  <FSET ,PLAYER ,NDESCBIT>
   <MAIN-LOOP>
 >
   
@@ -61,8 +62,7 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
     (<==? .RARG ,M-BEG>
       <COND
         (<AND <VERB? WALK> <==? ,ZOMBIE-HAND-GOT-YA 1>>
-          <TELL "You can't go anywhere! The hand is holding onto you and you can't walk!!!" CR>
-          <SETG P-CONT -1>
+          <TELL "You can't go anywhere! The hand is holding onto you, and you can't get away!" CR>
           <RFATAL>)
       >)
   >
@@ -204,6 +204,29 @@ yard is to the northwest, and the woods mostly surround you (to the east, west, 
     >
   >
 >
+
+<GLOBAL DIR-NAMES
+	<TABLE
+	 P?NORTH	"north"
+	 P?SOUTH	"south"
+	 P?EAST		"east"
+	 P?WEST		"west"
+	 P?NW		"northwest"
+	 P?NE		"northeast"
+	 P?SE		"southeast"
+	 P?SW		"southwest"
+	 P?UP		"above"
+	 P?DOWN		"below"
+	 <>		"out of thin air">>
+
+<ROUTINE PRINT-DIRECTION (DIR "AUX" (CNT 0) D)
+	 <REPEAT ()
+		 <SET D <GET ,DIR-NAMES .CNT>>
+		 <COND (<OR <0? .D>
+			    <EQUAL? .DIR .D>>
+			<TELL <GET ,DIR-NAMES <+ .CNT 1>>>
+			<RETURN>)>
+		 <SET CNT <+ .CNT 2>>>>
 
 <ROUTINE ZOMBIE-BITE-R ()
   <COND
@@ -561,13 +584,54 @@ but the VEHBIT kit was added recently." CR>)
 >
 
 <ROUTINE SKATE-R ("OPT" RARG)
-  <AND 
-    <VERB? ENTER>
-    <MOVE ,PLAYER ,SKATEBOARD>
-    <SETG VEHICLE ,SKATEBOARD>
+  <COND 
+    (<VERB? ENTER>
+      <MOVE ,PLAYER ,SKATEBOARD>
+      <SETG VEHICLE ,SKATEBOARD>
+      <SETG HERE <LOC ,SKATEBOARD>>
+      <TELL "Done." CR>
+      <RTRUE>
+    )
   >
-  <AND
-    <==? .RARG ,M-BEG> <VERB? WALK> <TELL "PRSO: " D, PRSO>
+  <COND
+    (<AND <==? .RARG ,M-BEG> <VERB? WALK>>
+      <SETG HERE <LOC ,SKATEBOARD>>
+      <FSET ,SKATEBOARD ,NDESCBIT>
+      <TELL "(on the skateboard)" CR>
+      <V-WALK>
+      <MOVE ,SKATEBOARD ,HERE>
+      <MOVE ,PLAYER ,SKATEBOARD>
+      <SETG HERE <LOC ,SKATEBOARD>>
+      <FCLEAR ,SKATEBOARD ,NDESCBIT>
+    )
+    (<AND <==? .RARG ,M-BEG> <VERB? LOOK>>
+      <SETG HERE <LOC ,SKATEBOARD>>
+      <FSET ,SKATEBOARD ,NDESCBIT>
+      <V-LOOK>
+      <FCLEAR ,SKATEBOARD ,NDESCBIT>
+    )
+    (<AND <==? .RARG ,M-BEG> <VERB? EXAMINE>>
+      <COND
+        (<PRSO? ,SKATEBOARD>
+          <TELL "" CR>
+        )
+        (ELSE
+          <SETG HERE <LOC ,SKATEBOARD>>
+          <V-EXAMINE>
+        )
+      >
+    )
+    (<AND <==? .RARG ,M-BEG> <VERB? TAKE>>
+      <COND
+        (<PRSO? ,SKATEBOARD>
+          <TELL "You're on it." CR>
+        )
+        (ELSE
+          <SETG HERE <LOC ,SKATEBOARD>>
+          <TELL "You'll have to get off the skateboard first." CR>
+        )
+      >
+    )
   >
 >
 

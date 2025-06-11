@@ -12,7 +12,12 @@
 <ROUTINE GO ()
   <SETG MODE ,VERBOSE>
   <CRLF> <CRLF>
-  <TELL "You are a citizen of the land of Nowhere, and you are given an urgent letter to deliver to the King. Navigate your way through the strange and twisted landscape to the capital city of Lost and gain access to the King's castle." CR CR "This is a casual text adventure game in the classic parser style." CR CR "Note: This game was an entry in The 2017 Spring Thing Festival of Interactive Fiction (springthing.net)" CR CR>
+  <TELL 
+"You are a citizen of the land of Nowhere, and you are given an urgent letter to deliver to the King.
+Navigate your way through the strange and twisted landscape to the capital city of Lost and gain
+access to the King's castle." CR CR "This is a casual text adventure game in the classic parser
+style.||Note: This game was an entry in The 2017 Spring Thing Festival of Interactive Fiction
+(springthing.net)" CR CR>
   <ITALICIZE "*** Type 'hints' at any time for help. ***">
   <CRLF>
   <CRLF>
@@ -64,11 +69,24 @@
 <SYNTAX STROKE OBJECT = V-STROKE>
 
 <ROUTINE PET-F (WORD)
-  <TELL "You can't " .WORD " " <ARTICLE ,PRSO> "." CR>>
+  <TELL "You can't " .WORD " " T, PRSO "." CR>>
 
 <ROUTINE V-PET () <PET-F "pet">>
 <ROUTINE V-PAT () <PET-F "pat">>
 <ROUTINE V-STROKE () <PET-F "stroke">>
+
+<SYNTAX TIE OBJECT = V-TIE>
+
+<ROUTINE V-TIE ()
+  <NOT-POSSIBLE "ty">
+  <RTRUE>
+>
+
+<SYNTAX THROW OBJECT = V-THROW>
+
+<ROUTINE V-THROW ()
+  <V-DROP>
+>
 
 ;----------------------------------------------------------------------
 ;"#################### YOUR HOVEL ####################"
@@ -108,6 +126,7 @@ there is no lock." CR>)>>
 <OBJECT BLUNT-AXE
     (DESC "axe")
     (SYNONYM AXE)
+    (ADJECTIVE BLUNT)
     (IN CHEST)
     (FLAGS TAKEBIT VOWELBIT)
     (ACTION BLUNT-AXE-R)>
@@ -125,21 +144,22 @@ sharp as Jack after a busy day." CR>)
           <TELL "You don't have that." CR>)
         (<IN? ,PLAYER ,HOVEL>
           <REMOVE ,BLUNT-AXE>
-          <MOVE , AXE ,PLAYER>
-          <THIS-IS-IT ,AXE>
+          <MOVE , SHARP-AXE ,PLAYER>
+          <THIS-IS-IT ,SHARP-AXE>
           <TELL 
 "You walk over to the hearthstones and sharpen the axe blade on one of them. After aminute or so, it
 gleams with a wicked edge. It is now an axe-is of evil." CR>)
         (T
           <TELL "There is nothing here to sharpen it on." CR>)>)>>
 
-<OBJECT AXE
+<OBJECT SHARP-AXE
   (DESC "axe")
   (SYNONYM AXE)
+  (ADJECTIVE SHARP)
   (FLAGS TAKEBIT VOWELBIT)
-  (ACTION AXE-R)>
+  (ACTION SHARP-AXE-R)>
 
-<ROUTINE AXE-R ()
+<ROUTINE SHARP-AXE-R ()
   <COND 
     (<VERB? EXAMINE>
       <TELL 
@@ -150,7 +170,7 @@ blade is sharp as frost." CR>)
       <TELL "It's already sharp." CRLF>)
     (<VERB? DROP>
       <TELL "You drop the useful looking axe, a wise move I'm sure." CR>
-      <MOVE ,AXE ,HERE>)>>
+      <MOVE ,SHARP-AXE ,HERE>)>>
 
 <OBJECT SHOVEL
   (IN HOVEL)
@@ -360,83 +380,6 @@ from the fire." CR>)>>
     (<VERB? TAKE>
       <TELL "You decide to leave the filthy hay where it is." CR>)>>
 
-<SYNTAX BOARD OBJECT = V-BOARD>
-<VERB-SYNONYM BOARD RIDE MOUNT>
-
-<ROUTINE V-BOARD ()
-  <COND
-    (<NOT <FSET? ,PRSO ,VEHBIT>>
-     <TELL T ,PRSO " can't be boarded." CR>
-     <RETURN T>)
-    (<==? ,PRSO ,VEHICLE>
-     <TELL "You're already on " T ,PRSO "." CR>
-     <RETURN T>)
-    (<IN? ,PRSO ,PLAYER>
-     <TELL "You can't ride something you're already holding." CR>
-     <RETURN T>)
-    (<NOT <ACCESSIBLE? ,PRSO>>
-     <TELL "You can't reach " T ,PRSO "." CR>
-     <RETURN T>)
-    (T
-     <MOVE ,PLAYER ,PRSO>
-     <SETG VEHICLE ,PRSO>
-     <FSET ,VEHICLE ,NDESCBIT>
-     <TELL "Done." CR>
-     <V-LOOK>)>>
-
-<SYNTAX EXIT = V-EXIT>
-<SYNTAX EXIT OBJECT = V-EXIT>
-<VERB-SYNONYM EXIT DEPART WITHDR DISMOUNT>
-
-
-<ROUTINE V-EXIT ()
-     <COND
-       (<OR <AND <NOT ,PRSO> <IN? ,PLAYER ,VEHICLE>> <FSET? ,PRSO ,VEHBIT>>
-         <MOVE ,PLAYER ,HERE>
-          <FCLEAR ,PRSO ,NDESCBIT>
-          <V-LOOK>
-          <RTRUE>)
-      (T
-        <DO-WALK ,P?OUT>)>>
-
-
-
-;-------------------------------------------------------------------------------
-;"NOTE: The horse won't be in the Northern Meadow. It's just here now for testing."
-;-------------------------------------------------------------------------------
-<OBJECT HORSE
-  (DESC "horse")
-  (IN NMEADOW)
-  (FLAGS VEHBIT CONTBIT SURFACEBIT SEARCHBIT OPENBIT)
-  (SYNONYM HORSE)
-  (ACTION HORSE-R)>
-
-<GLOBAL VEHICLE <>>
-
-
-<ROUTINE HORSE-R ()
-  <COND 
-    (<VERB? TAKE OPEN CLOSE LOCK UNLOCK PUSH PULL SEARCH>
-      <COND
-        (<PRSO? ,HORSE><SILLY>)
-        (<AND <IN? ,PLAYER ,HORSE> <NOT <IN? ,PRSO ,HORSE>>>
-          <TELL "You can't reach " T ,PRSO " from the horse." CR>)>)
-    (<VERB? EXAMINE>
-        <TELL "A perfectly ordinary horse." CR>)
-    (<VERB? PET>
-      <TELL "You pet the horse, and he seems just a ">
-      <ITALICIZE "little">
-      <TELL " bit happier with you now." CR>)
-    (<VERB? BOARD>
-      <COND
-        (<IN? ,PLAYER ,HORSE>
-          <TELL "You're already on it!" CR>)
-        (T
-          <TELL "You mount the horse." CR>
-        <MOVE ,PLAYER ,PRSO>
-        <FSET ,HORSE ,NDESCBIT>
-        <SETG VEHICLE ,PRSO>)>)>>
-
 ;----------------------------------------------------------------------
 ;"###################### NORTHERN MEADOW ######################"
 ;----------------------------------------------------------------------
@@ -445,7 +388,7 @@ from the fire." CR>)>>
   (DESC "Northern Meadow")
   (IN ROOMS)
   (FLAGS LIGHTBIT OUTSIDEBIT)
-  (IN PER ENTER-HOVEL-R)
+  (IN TO HOVEL)
   (SOUTH SMEADOW)
   (ACTION NMEADOW-R)>
 
@@ -466,15 +409,6 @@ pigeon rapidly disappearing out of sight, and a letter flutters to your feet. Yo
 "On the wind, you can hear a distant shout of what sounds like, \"fuck yooouuuu...\" coming from the
 pigeon's direction before it disappears from sight." CR>
           <MOVE ,LETTER ,PLAYER>)>)>>
-
-<ROUTINE ENTER-HOVEL-R ()
-  <COND
-    (<IN? ,PLAYER ,VEHICLE>
-      <TELL "You can't enter while on horseback." CR CR>
-      <SETG P-CONT 0>
-      <RETURN ,HERE>)
-    (T
-      <RETURN ,HOVEL>)>>
 
 <OBJECT LETTER
   (DESC "letter")
@@ -506,7 +440,7 @@ the south in general." CR>)
       <TELL "It's already closed.">)
     (<VERB? HACK>
       <COND
-        (<HELD? AXE>
+        (<HELD? SHARP-AXE>
           <TELL 
 "You consider chopping the letter into pieces, but the King has spies everywhere and you value your
 life." CR>)
@@ -515,6 +449,23 @@ life." CR>)
         (T
           <TELL "You need a tool for that." CR>)>)>>
 
+<OBJECT WILD-FLOWERS
+  (IN NMEADOW)
+  (DESC "wild flowers")
+  (SYNONYM FLOWERS)
+  (ADJECTIVE WILD)
+  (LDESC "There is a multitude of beautiful wild flowers, bowing gently in the breeze.")
+  (FLAGS NDESCBIT)
+  (ACTION WILD-FLOWERS-R)
+>
+
+<ROUTINE WILD-FLOWERS-R ()
+  <COND
+    (<VERB? TAKE>
+      <TELL "You decide to leave the flowers for the visiting bees to enjoy." CR>
+    )
+  >
+>
 
 ;----------------------------------------------------------------------
 ;"###################### SOUTHERN MEADOW ######################"
@@ -537,6 +488,144 @@ life." CR>)
       <TELL 
 "You are in the Southern Meadow, on the edge of the Northern Woods." CR>)>>
 
+<OBJECT FALLEN-TREE
+  (SYNONYM TREE)
+  (ADJECTIVE FALLEN)
+  (DESC "fallen tree")
+  (IN SMEADOW)
+  (ACTION FALLEN-TREE-R)
+>
+
+<ROUTINE FALLEN-TREE-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL "" CR>
+    )
+    (<VERB? TAKE>
+      <TELL "" CR>
+    )
+    (<VERB? HACK>
+      <COND
+        (<HELD? ,SHARP-AXE>
+          <TELL "You swing your trusty axe and reduce the tree to four body-length logs." CR>
+          <FCLEAR ,LOGS ,INVISIBLE>
+          <THIS-IS-IT ,LOGS>
+          <FSET ,FALLEN-TREE ,INVISIBLE>
+        )
+        (<HELD? ,BLUNT-AXE>
+          <TELL "You swing your axe at the fallen tree, but it's too blunt to chop it." CR>
+        )
+        (ELSE
+          <TELL "You need a tool for that." CR>
+        )
+      >
+    )
+  >
+>
+
+<OBJECT LOGS
+  (SYNONYM LOGS)
+  (DESC "logs")
+  (IN SMEADOW)
+  (FLAGS TAKEBIT INVISIBLE PLURALBIT)
+  (ACTION LOGS-R)
+>
+
+<ROUTINE LOGS-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL "Four body-length sized logs from a poplar tree." CR>
+    )
+    (<VERB? DROP>
+      <TELL "The four logs strike the ground making a rhythm... a log-a-rhythm." CR>
+      <MOVE ,LOGS, HERE>
+    )
+    (<VERB? TIE>
+      <COND
+        (<HELD? ,ROPE>
+          <TELL 
+"You lash the logs together with the rope, you now have what could very generously be described as
+a raft. Dylan eyes it suspiciously.." CR>
+          <MOVE ,RAFT ,PLAYER>
+          <MOVE ,ROPE <>>
+          <MOVE ,LOGS <>>
+        )
+        (<HELD? ,REEDS>
+          <TELL "The reeds are not strong enough to tie the logs with." CR>
+        )
+        (ELSE
+          <TELL "You need something to tie them with." CR>
+        )
+      >
+    )
+    (<VERB? HACK>
+      <COND
+        (<HELD? ,SHARP-AXE>
+          <TELL
+"You consider reducing the logs to matchwood, but decide they may prove more useful in their current
+logish formation." CR>
+        )
+        (<HELD? ,BLUNT-AXE>
+          <TELL "You swing your axe at the logs, but it's too blunt to chop them." CR>
+        )
+        (ELSE
+          <TELL "You would need a tool for that." CR>
+        )
+      >
+    )
+  >
+>
+
+<OBJECT APPLE
+  (DESC "apple")
+  (SYNONYM APPLE)
+  (IN SMEADOW)
+  (FLAGS TAKEBIT VOWELBIT)
+  (ACTION APPLE-R)
+>
+
+<ROUTINE APPLE-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL "A medium sized apple of the Cox's variety, it is mottled green and red." CR>
+    )
+    (<VERB? EAT>
+      <TELL "You detest fruit so you decide to not eat the apple." CR>
+    )
+    (<VERB? HACK>
+      <COND
+        (<HELD? ,SHARP-AXE>
+          <TELL "That would be fruitless." CR>
+        )
+        (<HELD? ,BLUNT-AXE>
+          <TELL "Your axe is blunt." CR>
+        )
+        (ELSE
+          <TELL "You would need a tool for that." CR>
+        )
+      >
+    )
+    (<VERB? THROW>
+      <TELL 
+"You throw the apple, as soon as it's in the air Dylan is off like a shot, he catches it and returns
+it to you." CR>
+    )
+    (<AND <VERB? GIVE><PRSI? ,HORSE>>
+      <TELL 
+"You place the apple in the flat palm of your hand and offer it up to the horse. Its lips tickle
+your hand as it picks it up, it munches it noisily. You smell the tart tang of the apple as it's
+masticated.||The horse eyes you and gently snorts. You've made a friend.">
+      <SETG HORSE-MATES T>
+      <MOVE ,APPLE <>>
+    )
+  >
+>
+
+;"TODO - PLACEHOLDER"
+
+<GLOBAL HORSE-MATES <>>
+<OBJECT HORSE
+>
 
 ;----------------------------------------------------------------------
 ;"###################### NORTHERN WOODS ######################"
@@ -560,7 +649,40 @@ life." CR>)
       <TELL 
 "You are on a path in the woods that runs North to South, the trees are densely packed, shards of
 sunlight stab through the small gaps in the canopy, it is humid in here. The floor of the forest is
-thick with leaf litter from countless autumns." CR>)>>
+thick with leaf litter from countless autumns.||You can go north or south." CR>)>>
+
+
+
+<OBJECT GNOME-CHOMPSKY
+  (SYNONYM GNOME CHOMPSKY)
+  (DESC "Gnome Chompsky")
+  (FLAGS PERSONBIT NARTICLEBIT)
+  (ACTION GNOME-CHOMPSKY-R)
+>
+
+<ROUTINE GNOME-CHOMPSKY-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL
+"He's just over a foot tall, including his bright red brimless conical cap. He's wearing a pastel
+blue jacket with a belt fastened at the middle, black trousers and comically big (relative to his
+stature) black boots. ||He has a white beard and a mischievous twinkle in his eyes." CR>
+    )
+    (<VERB? HACK>
+      <COND
+        (<HELD? ,SHARP-AXE>
+          <TELL "You consider a random axe of violence, but it would seem a little axe-cessive." CR>
+        )
+        (<HELD? ,BLUNT-AXE>
+          <TELL "You couldn't cut butter with this axe." CR>
+        )
+        (ELSE
+          <TELL "You need a weapon to do that, now where did you leave your axe?" CR>
+        )
+      >
+    )
+  >
+>
 
 ;----------------------------------------------------------------------
 ;"###################### WOODLAND CLEARING ######################"
@@ -583,7 +705,8 @@ thick with leaf litter from countless autumns." CR>)>>
     (<==? .RARG ,M-LOOK>
       <TELL 
 "A clearing in the wood, looks like it was once a small holding. There is a carpet of thyme
-underfoot that releases a sweet tang into the air as you walk across it." CR>)>>
+underfoot that releases a sweet tang into the air as you walk across it.||You can go north or
+south." CR>)>>
 
 
 ;----------------------------------------------------------------------
@@ -595,117 +718,108 @@ underfoot that releases a sweet tang into the air as you walk across it." CR>)>>
   (IN ROOMS)
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (NORTH WOODLAND-CLEARING)
-  (ACTION NORTH-BANK-R)>
+  (ACTION NORTH-BANK-R)
+  (GLOBAL RIVER-VOID BROKEN-BRIDGE)>
 
 
 <ROUTINE NORTH-BANK-R (RARG)
   <COND
     (<==? .RARG ,M-ENTER>
-     <MOVE ,DYLAN ,HERE>)>
-  <COND
+      <MOVE ,DYLAN ,HERE>
+    )
     (<==? .RARG ,M-LOOK>
       <TELL 
-"You are on the Northbank of the River Void. The river is roaring past with a fierce current." CR>)>>
+"You are on the Northbank of the River Void. The river is roaring past with a fierce current.||You
+can go north." CR>
+    )
+    (<AND <==? .RARG ,M-BEG><VERB? SWIM>>
+      <TELL "It's far too dangerous to swim across." CR>
+      <FUCKING-CLEAR>
+    )
+  >
+>
 
+<OBJECT REEDS
+  (SYNONYM REED REEDS)
+  (ADJECTIVE THICK BEDS)
+  (DESC "reeds")
+  (FDESC "On the edge of the riverbank there are thick beds of reeds.")
+  (IN NORTH-BANK)
+  (FLAGS TAKEBIT PLURALBIT)
+  (ACTION REEDS-R)
+>
+
+<ROUTINE REEDS-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL "They are long and fibrous water reeds." CR>
+    )
+    (<AND <VERB? TAKE> <NOT <FSET? ,REEDS ,TOUCHBIT>>>
+      <TELL "You pick a large bail of reeds." CR>
+      <MOVE ,REEDS ,PLAYER>
+      <FSET ,REEDS ,TOUCHBIT>
+    )
+    (<VERB? TIE>
+      <TELL "Nice idea, but you lack the skill." CR>
+    )
+    (< AND <VERB? GIVE><PRSI? ,GNOME-CHOMPSKY>>
+      <GIVE-CHOMPSKY-REEDS-R>
+    )    
+  >
+>
+
+<ROUTINE GIVE-CHOMPSKY-REEDS-R ()
+  <COND
+    (<AND <VERB? GIVE> <PRSI? ,REEDS>>
+      <TELL
+"\"Ah river reeds, perfect for rope making, let me sort that out for you.\" With his quick and
+nimble fingers the Gnome weaves the reeds together with astonishing speed. He hands you a long coil
+of strong rope." CR>
+      <MOVE ,REEDS <>>
+      <MOVE ,ROPE ,PLAYER>
+    )
+  >
+>
+
+;"LOCAL-GLOBALS"
+
+<OBJECT RIVER-VOID
+  (SYNONYM RIVER VOID)
+  (IN LOCAL-GLOBALS)
+  (DESC "River Void")
+  (LDESC 
+"The River Void is fast, deep and wide. The water level is unusually high and it is roaring loudly
+as it flows past. It looks like the bridge across has collapsed.")
+  (FLAGS NDESCBIT)
+>
+
+<OBJECT BROKEN-BRIDGE
+  (IN LOCAL-GLOBALS)
+  (SYNONYM BRIDGE)
+  (ADJECTIVE BROKEN)
+  (DESC "broken bridge")
+  (FLAGS NDESCBIT)
+  (LDESC 
+"A wooden footbridge, which has collapsed in the middle leaving a yawning gap down to the dangerous
+river below. What a terrible thing to happen, you can't get over it.")
+  (ACTION BROKEN-BRIDGE-R)
+>
+
+<ROUTINE BROKEN-BRIDGE-R ()
+  <TELL "TODO!" CR>
+>
 
 ;----------------------------------------------------------------------
-;"###################### DIRTY HACKS ######################"
+;"###################### NOWHERE ######################"
 ;----------------------------------------------------------------------
-<ROUTINE DESCRIBE-ROOM (RM "OPT" LONG "AUX" P)
-    <COND (<AND <==? .RM ,HERE> <NOT ,HERE-LIT>>
-           <DARKNESS-F ,M-LOOK>
-           <RFALSE>)>
-    ;"Print the room's real name."
-    <VERSION? (ZIP) (ELSE <HLIGHT ,H-BOLD>)>
-    <TELL D .RM>
-    <COND
-      (<IN? ,PLAYER ,VEHICLE>
-        <TELL " (">
-        <COND
-          (<FSET? ,VEHICLE ,SURFACEBIT>
-            <TELL "o">)
-          (T
-            <TELL "i" >)>
-        <TELL "n " T, VEHICLE ")" >)>
-    <CRLF>
-    <VERSION? (ZIP) (ELSE <HLIGHT ,H-NORMAL>)>
-    ;"If this is an implicit LOOK, check briefness."
-    <COND (<NOT .LONG>
-           <COND (<EQUAL? ,MODE ,SUPERBRIEF>
-                  <RFALSE>)
-                 (<AND <FSET? .RM ,TOUCHBIT>
-                       <NOT <EQUAL? ,MODE ,VERBOSE>>>
-                  ;"Call the room's ACTION with M-FLASH even in brief mode."
-                  <APPLY <GETP .RM ,P?ACTION> ,M-FLASH>
-                  <RTRUE>)>)>
-    ;"The room's ACTION can print a description with M-LOOK.
-      Otherwise, print the LDESC if present."
-    <COND (<APPLY <GETP .RM ,P?ACTION> ,M-LOOK>)
-          (<SET P <GETP .RM ,P?LDESC>>
-           <TELL .P CR>)>
-    ;"Call the room's ACTION again with M-FLASH for important descriptions."
-    <APPLY <GETP .RM ,P?ACTION> ,M-FLASH>
-    ;"Mark the room visited."
-    <FSET .RM ,TOUCHBIT>
-    <RTRUE>>
 
+;"TODO - PLACEHOLDER"
+<OBJECT ROPE
+>
 
-<ROUTINE V-WALK ("AUX" PT PTS RM D)
-    <COND (<NOT ,PRSO-DIR>
-           <PRINTR "You must give a direction to walk in.">)
-          (<0? <SET PT <GETPT ,HERE ,PRSO>>>
-           <COND (<OR ,HERE-LIT <NOT <DARKNESS-F ,M-DARK-CANT-GO>>>
-                  <TELL ,CANT-GO-THAT-WAY CR>)>
-           <SETG P-CONT 0>
-           <RTRUE>)
-          (<==? <SET PTS <PTSIZE .PT>> ,UEXIT>
-           <SET RM <GET/B .PT ,EXIT-RM>>)
-          (<==? .PTS ,NEXIT>
-           <TELL <GET .PT ,NEXIT-MSG> CR>
-           <SETG P-CONT 0>
-           <RTRUE>)
-          (<==? .PTS ,FEXIT>
-           <COND (<0? <SET RM <APPLY <GET .PT ,FEXIT-RTN>>>>
-                  <SETG P-CONT 0>
-                  <RTRUE>)>)
-          (<==? .PTS ,CEXIT>
-           <COND (<VALUE <GETB .PT ,CEXIT-VAR>>
-                  <SET RM <GET/B .PT ,EXIT-RM>>)
-                 (ELSE
-                  <COND (<SET RM <GET .PT ,CEXIT-MSG>>
-                         <TELL .RM CR>)
-                        (<AND <NOT ,HERE-LIT> <DARKNESS-F ,M-DARK-CANT-GO>>
-                         ;"DARKNESS-F printed a message")
-                        (ELSE
-                         <TELL ,CANT-GO-THAT-WAY CR>)>
-                  <SETG P-CONT 0>
-                  <RTRUE>)>)
-          (<==? .PTS ,DEXIT>
-           <COND (<FSET? <SET D <GET/B .PT ,DEXIT-OBJ>> ,OPENBIT>
-                  <SET RM <GET/B .PT ,EXIT-RM>>)
-                 (<SET RM <GET .PT ,DEXIT-MSG>>
-                  <TELL .RM CR>
-                  <SETG P-CONT 0>
-                  <RTRUE>)
-                 (ELSE
-                  <THIS-IS-IT .D>
-                  <TELL "You'll have to open " T .D
-                        " first." CR>
-                  <SETG P-CONT 0>
-                  <RTRUE>)>)
-          (ELSE
-           <TELL "Broken exit (" N .PTS ")." CR>
-           <SETG P-CONT 0>
-           <RTRUE>)>
-    <COND
-      (<IN? ,PLAYER ,VEHICLE>
-        <MOVE ,VEHICLE .RM>
-        <SET HERE .RM>
-        <DESCRIBE-ROOM .RM>)
-      (T
-        <GOTO .RM>)>>
-
-
+;"TODO - PLACEHOLDER"
+<OBJECT RAFT
+>
 
 ;----------------------------------------------------------------------
 ;"###################### TEXT ROUTINES ######################"
@@ -721,3 +835,9 @@ underfoot that releases a sweet tang into the air as you walk across it." CR>)>>
 ;----------------------------------------------------------------------
 <ROUTINE V-ENJOY ()
 	 <TELL "Not difficult at all, considering how enjoyable" T, PRSO " is." CR>>
+   
+;"OG"
+<ROUTINE FUCKING-CLEAR ()
+  <SETG P-CONT -1>
+  <RFATAL>
+>
