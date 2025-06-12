@@ -1,0 +1,481 @@
+    /*window.squiffy = squiffy;*/
+    squiffy.set('version','0.1 alpha');
+    squiffy.set('items', ['milk']);
+    squiffy.koww = {};
+    squiffy.koww.give = function(item){ 
+      var tmpArr = squiffy.get('items');
+      if (tmpArr.indexOf(item) === -1){
+        tmpArr.push(item);
+        squiffy.set('items', tmpArr);
+        squiffy.set('got' + item.replace(/ /g,''), true);
+        squiffy.ui.write(squiffy.koww.itemsList());
+        return 1;
+      }
+      return 0;
+    };
+    squiffy.koww.lose = function(item){ 
+      var tmpArr = squiffy.get('items');
+      var index = tmpArr.indexOf(item);
+      if (index !== -1) {
+        tmpArr.splice(index, 1);
+        squiffy.set('items', tmpArr);
+        squiffy.set('got' + item.replace(/ /g,''), false);
+        return 1;
+      }
+      return 0;
+    };
+    squiffy.koww.itemsList = function(){
+      var sarr = squiffy.get('items');
+      var s = '<div class="items-list"><strong>Items:</strong><br/>- ';
+      s = s + sarr.join('<br/>- ') + '</div>';
+      return s;
+    };
+    document.addEventListener("contextmenu", function (event) {
+        const link = event.target.closest(".link-passage");
+        if (link) {
+            event.preventDefault(); // Prevent the default context menu
+            event.stopPropagation();
+            handleRightClick(link.dataset.passage);
+        }
+    });
+    window.handleRightClick = function (data) {
+      //console.log(data);
+      squiffy.story.passage('take ' + data);
+    };
+@title The Adventures of Koww the Magician (Squiffy Port)
+# The Adventures of Koww the Magician
+## by Brian the Great
+### © 1999
+<em><strong>(<a target="_blank" href="https://textadventures.co.uk/games/
+view/nalydifu9eqbcgy0pcyceq/
+the-adventures-of-koww-the-magician" 
+title="Check out the original Quest 2 game on textadventures.co.uk!">
+ported</a> by David Agnew, 2025)</strong></em><br/>
+
+<blockquote>Koww is a magical cow trying to figure out whether the grass is 
+greener on the other side of the chasm.</blockquote>
+
++++Find out if the grass is really greener on the other side of the chasm.
+@clear
+    squiffy.set('starttime', new Date().toLocaleString());
+    squiffy.set('gotmilk', true);
+    squiffy.ui.write(squiffy.koww.itemsList() + '<hr/>');
+    squiffy.story.go("Koww's Chasm");
+
+<!-- ************KOWW'S CHASM************ -->
+[[Koww's Chasm]]:
+You are in <font color=red>Koww's Chasm</font>.<br/>
+There is nobody here.<br/>
+There is a [sign] and the [chasm] here.<br/>
+You can go [[east]](Zeke's Farm).<br/>
+You are outside in a pasture of pure, pure green.  Green as far as the eye 
+can see.  But you, Koww the Magician, are not satisfied.  The grass may be 
+even greener on the other side of the <strong>chasm</strong>... you must 
+know! Also in the area is a very undramatic <strong>sign</strong>.
+{if gotflyscroll:
+
+[Use fly scroll.](FLY)}
+
+[sign]:
+**\> examine sign**
+
+It reads: "<em>Got milk?  Come to Farmer Zeke's mag-NIFicent silo!</em>"
+
+[take sign]:
+**\> take sign**
+
+You yank the sign out of the ground and try to fit it in your Koww-pack. 
+But it just doesn't fit.  Frustrated, you put it back.
+
+[chasm]:
+That's the chasm you simply MUST cross!  Surely the only way to cross it 
+is to [FLY]!
+
+[take chasm]:
+Don't worry, the men in the white coats will soon be here to deal with you.
+
+[FLY]:
+    if (squiffy.get('gotflyscroll')){
+      squiffy.story.passage('endproc');
+    }
+    else {
+      squiffy.story.passage('noscroll');
+    }
+
+[noscroll]:
+That's not a spell you know.  But perhaps if you could find a scroll -- 
+like the ones owned by the Great Phoenix -- you could do so.
+
+
+[endproc]:
+@clear
+You fly up and over the chasm!<br/>
+Congratulations, you have found out that you were better off where you 
+started anyway.  The grass here is brown and crackly.  Too bad!  And... OH 
+NO!  Now you're trapped here, alone with the NecroYaks!  Stay tuned for 
+"The Adventures of Koww the Magician II -- Escape from the NecroYaks!"
+
+Play the real game:
+<a href="https://textadventures.co.uk/games/view/nalydifu9eqbcgy0pcyceq/
+the-adventures-of-koww-the-magician" title="https://textadventures.co.uk/
+games/view/nalydifu9eqbcgy0pcyceq/the-adventures-of-koww-the-magician">
+https://textadventures.co.uk/games/view/nalydifu9eqbcgy0pcyceq/
+the-adventures-of-koww-the-magician</a>
+
+<!-- ***********ZEKE'S FARM********** -->
+[[Zeke's Farm]]:
+You are in <font color=red>Zeke's Farm</font>.<br/>
+There is nobody here.<br/>
+There is the [haystack] and the [pond] here.<br/>
+You can go [[west]](Koww's Chasm), [[south]](Goblin Trail), 
+[[east]](Phoenix Mountain Pass), or [[north]](Land of the NecroYaks).<br/>
+You can go to [[Zeke's Farmhouse]], or [[Zeke's Silo]].<br/>
+You stand outside of a small <strong>farmhouse</strong> with a 
+<strong>silo</strong> beside it.  There are a <strong>haystack</strong> 
+and a <strong>pond</strong> here.
+
+[haystack]:
+About what you'd expect from a haystack.  It's made of... HAY!  You 
+[munch](take haystack) on it for a while.{if gotpitchfork:
+
+[Use pitchfork on haystack.]}
+
+[take haystack]:
+You take a bite of the haystack.  Yummy... tastes just like chicken!
+
+[Use pitchfork on haystack.]:
+    squiffy.koww.lose('pitchfork');
+    squiffy.koww.give('jade statuette');
+<hr/>
+You stab the pitchfork into the haystack.  Lo and behold, the haystack 
+falls down into a hole in the ground!  Inside the hole is a jade statuette,
+ which you take.
+
+[pond]:
+A nice, placid [pond](take pond) full of little tiny duckies.  Ooo, how 
+cute!  If you were carnivorous, they'd make you hungry.{if gotsomething:
+
+[Use something on the pond.]}
+
+[Use something on the pond.]:
+    squiffy.koww.lose('something');
+    squiffy.koww.give('duck turd');
+<hr/>
+You throw the something into the lake.  The ducks swarm around it in 
+curiosity.  You take the opportunity to grab a duck turd without being 
+noticed!
+
+[take pond]:
+You sip the water from the pond.  Just what you need to wash down a bit of 
+grazing.
+
+<!-- ************ZEKE'S FARMHOUSE********** -->
+[[Zeke's Farmhouse]]:
+You are in <font color=red>Zeke's Farmhouse</font>.<br/>
+This is nobody here.<br/>
+{if not gotnothing:There is the [table] here.<br/>}
+You can go [[out]](Zeke's Farm).<br/>
+You're inside Farmer Zeke's rather cramped home.  No one's here at the 
+moment. Perhaps you should go away.
+
+[table]:
+Hmmm, what's a table doing here?  Cool!  It has a 
+<strong>[treasure chest]</strong> on it!
+
+[take table]:
+Farmer Zeke took the wise precaution of bolting his table to the floor.
+
+[treasure chest]:
+    squiffy.koww.give('nothing')
+<hr/>
+Ooooo!  There's nothing inside!  Told ya you should have gone away.
+
+<!-- *************ZEKE'S SILO************** -->
+[[Zeke's Silo]]:
+You are in <font color=red>Zeke's Silo</font>.<br/>
+You can see <strong>[Zeke]</strong> here.<br/>
+You can go [[out]](Zeke's Farm) to Zeke's Farm.<br/>
+Gee, this place smells just like rotting feed.  Standing in the silo, 
+grinning like the idiot that he is, is Farmer <strong>Zeke</strong>.
+{if gotpurplepaint:
+
+[Use purple paint.](use purple paint)}
+
+[Zeke]:
+He's wearing a straw hat and at least one of his teeth is rotting away, 
+but he seems pleased as punch that you've arrived.{if gotmilk:
+
+"Hey there, good buddy!  Say, bein' a wizard an' all, couldja find it in 
+yer heart to [gimme some magic milk](give milk to zeke)?  I'm all out!"}
+
+[give milk to zeke]:
+    squiffy.koww.lose('milk');
+    squiffy.koww.give('pitchfork');
+<hr/>"Well, thanks a lot, good buddy!  Well, tell ya what, why don't I 
+give ya this here pitchfork ta comp'n'sate ya fer yer milk."
+
+[use purple paint]:
+    squiffy.koww.lose('purple paint');
+    squiffy.ui.write(squiffy.koww.itemsList());
+<hr/>
+You spread the purple paint on yourself.  Suddenly Farmer Zeke bursts into 
+song!
+
+"<em>I never saw a purple cow, and I never hope to see one; but I can tell 
+you anyhow, I'd rather see than be one!</em>"<br/>
+Wonderful!  You have just activated the scenario's secret feature!  That's 
+it.  Return to your home.  There's nothing more to do here.
+
+[kill zeke]:
+You may be an evil sorcerer, but at least you're an ETHICAL evil sorcerer. 
+No killing allowed!  Especially not of idiots.  They don't know they're 
+idiots.
+
+[splash milk on zeke]:
+@clear
+"Well, gee," says Farmer Zeke, "I shore do like ya a lot, but I guess 
+there's a limit!"<br/>
+So saying, Zeke stabs you with his pitchfork.<br/>
+
+Idiot.  You die.  HA HA HA HA HA!
+
+<!-- *************GOBLIN TRAIL*************** -->
+[[Goblin Trail]]:
+You are in <font color=red>Goblin Trail</font>.<br/>
+There is nobody here.<br/>
+There is the [road] here.<br/>
+You can go [[north]](Zeke's Farm) or [[south]](Goblin Lair).<br/>
+The stench of goblins permeates this place.  Goblins are small, annoying 
+creatures who like to fight anyone who looks weak.  Fortunately, you don't 
+look weak.
+
+[road]:
+It's made of dirt.  Concrete hasn't been invented yet.
+
+[take road]:
+But you're already taking the road!  You're taking it either north or 
+south! Har har har!  Hey, I saw a car transform the other day!  Yeah, it 
+turned into a driveway!
+
+<!-- *************GOBLIN LAIR**************** -->
+[[Goblin Lair]]:
+You are in <font color=red>Goblin Lair</font>.<br/>
+You can see the [goblin guard] here.<br/>
+There is the [cliff] here.<br/>
+You can go [[north]](Goblin Trail).<br/>
+You can go to [[Inside the Goblin Lair]].<br/>
+About twenty goblins patrol the front of a massive cave complex.  They eye 
+you for a moment, then decide not to attack.  You return the favor and 
+don't kill them.
+
+[cliff]:
+It's a cliff; you could [climb] it, but it might be a difficult climb.
+
+[take cliff]:
+If you want to climb the cliff, say so!
+
+[climb]:
+After a difficult climb, you reach the top.  You're very pleased with 
+yourself. Unfortunately, the ledge crumbles beneath you and you plummet 
+back to the ground.
+
+[goblin guard]:
+It's very ugly, like most of its kind.  Don't get too close; you could 
+faint from the smell.
+
+"Yu wan go cave?  No try no funny bizniss -- I can tell."{if gotnothing:
+
+[Give nothing to the goblin guard.]}
+
+[Give nothing to the goblin guard.]:
+    squiffy.koww.lose('nothing');
+    squiffy.koww.give('something');
+<hr/>
+"Ooooo!  Nuthing!  Jus wut I all ways want'd!  Inn ex chaynge, I giv yu 
+summ thing!"
+
+<!-- **************INSIDE THE GOBLIN LAIR************* -->
+[[Inside the Goblin Lair]]:
+You are in <font color=red>Inside the Goblin Lair</font>.<br/>
+You can see the [Goblin King] here.<br/>
+There is the [statues] here.<br/>
+You can go out to [[Goblin Lair]].<br/>
+You are escorted to the Goblin King's throne room, a large chamber 
+ornamented with statues of nude female goblins.  You try hard to avoid 
+puking.
+
+[statues]:
+Apparently, the goblin idea of beauty is the same as the bovine idea of 
+putridity.  You'd prefer not to look at these statues.
+
+[take statues]:
+That would be difficult, considering the statues are about seven feet 
+tall, are made of stone, weigh about a ton, and are guarded by some 
+mean-looking goblins.
+
+[Goblin King]:
+An officious-looking, double-chinned goblin monarch sits royally atop a 
+throne of deer hide.
+
+"Hoo hoo hoo!  Goblinz so grate, our spit is assid!  We spit on yu if yu 
+make us angree!{if gotjadestatuette: If yu hav [tiny statyoo of jade], we 
+giv yu 
+nice thing!}"{if gotduckturd:
+
+[Give duck turd to the Goblin King.](duck turd)}
+
+[tiny statyoo of jade]:
+    squiffy.koww.lose('jade statuette');
+    squiffy.koww.give('jar of spit');
+<hr/>
+"Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!"
+
+[duck turd]:
+    squiffy.koww.lose('duck turd');
+    squiffy.koww.give('grappling hook');
+<hr/>
+"Ooooo!  GIMME GIMME GIMME!  Duck turd favorite goblin food!  We giv yu 
+grapple hook!"
+
+<!-- ***************LAND OF THE NECROYAKS************** -->
+[[Land of the NecroYaks]]:
+You are in <font color=red>Land of the NecroYaks</font>.<br/>
+There is nobody here.<br/>
+There is a [sign](look at sign) here.<br/>
+You can go [[south]](Zeke's Farm) or [[north]](Deep in NecroYak Territory).
+
+The greenness of the farmland dissolves into gray bleakness as you pass 
+into the land of the NecroYaks.  Yaks are the sworn enemies of cows -- 
+you'd better stay on your toes!
+
+[look at sign]:
+It reads: "<em>Unless you own a vial of acid that you can give to the 
+NecroYaks for their sinister experiments, do not proceed on pain of 
+Death!</em>"
+
+[take sign]:
+Oh, THAT'S original.
+
+<!-- ***************AMBUSH POINT*************** -->
+[[Deep in NecroYak Territory]]:
+You are in <font color=red>Deep in NecroYak Territory</font>.<br/>
+There is nobody here.<br/>
+You can go [[south]](Land of the NecroYaks).<br/>
+A cliff face blocks your way here.  It's steep -- you can't climb.  If you 
+want to continue, you'll have to [search] the face.
+
+[search]:
+    if (squiffy.get('gotjarofspit')){
+      squiffy.story.passage('yakslove');
+    }
+    else {
+      squiffy.story.passage('yakskill');
+    }
+
+[yakslove]:
+    squiffy.koww.lose('jar of spit');
+    squiffy.koww.give('phoenix feather');
+<hr/>
+The NecroYaks jump out and search you for acid.  They find your goblin 
+spit, take it, and run off.  But one of them drops a <strong>phoenix 
+feather</strong>, and you scoop it up unnoticed.  By the way, there's no 
+way to go farther  this  way unless you're a yak.
+
+[yakskill]:
+    squiffy.set('obittime', new Date().toLocaleString());
+@clear
+The NecroYaks recognize you as a cow, then jump out and kill you.
+
+Idiot.  You die.  HA HA HA HA HA!
+<hr/>
+GAME STARTED: {starttime}
+
+TIME OF DEATH: {obittime}
+
+<!-- ***************PHOENIX MOUNTAIN PASS*************** -->
+[[Phoenix Mountain Pass]]:
+You are in <font color=red>Phoenix Mountain Pass</font>.<br/>
+There is nobody here.<br/>
+There is the [mountains] here.<br/>
+You can go [[west]](Zeke's Farm) or [[east]](Phoenix Peak).<br/>
+The towering mountains surround you on all sides but back to your west.  
+Passage farther east is remotely possible, should you be brave or foolhardy 
+enough to try it.
+
+[mountains]:
+They tower up almost as high as the Great Auk Mountains far, far to the 
+north.{if gotgrapplinghook:
+
+[Use the grappling hook on the mountains.](use grappling hook on mountains)
+}
+
+[take mountains]:
+After several hours of effort, you manage to chip a piece off of the 
+mountain you're standing on.  But you accidentally let go and it plummets 
+into the valley below.
+
+[use grappling hook on mountains]:
+    squiffy.koww.lose('grappling hook');
+    squiffy.koww.give('purple paint');
+<hr/>
+On top of the mountain, you find a bunch of purple paint, which you take.  
+After descending again, you ditch your grappling hook.
+
+<!-- ***************PHOENIX PEAK**************** -->
+[[Phoenix Peak]]:
+You are in <font color=red>Phoenix Peak</font>.<br/>
+You can see the [Resplendent Magnificent Phoenix] here.<br/>
+You can go [[west]](Phoenix Mountain Pass).<br/>
+After hard hours of climbing, you finally reach the summit of Phoenix Peak.  
+Here, in all its glory, sits the Resplendent Magnificent Phoenix.
+
+[Resplendent Magnificent Phoenix]:
+The Resplendent Magnificent Phoenix's visage is so brilliant that it hurts 
+to look at it.
+
+"The Resplendent Magnificent Phoenix demands to know <em>why</em> such a 
+weakling as you has come here!{if not gotflyscroll:  If you do not have my 
+wing feather with you, I'm afraid I must ask you to leave immediately!  
+Now, do you have my wing feather or not -- <strong>[Yes]</strong> or 
+<strong>[No]</strong>?}"
+
+[Yes]:
+    if (squiffy.get('gotphoenixfeather')){
+      squiffy.story.passage('phoenixproc');
+    }
+    else {
+      squiffy.story.passage('phoenixkill');
+    }
+
+[phoenixproc]:
+    squiffy.koww.lose('phoenix feather');
+    squiffy.koww.give('fly scroll');
+"Thank you; you have found my wing feather.  In the wrong hands, that could 
+have been very dangerous.  I will give you this "fly" scroll to compensate 
+you for your hard work.  <strong>Use</strong> the scroll to fly, but it 
+will only work once."
+
+[phoenixkill]:
+    squiffy.set('obittime', new Date().toLocaleString());
+@clear
+"Then give it to me quickly!  What..... You don't have my wing feather at 
+all, do you?  You shammer.  I was going to dismiss you without hurting 
+you, but I'm afraid now I'll have to kill you."<br/>
+The Resplendent Magnificent Phoenix bats you with one claw.  You roll 
+back down the mountainside, finally coming to a complete stop looking 
+very much like a well-done steak.
+
+Idiot.  You die.  HA HA HA HA HA!
+<hr/>
+GAME STARTED: {starttime}
+
+TIME OF DEATH: {obittime}
+
+
+[No]:
+"Then leave me immediately, as I do not appreciate company."
+
+<!-- 
+    NOTE: The TAKE 'commands' included here do nothing, although a 
+           few of the responses are worth including somehow!
+-->
