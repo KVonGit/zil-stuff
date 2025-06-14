@@ -7,7 +7,7 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.1.9 alpha
+|v0.2.0 alpha
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
@@ -184,7 +184,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
         <TELL "About what you'd expect something to look like in this game." CR>)
     (<VERB? DROP>
       <QUEST-TWO-R>)
-    (<VERB? USE-ON PUT-IN TOSS-INTO>
+    (<VERB? USE-ON PUT-IN>
       <COND
         (<PRSI? ,POND>
           <CALL GET-DUCK-TURD-R>)>)>>

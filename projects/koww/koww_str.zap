@@ -1,4 +1,4 @@
-	; Strings to accompany C:\Users\kv\Documents\GitHub\zil-stuff\projects\koww\koww.zap
+	; Strings to accompany koww.zap
 
 	.GSTR STR?10," are"
 	.GSTR STR?30," doesn't"
@@ -90,7 +90,7 @@
 	.GSTR STR?0,"The Adventures of Koww the Magician 
 Based upon the original Quest 2 game by Brian the Great 
 Copyright (c) 1999-2025 Brian the Great 
-v0.1.9 alpha 
+v0.2.0 alpha 
 IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1"
 	.GSTR STR?80,"The greenness of the farmland dissolves into gray bleakness as you pass into the land of the NecroYaks. Yaks are the sworn enemies of cows -- you'd better stay on your toes!
 "

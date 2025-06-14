@@ -97,16 +97,9 @@ with">
       <TELL 
 "You don't have any paint." CR>)>>
 
-<SYNTAX DROP OBJECT INTO OBJECT = V-TOSS-INTO>
-<SYNTAX PUT OBJECT INTO OBJECT = V-TOSS-INTO>
-<SYNTAX THROW OBJECT INTO OBJECT = V-TOSS-INTO>
-<SYNTAX PITCH OBJECT INTO OBJECT = V-TOSS-INTO>
-<SYNTAX TOSS OBJECT INTO OBJECT = V-TOSS-INTO>
-<SYNTAX THROW OBJECT IN OBJECT = V-TOSS-INTO>
-<SYNTAX PITCH OBJECT IN OBJECT = V-TOSS-INTO>
-<SYNTAX TOSS OBJECT IN OBJECT = V-TOSS-INTO>
 
-<SYNONYM IN INTO>
+
+
 
 <ROUTINE V-TOSS-INTO ()
   <POINTLESS "Wasting your">>
@@ -162,15 +155,6 @@ peruse the feelies, or just check out the walkthrough on IFDB." CR>>
       <RTRUE>)
     (T
       <TELL "You sound rather negative." CR>)>>
-      
-<SYNTAX DON\'T KNOW = V-I-DONT-KNOW>
-<SYNTAX DONT KNOW = V-I-DONT-KNOW>
-<SYNTAX DUNNO = V-I-DONT-KNOW>
-
-<VERB-SYNONYM DUNNO UNSURE \?>
-
-<ROUTINE V-I-DONT-KNOW ()
-  <TELL "You seem confused." CR>>
   
 <ROUTINE V-EAT ()
     <COND (<PRSO? ,WINNER> <TSD> <RTRUE>)
@@ -401,8 +385,3 @@ are ready.) >" >
           (ELSE
            <TELL 
 "You contemplate " T ,PRSO " for a bit, but nothing helpful comes to mind." CR>)>>
-
-<SYNTAX DON\'T OBJECT (FIND KLUDGEBIT) = V-DONT>
-
-<ROUTINE V-DONT ()
-  <TELL "You don't " D ,PRSO ".">>

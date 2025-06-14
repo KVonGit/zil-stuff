@@ -1,4 +1,4 @@
-	; Dummy frequent words file for C:\Users\kv\Documents\GitHub\zil-stuff\projects\koww\koww.zap
+	; Dummy frequent words file for ..\games\koww\koww.zap
 	.FSTR FSTR?DUMMY,""
 WORDS::
 	FSTR?DUMMY
