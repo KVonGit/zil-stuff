@@ -98,7 +98,7 @@ with">
 "You don't have any paint." CR>)>>
 
 
-
+<VERB-SYNONYM PUT TOSS>
 
 
 <ROUTINE V-TOSS-INTO ()
@@ -385,3 +385,9 @@ are ready.) >" >
           (ELSE
            <TELL 
 "You contemplate " T ,PRSO " for a bit, but nothing helpful comes to mind." CR>)>>
+
+<ROUTINE V-LOOK-UNDER ()
+  <TELL "That was a waste of a good turn." CR>
+>
+
+<SYNONYM IN INTO>

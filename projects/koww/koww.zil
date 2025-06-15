@@ -38,6 +38,7 @@
 
 <INSERT-FILE "kowwverbs">
 <INSERT-FILE "kowwified">
+<INSERT-FILE "hints">
 
 <CONSTANT MAX-SCORE 110>
 
@@ -515,7 +516,9 @@ grazing." CR>)
       <COND
         (<PRSO? ,SOMETHING-ITEM>
           <CALL GET-DUCK-TURD-R>
-        )>)>>
+        )>)
+    (<VERB? SMELL>
+      <TELL "It smells like pond water and duck turds." CR>)>>
 
 
 <ROUTINE GET-DUCK-TURD-R ()
@@ -1210,7 +1213,9 @@ stupid cow." CR>)>>
 <ROUTINE CUD-R ()
   <COND
     (<VERB? EAT>
-      <TELL "You chew your cud." CR>)>>
+      <TELL "You chew your cud." CR>)
+    (<VERB? SMELL>
+      <SILLY>)>>
 
 <OBJECT TAIL
   (IN GLOBAL-OBJECTS)

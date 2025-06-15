@@ -1,59 +1,71 @@
 "HINTS for
 		The Adventures of Koww the Magician"
 
+;"============================================================================="
+;"
+	Hints (InvisiClue-style)
+    ------------------------
+	Skeleton file to add a InvisiClue-style hintsystem to your story. The original 
+	file (hint.zil) is from the project 'hitchhiker-invclues-r31' (Solid Gold-version) 
+	at https://github.com/historicalsource/hitchhikersguide-gold/blob/master/hints.zil
+	To make it work I only needed to add the code i the 'Added stuff'-section.
+	To make your own hints you need to add text in the <GLOBAL HINT>-structure.
+"
+;"============================================================================="
+
+;"============================================================================="
+;"Added stuff"
+;"============================================================================="
+
+<CONSTANT S-TEXT 0>
+<CONSTANT S-WINDOW 1>
+
+<CONSTANT D-TABLE-ON 3>
+<CONSTANT D-TABLE-OFF -3>
+
+<ROUTINE PRINT-SPACES (CNT)
+	 <REPEAT ()
+		 <COND (<L? <SET CNT <- .CNT 1>> 0>
+			<RETURN>)
+		       (T
+			<PRINTC 32>)>>>
+
+<SYNTAX HELP = V-HINTS>
+<SYNTAX HELP OFF OBJECT (FIND KLUDGEBIT) = V-HINTS-NO>
+<VERB-SYNONYM HELP HINT HINTS CLUE CLUES VISICLUES INVISICLUES>
+
+;"======================================================================"
+;"Here starts the orginal hints.zil from HITCHHIKERS GUIDE TO THE GALAXY
+  There is some small changes to the routines V-HINTS and V-HINTS-NO."
+;"======================================================================"
+
 <FILE-FLAGS CLEAN-STACK?>
 
 <GLOBAL HINT-WARNING <>>
 
 <GLOBAL HINTS-OFF <>>
 
-<CONSTANT MAC-DOWN-ARROW <ASCII !\/>>
-<CONSTANT MAC-UP-ARROW <ASCII !\\>>
-<CONSTANT ALL-DONE-HINTS "|[That's all.]|">
-<CONSTANT UP-ARROW 129>
-<CONSTANT DOWN-ARROW 130>
-<CONSTANT ESCAPE-KEY 27>
-
-<ROUTINE V-HINTS-ON ()
-    <SETG CLOCK-WAIT T>
-	<COND (<NOT <EQUAL? ,PRSO ,ROOMS>>
-		   <TELL "I don't understand what you mean." CR>)
-	      (T
-		   <COND (,HINTS-OFF
-			      <SETG HINTS-OFF <>>
-			      <TELL "[Hints have been allowed for this session.]" CR>)
-		         (ELSE
-			      <TELL "[The hint system wasn't turned off.]" CR>)>)>
-	<RFATAL>>
-
 <ROUTINE V-HINTS-NO ()
-    <SETG CLOCK-WAIT T>
-	<COND (<NOT <EQUAL? ,PRSO ,ROOMS>>
+	<COND (,HINTS-OFF
 	       <TELL "I don't understand what you mean." CR>)
 	      (T
 	       <SETG HINTS-OFF T>
-           <SETG HINT-WARNING T>
 	       <TELL "[Hints have been disallowed for this session.]" CR>)>
 	<RFATAL>>
 
-<ROUTINE V-HINTS ("AUX" CHR MAXC (C <>) Q WHO)
-    <SETG CLOCK-WAIT T>
+<ROUTINE V-HINTS ("AUX" CHR MAXC (C <>) Q)
 	<COND (,HINTS-OFF
-	       <TELL
-"[If you still want hints, just type HINTS ON. But by this point, you
-have already turned them off, so this would be a warning to you.]" CR>
+	       <PERFORM ,V?HINTS-NO>
 	       <RFATAL>)
 	      (<NOT ,HINT-WARNING>
-		   <SETG AWAITING-REPLY 6>
-           <QUEUE I-REPLY 1>
 	       <SETG HINT-WARNING T>
 	       <TELL
-"[Warning: It is recognized that the temptation for help may at times be
-so exceedingly strong that you might fetch hints prematurely. Therefore,
-if you would like to disallow yourself to have hints from now on, then you
-may type HINTS OFF. If you still want a hint now, or if you are a beginner
-and are looking at the General Commands, indicate HINT.]" CR>
-			<RFATAL>)>
+"[Warning: It is recognized that the temptation for help may at times be so
+exceedingly strong that you might fetch hints prematurely. Therefore, you may
+at any time during the story type HINTS OFF, and this will disallow the
+seeking out of help for the present session of the story. If you still want a
+hint now, indicate HINT.]" CR>
+	       <RFATAL>)>
        	<SET MAXC <GET ,HINTS 0>>
 	<INIT-HINT-SCREEN>
 	<CURSET 5 1>
@@ -62,12 +74,10 @@ and are looking at the General Commands, indicate HINT.]" CR>
 	<NEW-CURSOR>
 	<REPEAT ()
 		<SET CHR <INPUT 1>>
-		<COND (<EQUAL? .CHR %<ASCII !\Q> %<ASCII !\q>>
+		<COND (<EQUAL? .CHR %<ASCII !\Q> %<ASCII !\q> %131>
 		       <SET Q T>
 		       <RETURN>)
-			  (<EQUAL? .CHR ,ESCAPE-KEY>
-			   <CONTINUE-STORY-HINTS>)
-		      (<EQUAL? .CHR %<ASCII !\N> %<ASCII !\n> ,DOWN-ARROW ,MAC-DOWN-ARROW>
+		      (<EQUAL? .CHR %<ASCII !\N> %<ASCII !\n> %130>
 		       <ERASE-CURSOR>
 		       <COND (<EQUAL? ,CHAPT-NUM .MAXC>
 			      <SETG CUR-POS 0>
@@ -78,7 +88,7 @@ and are looking at the General Commands, indicate HINT.]" CR>
 			      <SETG CHAPT-NUM <+ ,CHAPT-NUM 1>>
 			      <SETG QUEST-NUM 1>)>
 		       <NEW-CURSOR>)
-		      (<EQUAL? .CHR %<ASCII !\P> %<ASCII !\p> ,UP-ARROW ,MAC-UP-ARROW>
+		      (<EQUAL? .CHR %<ASCII !\P> %<ASCII !\p> %129>
 		       <ERASE-CURSOR>
 		       <COND (<EQUAL? ,CHAPT-NUM 1>
 			      <SETG CHAPT-NUM .MAXC>
@@ -89,20 +99,16 @@ and are looking at the General Commands, indicate HINT.]" CR>
 			      <SETG CHAPT-NUM <- ,CHAPT-NUM 1>>
 			      <SETG QUEST-NUM 1>)>
 		       <NEW-CURSOR>)
-		      (<EQUAL? .CHR 13 10>
+		      (<EQUAL? .CHR 13 10 %132>
 		       <PICK-QUESTION>
 		       <RETURN>)>>
 	<COND (<NOT .Q>
 	       <AGAIN>	;"AGAIN does whole routine?")>
-	<CONTINUE-STORY-HINTS>>
-
-<ROUTINE CONTINUE-STORY-HINTS ()
 	<CLEAR -1>
 	<INIT-STATUS-LINE>
-	;<SETG P-CONT 0>
-	<TELL CR "Back to the story..." CR CR>
-	<V-LOOK>
-	<MAIN-LOOP>>
+	<TELL CR "Back to the story..." CR>
+	<RFATAL>>
+
 
 <ROUTINE PICK-QUESTION ("AUX" CHR MAXQ (Q <>))
 	<INIT-HINT-SCREEN <>>
@@ -115,12 +121,10 @@ and are looking at the General Commands, indicate HINT.]" CR>
 	<NEW-CURSOR>
 	<REPEAT ()
 		<SET CHR <INPUT 1>>
-		<COND (<EQUAL? .CHR %<ASCII !\Q> %<ASCII !\q>>
+		<COND (<EQUAL? .CHR %<ASCII !\Q> %<ASCII !\q> %131>
 		       <SET Q T>
 		       <RETURN>)
-			  (<EQUAL? .CHR ,ESCAPE-KEY>
-			   <CONTINUE-STORY-HINTS>)
-		      (<EQUAL? .CHR %<ASCII !\N> %<ASCII !\n> ,DOWN-ARROW ,MAC-DOWN-ARROW>
+		      (<EQUAL? .CHR %<ASCII !\N> %<ASCII !\n> %130>
 		       <ERASE-CURSOR>
 		       <COND (<EQUAL? ,QUEST-NUM .MAXQ>
 			      <SETG CUR-POS 0>
@@ -129,7 +133,7 @@ and are looking at the General Commands, indicate HINT.]" CR>
 			      <SETG CUR-POS <+ ,CUR-POS 1>>
 			      <SETG QUEST-NUM <+ ,QUEST-NUM 1>>)>
 		       <NEW-CURSOR>)
-		      (<EQUAL? .CHR %<ASCII !\P> %<ASCII !\p> ,UP-ARROW ,MAC-UP-ARROW>
+		      (<EQUAL? .CHR %<ASCII !\P> %<ASCII !\p> %129>
 		       <ERASE-CURSOR>
 		       <COND (<EQUAL? ,QUEST-NUM 1>
 			      <SETG QUEST-NUM .MAXQ>
@@ -138,7 +142,7 @@ and are looking at the General Commands, indicate HINT.]" CR>
 			      <SETG CUR-POS <- ,CUR-POS 1>> 
 			      <SETG QUEST-NUM <- ,QUEST-NUM 1>>)>
 		       <NEW-CURSOR>)
-		      (<EQUAL? .CHR 13 10>
+		      (<EQUAL? .CHR 13 10  %132>
 		       <DISPLAY-HINT>
 		       <RETURN>)>>
 	<COND (<NOT .Q>
@@ -171,7 +175,7 @@ the cursor and text"
 
 <ROUTINE NEW-CURSOR ()
 	<CURSET <GET ,LINE-TABLE ,CUR-POS>
-		    <- <GET ,COLUMN-TABLE ,CUR-POS> 2 ;1>>
+		<- <GET ,COLUMN-TABLE ,CUR-POS> 2 ;1>>
 	<TELL ">">	;"print the new cursor">
 
 <ROUTINE INVERSE-LINE ("AUX" (CENTER-HALF <>)) 
@@ -180,7 +184,7 @@ the cursor and text"
 	<HLIGHT ,H-NORMAL>>
 
 ;"cnt (3) is where in table answers begin. (2) in table is # of hints-seen"
-<ROUTINE DISPLAY-HINT ("AUX" H MX MXC MXA (CNT 2) CHR (FLG T) N)
+<ROUTINE DISPLAY-HINT ("AUX" H MX MXC (CNT 2) CHR (FLG T) N)
 	;<SPLIT 0>
 	<CLEAR -1>
 	<SPLIT 3>
@@ -199,85 +203,66 @@ the cursor and text"
 	<CENTER-LINE 2 <GET .H 2>>
 	<HLIGHT ,H-NORMAL>
 	<SET MX <GET .H 0>>
-	<SET MXC <GET ,HINTS 0>>
-	<SET MXA <- .MXC 1>>
+	<SET MXC <GET ,HINTS 0>> 
 	<SCREEN ,S-TEXT>
 	<CRLF>
 	<REPEAT ()
-     <COND (<EQUAL? .CNT <GET .H 1>>
-  	        <RETURN>)
-  	       (T
-            <COND (<NOT <EQUAL? .CNT 2>>
-                   <HINTS-LEFT <+ <- .MX .CNT> 1> .FLG .MXC .MXA>)>
-  	        <TELL <GET .H .CNT> CR ;CR>
-  	        <SET CNT <+ .CNT 1>>)>>
-    <SET N <+ <- .MX .CNT> 1>>
-    <COND (<0? .N>
-           <SET FLG <>>
-           <TELL ,ALL-DONE-HINTS>)
-          (ELSE
-           <HINTS-LEFT .N .FLG .MXC .MXA>)>
+	       <COND (<EQUAL? .CNT <GET .H 1>>
+		      <RETURN>)
+		     (T
+		      <TELL <GET .H .CNT> CR ;CR>
+		      <SET CNT <+ .CNT 1>>)>>
 	<REPEAT ()
-     <SET CHR <INPUT 1>>
-     <COND (<EQUAL? .CHR %<ASCII !\Q> %<ASCII !\q>>
-   	        <PUT .H 1 .CNT>
-   	        <RETURN>)
-   		   (<EQUAL? .CHR ,ESCAPE-KEY>
-   		    <CONTINUE-STORY-HINTS>)
-   	       (<AND .FLG <EQUAL? .CHR 13 10>>
-   	        <COND (<NOT <G? .CNT .MX>>
-   		           <SET FLG T>	;".cnt starts as 3" 
-   		           <TELL <GET .H .CNT>>
-   		           ;<CRLF> ;"extra CRLF removed by GARY"
-   		           <CRLF>
-   		           <SET CNT <+ .CNT 1>>
-   		           <COND (<G? .CNT <+ .MX 1>>
-   		   	              <SET FLG <>>
-   		   	              <TELL ,ALL-DONE-HINTS>)>)>)
-           (ELSE
-            <AGAIN>)>
-     <COND (<AND .FLG <G? .CNT .MX>>
-   	        <SET FLG <>>
-   	        <TELL ,ALL-DONE-HINTS>)
-           (.FLG
-   	        <SET N <+ <- .MX .CNT> 1>> ;"added +1 - Jeff"
-            <HINTS-LEFT .N .FLG .MXC .MXA>
-   	        ;<SET FLG <>>)>>>
-
-<ROUTINE HINTS-LEFT (N FLG MXC MXA)
-    <COND (<NOT <EQUAL? ,CHAPT-NUM .MXC .MXA>> ;"add cond-GARY" 
-   	       <TELL N .N>)
-          (ELSE
-           <TELL !\->)>
-    <TELL "> ">
-    <COND (<AND <NOT <EQUAL? ,CHAPT-NUM .MXC .MXA>>
-                <L? .N 10>
-                .FLG>
-   	       <TELL !\ >)> ;"Added spaces to keep everything even - MAXXY">
+	      <COND (<AND .FLG <G? .CNT .MX>>
+		     <SET FLG <>>
+		     <TELL "[That's all.]" CR>)
+		    (.FLG
+		     <SET N <+ <- .MX .CNT> 1>> ;"added +1 - Jeff"
+		     <COND (<NOT <EQUAL? ,CHAPT-NUM .MXC>> ;"add cond-GARY" 
+		            <TELL N .N " hint">
+		            <COND (<NOT <EQUAL? .N 1>>
+			           <TELL "s">)>
+		            <TELL " left " ;CR ;CR>)> ;"removed CRs - GARY"
+		     <TELL "-> ">
+		     <SET FLG <>>)>
+	      <SET CHR <INPUT 1>>
+	      <COND (<EQUAL? .CHR %<ASCII !\Q> %<ASCII !\q> %131>
+		     <PUT .H 1 .CNT>
+		     <RETURN>)
+		    (<EQUAL? .CHR 13 10>
+		     <COND (<NOT <G? .CNT .MX>>
+			    <SET FLG T>	;".cnt starts as 3" 
+			    <TELL <GET .H .CNT>>
+			    ;<CRLF> ;"extra CRLF removed by GARY"
+			    <CRLF>
+			    <SET CNT <+ .CNT 1>>
+			    <COND (<G? .CNT .MX>
+				   <SET FLG <>>
+				   <TELL "[That's all.]" CR>)>)>)>>>
 
 <ROUTINE PUT-UP-QUESTIONS ("AUX" (ST 1) MXQ MXL)
 	<SET MXQ <- <GET <GET ,HINTS ,CHAPT-NUM> 0> 1>>
 	<SET MXL <- <LOWCORE SCRV> 1>>
 	<REPEAT ()
-	 <COND (<G? .ST .MXQ>
-	        <RETURN>)
-	       (T                        ;"zeroth"
-	        <CURSET <GET ,LINE-TABLE <- .ST 1>>
-	 	       <- <GET ,COLUMN-TABLE <- .ST 1>> 1>>)>
-	 <TELL " " <GET <GET <GET ,HINTS ,CHAPT-NUM> <+ .ST 1>> 2>>
-	 <SET ST <+ .ST 1>>>>
+		<COND (<G? .ST .MXQ>
+		       <RETURN>)
+		      (T                        ;"zeroth"
+		       <CURSET <GET ,LINE-TABLE <- .ST 1>>
+			       <- <GET ,COLUMN-TABLE <- .ST 1>> 1>>)>
+		<TELL " " <GET <GET <GET ,HINTS ,CHAPT-NUM> <+ .ST 1>> 2>>
+		<SET ST <+ .ST 1>>>>
 
 <ROUTINE PUT-UP-CHAPTERS ("AUX" (ST 1) MXC MXL)
 	<SET MXC <GET ,HINTS 0>>
 	<SET MXL <- <LOWCORE SCRV> 1>>
 	<REPEAT ()
-	 <COND (<G? .ST .MXC>
-	        <RETURN>)
-	       (T                        ;"zeroth"
-	        <CURSET <GET ,LINE-TABLE <- .ST 1>>
-	 	       <- <GET ,COLUMN-TABLE <- .ST 1>> 1>>)>
-	 <TELL " " <GET <GET ,HINTS .ST> 1>>
-	 <SET ST <+ .ST 1>>>>
+		<COND (<G? .ST .MXC>
+		       <RETURN>)
+		      (T                        ;"zeroth"
+		       <CURSET <GET ,LINE-TABLE <- .ST 1>>
+			       <- <GET ,COLUMN-TABLE <- .ST 1>> 1>>)>
+		<TELL " " <GET <GET ,HINTS .ST> 1>>
+		<SET ST <+ .ST 1>>>>
 
 <ROUTINE INIT-HINT-SCREEN ("OPTIONAL" (THIRD T))
 	;<SPLIT 0>
@@ -290,7 +275,7 @@ the cursor and text"
 	<INVERSE-LINE>
 	<CURSET 3 1>
 	<INVERSE-LINE>
-	<CENTER-LINE 1 "INVISICLUES" %<LENGTH "INVISICLUES">>
+	<CENTER-LINE 1 "INVISICLUES (tm)" %<LENGTH "INVISICLUES (tm)">>
 	<LEFT-LINE 2 " N = Next">
 	<RIGHT-LINE 2 "P = Previous" %<LENGTH "P = Previous">>
 	<COND (<T? .THIRD>
@@ -334,6 +319,9 @@ the cursor and text"
 <GLOBAL DIROUT-TBL
 	<TABLE 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 	       0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 >>
+
+;"longest hint topic can be 17 questions long, longest question 36 characters"
+
 
 ;"longest hint topic can be 17 questions long, longest question 36 characters"
 
