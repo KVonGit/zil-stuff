@@ -8,8 +8,8 @@
 	Skeleton file to add a InvisiClue-style hintsystem to your story. The original 
 	file (hint.zil) is from the project 'hitchhiker-invclues-r31' (Solid Gold-version) 
 	at https://github.com/historicalsource/hitchhikersguide-gold/blob/master/hints.zil
-	To make it work I only needed to add the code i the 'Added stuff'-section.
-	To make your own hints you need to add text in the <GLOBAL HINT>-structure.
+	To make it work we only needed to add the code in the 'Added stuff'-section.
+	To make your own hints you need to add text in the <GLOBAL HINTS>-structure.
 "
 ;"============================================================================="
 
@@ -36,7 +36,7 @@
 
 ;"======================================================================"
 ;"Here starts the orginal hints.zil from HITCHHIKERS GUIDE TO THE GALAXY
-  There is some small changes to the routines V-HINTS and V-HINTS-NO."
+  There are some small changes to the routines V-HINTS and V-HINTS-NO."
 ;"======================================================================"
 
 <FILE-FLAGS CLEAN-STACK?>
@@ -106,7 +106,8 @@ hint now, indicate HINT.]" CR>
 	       <AGAIN>	;"AGAIN does whole routine?")>
 	<CLEAR -1>
 	<INIT-STATUS-LINE>
-	<TELL CR "Back to the story..." CR>
+	<TELL CR "Back to the game..." CR CR>
+  <V-LOOK>
 	<RFATAL>>
 
 
@@ -328,22 +329,17 @@ the cursor and text"
 <GLOBAL HINTS
 	<PLTABLE
     	;"Table of chapters."
-      	<PLTABLE 
-       		"KOWW'S CHASM"
+      <PLTABLE 
+        "KOWW'S CHASM"
 			<LTABLE 3
 				"How do I get across the chasm?"
 				"Did you try to FLY?"
 				"If you don't have the Fly Scroll, you can't fly."
 				"The Resplendent Magnicifent Phoenix can help you.">
-     		<LTABLE 3
-	  			"What do I do with this sign?"
-      		"Have you tried reading it?"
-				  "That's it. Just read it!">>
-		<PLTABLE
-			"DARK"
-			<LTABLE 3
-				"I'm stuck in the Dark!"
-				"There are no dark rooms in this game!">>
+      <LTABLE 3
+        "What do I do with this sign?"
+        "Have you tried reading it?"
+        "That's it. Just read it!">>
 		<PLTABLE
 			"ZEKE'S FARM"
 			<LTABLE 3

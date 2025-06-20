@@ -364,7 +364,16 @@
                                  <SET OBITS -1>    ;"Avoid bouncing between <1 and >1 matches"
                                  <AGAIN .BITS-SET>)>
                           <COND (<=? ,MAP-SCOPE-STATUS ,MS-NO-LIGHT>
-                                 <TELL "It's too dark to see anything here." CR>)
+                                 <TELL "It's too dark to ">
+                                 <COND
+                                  (<VERB? SMELL>
+                                    <TELL "smell">
+                                  )
+                                  (T
+                                    <TELL "see">
+                                  )
+                                >
+                                <TELL " anything here." CR>)
                                 (ELSE
                                  <COND
                                   (<VERB? SMELL>
@@ -461,6 +470,10 @@
       >
     >
   >
+>
+
+<ROUTINE V-LOOK-UNDER ()
+  <TELL "You don't need to look under anything in this game." CR>
 >
 
 <OBJECT PLAYER

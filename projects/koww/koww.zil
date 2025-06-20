@@ -11,6 +11,8 @@
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
+  ;<COLOR 9 2>
+  ;<CLEAR -1>
   <SETG MODE ,VERBOSE>
   <CRLF>
   <CRLF>
@@ -47,7 +49,7 @@
   <TELL 
 "[Your score has just gone up by " N .NUM ".]" CR>>
 
-; ************************* ITEMS **********************************************
+;" ************************* ITEMS **********************************************"
 
 <ROUTINE QUEST-TWO-R ()
   <COND
@@ -55,7 +57,9 @@
       <TELL 
 "About what you'd expect from " T, PRSO "." CR>)
     (<==? ,PRSA ,V?DROP>
-      <TELL "Dropping " T, PRSO " would be anti-productive." CR>)>>
+      <TELL "Dropping " T, PRSO " would be anti-productive." CR>)
+    (<OR <==? ,PRSA ,V?PUT-IN><==? ,PRSA ,V?PUT-ON>>
+      <TELL "That would be anti-productive." CR>)>>
 
 <OBJECT MILK
   (IN PLAYER)
@@ -70,7 +74,7 @@
     (<VERB? EXAMINE>
       <TELL
 "Why would you do that?  You are more than familiar with your own magical milk.|">)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <TELL 
 "Why would you do that?  Awful waste of milk." CR>)
     (<VERB? GIVE>
@@ -96,7 +100,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
       <TELL "A sharp-looking tool!" CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>)
     (<VERB? USE-ON DIG>
       <COND
@@ -104,7 +108,11 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
           <AND <VERB? USE-ON><PRSI? ,HAYSTACK>>
           <AND <VERB? DIG><PRSO? ,HAYSTACK>>>
             <OPEN-STATUE-CAVE-R>
-            <RTRUE>)>)>>
+            <RTRUE>)>)
+    (<VERB? THINK-ABOUT>
+      <TELL
+"Hmm... You think there's probably something to use the pitchfork on, in much
+the same way Farmer Zeke sometimes uses it." CR>)>>
 
 <OBJECT FLY-SCROLL
   (DESC "the Fly Scroll")
@@ -117,11 +125,13 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
       <TELL "Try using it (when in the proper location)." CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>
     )
     (<VERB? USE CAST>
-      <CALL FINISH-R>)>>
+      <CALL FINISH-R>)
+    (<VERB? THINK-ABOUT>
+      <TELL "You need to be in the proper location to use it." CR>)>>
 
 
 <OBJECT WING-FEATHER
@@ -135,8 +145,11 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
       <TELL "A wing feather from a Phoenix." CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>
+    )
+    (<VERB? THINK-ABOUT>
+      <TELL "You should probably find its original owner." CR>
     )>>
 
 <OBJECT JADE-STATUETTE
@@ -150,12 +163,14 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
         <TELL "The ugly statuette is a waste of jade." CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>)
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-KING>
-          <GIFT-OF-KING-R>)>)>>
+          <GIFT-OF-KING-R>)>)
+    (<VERB? THINK-ABOUT>
+      <TELL "It seems like a gift fit for a king!" CR>)>>
 
 <OBJECT GOBLIN-SPIT
   (DESC "goblin spit")
@@ -168,10 +183,22 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
         <TELL "Yuck... It's chunky!" CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>)
     (<VERB? SMELL>
-      <TELL "Yuck!" CR>)>>
+      <TELL "Yuck!" CR>)
+    (<VERB? THINK-ABOUT>
+      <TELL 
+"After a turn of thinking, you ">
+    <COND
+      (<FSET? ,LAND-OF-NECROYAKS ,TOUCHBIT>
+        <TELL "remember a sign somewhere saying something about acid">
+      )
+      (T
+        <TELL "decide you need to explore a little more to find a place to use it">
+      )
+    >
+    <TELL "." CR>)>>
 
 <OBJECT SOMETHING-ITEM
   (DESC "something")
@@ -183,12 +210,16 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
         <TELL "About what you'd expect something to look like in this game." CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>)
     (<VERB? USE-ON PUT-IN>
       <COND
         (<PRSI? ,POND>
-          <CALL GET-DUCK-TURD-R>)>)>>
+          <CALL GET-DUCK-TURD-R>)>)
+    (<VERB? THINK-ABOUT>
+      <TELL 
+"You think about it for a complete turn, and you decide you should simply put
+something in the pond!" CR>)>>
 
 <OBJECT NOTHING-ITEM
   (DESC "nothing")
@@ -202,12 +233,15 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
       <TELL "You smell nothing." CR>)
     (<VERB? EXAMINE>
       <TELL "It doesn't look like much of anything!" CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <TELL "Are you serious?" CR>)
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-GUARD>
-          <CALL SECRET-ONE-R>)>)>>
+          <CALL SECRET-ONE-R>)>)
+    (<VERB? THINK-ABOUT>
+      <TELL 
+"Perhaps you can find someone who'll give you something for nothing?" CR>)>>
 
 <OBJECT DUCK-TURD
   (DESC "duck turd")
@@ -220,14 +254,16 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
         <TELL "About what you'd expect, obviously dropped by something fowl." CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>)
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-KING>
           <OTHER-GIFT-R>)>)
     (<VERB? SMELL>
-      <SILLY>)>>
+      <SILLY>)
+    (<VERB? THINK-ABOUT>
+      <TELL "You decide you should find a disgusting NPC who might want it." CR>)>>
 
 <OBJECT GRAPPLING-HOOK
   (DESC "grappling hook")
@@ -240,7 +276,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
         <TELL "It looks strong enough to support a cow!" CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>)
     (<VERB? USE>
       <COND
@@ -249,7 +285,11 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
     (<VERB? USE-ON>
       <COND
         (<PRSO? ,MOUNTAINS>
-          <CLIMB-THEM-R>)>)>>
+          <CLIMB-THEM-R>)>)
+    (<VERB? THINK-ABOUT>
+      <TELL 
+"It doesn't even take you the full turn to realize that this needs to be used to
+climb something." CR>)>>
 
 <OBJECT PURPLE-PAINT
   (DESC "purple paint")
@@ -262,7 +302,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
   <COND
     (<VERB? EXAMINE>
         <TELL "It's paint, and it's purple." CR>)
-    (<VERB? DROP>
+    (<VERB? DROP PUT-IN PUT-ON>
       <QUEST-TWO-R>)
     (<VERB? USE>
       <COND
@@ -271,7 +311,10 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
     (<VERB? WEAR>
         <PURPLE-USE-R>)
     (<VERB? SMELL>
-      <TELL "It smells like... about 15 points!" CR>)>>
+      <TELL "It smells like... about 15 points!" CR>)
+    (<VERB? THINK-ABOUT>
+      <TELL 
+"You probably need to be in the right place before you try to use it." CR>)>>
 
 <ROUTINE PURPLE-USE-R ()
   <COND
@@ -304,7 +347,7 @@ Return to your home.  There's nothing more to do here." CR>
   <INCREMENT-SCORE 15>>
 
 
-; ************************* KOWW'S CHASM ***************************************
+;" ************************* KOWW'S CHASM ***************************************"
 
 <OBJECT KOWWS-CHASM
   (IN ROOMS)
@@ -369,7 +412,7 @@ it just doesn't fit.  Frustrated, you put it back." CR>
 "That's the chasm you simply MUST cross!  Surely the only way to cross it is to
 FLY!" CR>)>>
 
-; ************************* ZEKE'S FARM ****************************************
+;" ************************* ZEKE'S FARM ****************************************"
 
 <OBJECT ZEKES-FARM
   (IN ROOMS)
@@ -464,7 +507,22 @@ for a while." CR>)>)
       <TELL
 "What, drink THAT?!?!?  You loony." CR>)
     (<VERB? STAB ATTACK>
-      <OPEN-STATUE-CAVE-R>)>>
+      <OPEN-STATUE-CAVE-R>)
+    (<VERB? THINK-ABOUT>
+      <COND
+        (<FSET? ,JADE-STATUETTE ,TOUCHBIT>
+          <TELL "It has no more purpose in this game." CR>
+        )
+        (<HELD? ,PITCHFORK>
+          <TELL 
+"Hmmm... You think you probably have the proper tool to use on it...." CR>
+        )
+        (T
+          <TELL 
+"It seems important. Maybe you just need something else first." CR>
+        )
+      >
+    )>>
 
 <ROUTINE OPEN-STATUE-CAVE-R ()
   <COND
@@ -518,7 +576,10 @@ grazing." CR>)
           <CALL GET-DUCK-TURD-R>
         )>)
     (<VERB? SMELL>
-      <TELL "It smells like pond water and duck turds." CR>)>>
+      <TELL "It smells like pond water and duck turds." CR>)
+    (<VERB? THINK-ABOUT>
+      <TELL 
+"You've always gotten a kick out of putting something into ponds like this..." CR>)>>
 
 
 <ROUTINE GET-DUCK-TURD-R ()
@@ -538,7 +599,7 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
   (IN ZEKES-FARM)
   (FLAGS NDESCBIT NPREFIXBIT PLURALBIT)>
 
-; ************************* ZEKE'S FARMHOUSE ***********************************
+;" ************************* ZEKE'S FARMHOUSE ***********************************"
 
 <OBJECT ZEKES-FARMHOUSE
   (IN ROOMS)
@@ -619,7 +680,7 @@ moment.  Perhaps you should go away.||There is a ">
       <RFALSE>)>>
 
 
-; ************************** ZEKE'S SILO ***************************************
+;"************************** ZEKE'S SILO ***************************************"
 
 <OBJECT ZEKES-SILO
   (IN ROOMS)
@@ -665,7 +726,9 @@ it in yer heart to gimme some magic milk?  I'm all out!\"" CR>)
 sorcerer.  No killing allowed!  Especially not of idiots.  They don't know
 they're idiots." CR>)
     (<VERB? SPLASH>
-      <CALL DUMB-LOSE-R>)>>
+      <CALL DUMB-LOSE-R>)
+    (<VERB? THINK-ABOUT>
+      <TELL "He LOVES your magic milk, and purple cows!" CR>)>>
 
 <ROUTINE DUMB-LOSE-R ()
   <TELL "\"Well, gee,\" says Farmer Zeke, \"I shore do like ya a lot, but I
@@ -676,7 +739,7 @@ guess there's a limit!\"" CR>
   <CRLF>
   <V-QUIT>>
 
-; ************************** GOBLIN TRAIL **************************************
+;"************************** GOBLIN TRAIL **************************************"
 
 <OBJECT GOBLIN-TRAIL
   (IN ROOMS)
@@ -722,14 +785,14 @@ weak." CR CR>
 Har har har!  Hey, I saw a car transform the other day!  Yeah, it turned into a
 driveway!" CR>)>>
 
-; ************************** GOBLIN LAIR ***************************************
+;"************************** GOBLIN LAIR ***************************************"
 
 <OBJECT GOBLIN-LAIR
   (IN ROOMS)
   (DESC "Goblin Lair")
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (NORTH TO GOBLIN-TRAIL)
-  (IN "Try entering the cave.")
+  (IN TO INSIDE-GOBLIN-LAIR)
   (ACTION GOBLIN-LAIR-R)
   (GLOBAL GOBLINS)>
 
@@ -778,8 +841,13 @@ ground." CR>)>>
 <ROUTINE INSIDE-GOBLIN-LAIR-ENTRANCE-R ()
   <COND
     (<VERB? ENTER>
-      <GOTO INSIDE-GOBLIN-LAIR>
+      <GOTO-LAIR>
     )>>
+
+<ROUTINE GOTO-LAIR ()
+  <SETG PRSO ,INSIDE-GOBLIN-LAIR-ENTRANCE>
+  <V-ENTER>
+>
 
 <OBJECT GOBLIN-GUARD
   (IN GOBLIN-LAIR)
@@ -800,7 +868,9 @@ from the smell." CR>)
       <TELL
 "\"Yu wan go cave?  No try no funny bizniss -- I can tell.\"" CR>)
     (<VERB? SMELL>
-      <SILLY>)>>
+      <SILLY>)
+    (<VERB? THINK-ABOUT>
+      <TELL "He seems to want nothing." CR>)>>
 
 <ROUTINE SECRET-ONE-R ()
   <TELL
@@ -813,7 +883,7 @@ thing!\"" CR>
   
 
 
-; ************************** INSIDE THE GOBLIN LAIR ****************************
+;" ************************** INSIDE THE GOBLIN LAIR ****************************"
 
 <OBJECT INSIDE-GOBLIN-LAIR
   (IN ROOMS)
@@ -878,6 +948,10 @@ of deer hide." CR>)
 "  Goblinz so grate, our spit is assid!  We spit on yu if yu make
 us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!">)>
       <TELL "\"" CR>
+    )
+    (<VERB? THINK-ABOUT>
+      <TELL 
+"Just speak to him. If he wants something, he'll pretty much say so." CR>
     )>>
 
 <ROUTINE GIFT-OF-KING-R ()
@@ -899,7 +973,7 @@ us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!">)>
 grapple hook!\"" CR>
   <INCREMENT-SCORE 5>>
 
-; ************************** LAND OF THE NECROYAKS *****************************
+;" ************************** LAND OF THE NECROYAKS *****************************"
 
 <OBJECT LAND-OF-NECROYAKS
   (IN ROOMS)
@@ -943,14 +1017,25 @@ sinister experiments, do not proceed on pain of Death!\"">
 "Oh, THAT'S original." CR>
     )>>
 
-; ************************** AMBUSH POINT **************************************
+;" ************************** AMBUSH POINT **************************************"
 
+<GLOBAL CLIFF-FACE-BLOCKS "The cliff face blocks your way.">
 <OBJECT AMBUSH-POINT
   (IN ROOMS)
   (DESC "Deep in NecroYak Territory")
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (ACTION AMBUSH-POINT-R)
-  (SOUTH TO LAND-OF-NECROYAKS)>
+  (SOUTH TO LAND-OF-NECROYAKS)
+  (NORTH "The cliff face blocks your way.")
+  (NE "The cliff face blocks your way.")
+  (NW "The cliff face blocks your way.")
+  (SW "The cliff face blocks your way.")
+  (SE "The cliff face blocks your way.")
+  (EAST "The cliff face blocks your way.")
+  (WEST "The cliff face blocks your way.")
+  (UP "It's steep -- you can't climb.")
+  (DOWN "It's steep -- you can't climb.")
+>
 
 <ROUTINE AMBUSH-POINT-R (RARG)
   <COND
@@ -965,7 +1050,10 @@ to continue, you'll have to ">
       <TELL "You can go ">
       <BOLDIZE "south">
       <TELL "." CR>
-    )>>
+    )
+    (<AND <==? .RARG ,M-BEG> <VERB? CLIMB-MOD> >
+      <TELL "It's steep -- you can't climb." CR>
+      <RTRUE>)>>
 
 <ROUTINE YAKS-KILL-R ()
   <TELL 
@@ -996,7 +1084,7 @@ yak." CR>
     (T
       <V-SEARCH>)>>
 
-; ************************** PHOENIX MOUNTAIN PASS *****************************
+;" ************************** PHOENIX MOUNTAIN PASS *****************************"
 
 <OBJECT PHOENIX-MOUNTAIN-PASS
   (IN ROOMS)
@@ -1041,7 +1129,9 @@ north." CR>)
 you're standing on.  But you accidentally let go and it plummets into the valley
 below." CR>)
     (<VERB? CLIMB>
-      <CLIMB-THEM-R>)>>
+      <CLIMB-THEM-R>)
+    (<VERB? THINK-ABOUT>
+      <TELL "You think they could be climbed, with the proper tool." CR>)>>
 
 <ROUTINE CLIMB-THEM-R ()
   <COND
@@ -1057,7 +1147,7 @@ After descending again, you ditch your grappling hook." CR>
       <TELL 
 "Those particular mountains are too steep." CR>)>>
 
-; ************************** PHOENIX PEAK **************************************
+;" ************************** PHOENIX PEAK **************************************"
 
 <OBJECT PHOENIX-PEAK
   (IN ROOMS)
@@ -1122,7 +1212,9 @@ with you, I'm afraid I must ask you to leave ">
             (T
               <CRLF>
               <TELL
-"\"Then leave me immediately, as I do not appreciate company.\"" CR>)>)>)>>
+"\"Then leave me immediately, as I do not appreciate company.\"" CR>)>)>)
+      (<VERB? THINK-ABOUT>
+        <TELL "Just speak to him." CR>)>>
 
 <ROUTINE PHOENIX-PROC-R ()
   <TELL 
@@ -1145,7 +1237,7 @@ you with one claw.  You roll back down the mountainside, finally coming to a
 complete stop looking very much like a well-done steak." CR CR>
   <JIGS-UP ,LOSE-TEXT>>
 
-; ************************** END OF ROOM DESCRIPTIONS **************************
+;" ************************** END OF ROOM DESCRIPTIONS **************************"
 
 <GLOBAL WIN-TEXT "Congratulations, you have found out that you were better off
 where you started anyway.  The grass here is brown and crackly.  Too bad!
@@ -1237,22 +1329,33 @@ stupid cow." CR>)>>
   (DESC "your Koww-pack")
   (SYNONYM PACK KOWW-PACK)
   (ADJECTIVE MY KOWW)
-  (FLAGS NARTICLEBIT TAKEBIT TRYTAKEBIT INVISIBLE)
+  (FLAGS NARTICLEBIT TAKEBIT TRYTAKEBIT)
   (ACTION KOWW-PACK-R)>
   
 <ROUTINE KOWW-PACK-R ()
-  <TELL
-    <PICK-ONE-R
-      <PLTABLE
-        "You don't have a KOWW-pack."
-        "There is no KOWW-pack in this game."
-        "You don't have a KOWW-pack.">>>
-  <TELL
-    <PICK-ONE-R
-      <PLTABLE
-        " I was just kidding about that."
-        " That was just a joke.">>>
-     <CRLF>>
+  <COND
+    (<PRSO? ,KOWW-PACK>
+      <TELL
+        <PICK-ONE-R
+          <PLTABLE
+            "You don't have a KOWW-pack."
+            "There is no KOWW-pack in this game."
+            "You don't have a KOWW-pack."
+          >
+        >
+      >
+      <TELL
+        <PICK-ONE-R
+          <PLTABLE
+            " I was just kidding about that."
+            " That was just a joke."
+          >
+        >
+      >
+      <CRLF>
+    )
+  >
+>
 
 ;"######## LOCAL GLOBALS ########"
 
