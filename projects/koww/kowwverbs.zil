@@ -365,7 +365,7 @@ are ready.) >" >
            <COND (<FIRST? ,WINNER>
                   <TELL "You have:" CR>
                   <MAP-CONTENTS (I ,WINNER)
-                      <TELL "  - " A .I>
+                      <TELL "  " A .I>
                       <AND <FSET? .I ,WORNBIT> <TELL " (worn)">>
                       <AND <FSET? .I ,LIGHTBIT> <TELL " (providing light)">>
                       <COND (<FSET? .I ,CONTBIT>
