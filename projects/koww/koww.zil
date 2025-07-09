@@ -7,7 +7,7 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.2.1 alpha
+|v0.1 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
@@ -16,8 +16,9 @@
   <SETG MODE ,VERBOSE>
   <CRLF>
   <CRLF>
-  <BOLDIZE "*** DEBUGGING ENABLED ***">
-  <CRLF><CRLF>
+  ;<BOLDIZE "*** DEBUGGING ENABLED ***">
+  ;<CRLF>
+  ;<CRLF>
   <ITALICIZE 
 "***  Find out if the grass is really greener on the other side of the chasm.  ***">
   <CRLF>
@@ -29,7 +30,7 @@
   <V-LOOK>
   <MAIN-LOOP>>
 
-<COMPILATION-FLAG DEBUGGING-VERBS T>
+;<COMPILATION-FLAG DEBUGGING-VERBS T>
 
 ;"----------------------- UNCOMMENT TO ADD FLAGS --------------------------------------------------"
 <SETG EXTRA-FLAGS (NALLBIT)>
@@ -73,7 +74,7 @@
   <COND
     (<VERB? EXAMINE>
       <TELL
-"Why would you do that?  You are more than familiar with your own magical milk.|">)
+"Why would you do that?  You are more than familiar with your own magical milk." CR>)
     (<VERB? DROP PUT-IN PUT-ON>
       <TELL 
 "Why would you do that?  Awful waste of milk." CR>)
@@ -111,8 +112,8 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
             <RTRUE>)>)
     (<VERB? THINK-ABOUT>
       <TELL
-"Hmm... You think there's probably something to use the pitchfork on, in much
-the same way Farmer Zeke sometimes uses it." CR>)>>
+"Hmm... You think there's probably something to use the pitchfork on, in much the same way Farmer
+Zeke sometimes uses it." CR>)>>
 
 <OBJECT FLY-SCROLL
   (DESC "the Fly Scroll")
