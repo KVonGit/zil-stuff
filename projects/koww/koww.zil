@@ -7,18 +7,13 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.1 beta
+|v0.1.2 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
-  ;<COLOR 9 2>
-  ;<CLEAR -1>
   <SETG MODE ,VERBOSE>
   <CRLF>
   <CRLF>
-  ;<BOLDIZE "*** DEBUGGING ENABLED ***">
-  ;<CRLF>
-  ;<CRLF>
   <ITALICIZE 
 "***  Find out if the grass is really greener on the other side of the chasm.  ***">
   <CRLF>
@@ -28,11 +23,10 @@
   <SETG HERE ,KOWWS-CHASM>
   <MOVE ,PLAYER ,HERE>
   <V-LOOK>
-  <MAIN-LOOP>>
+  <SETG SCORING-ENABLED T>
+  <MAIN-LOOP>
+>
 
-;<COMPILATION-FLAG DEBUGGING-VERBS T>
-
-;"----------------------- UNCOMMENT TO ADD FLAGS --------------------------------------------------"
 <SETG EXTRA-FLAGS (NALLBIT)>
 
 <INSERT-FILE "parser">
@@ -43,12 +37,13 @@
 <INSERT-FILE "kowwified">
 <INSERT-FILE "hints">
 
-<CONSTANT MAX-SCORE 110>
+<CONSTANT MAX-SCORE 420>
 
 <ROUTINE INCREMENT-SCORE (NUM)
   <SETG SCORE <+ ,SCORE .NUM>>
   <TELL 
-"[Your score has just gone up by " N .NUM ".]" CR>>
+"[Your score has just increased by " N .NUM ".]" CR CR>
+>
 
 ;" ************************* ITEMS **********************************************"
 
@@ -81,10 +76,10 @@
     (<VERB? GIVE>
       <COND
         (<PRSI? ZEKE>
+          <INCREMENT-SCORE 40>
           <TELL 
 "\"Well, thanks a lot, good buddy!  Well, tell ya what, why don't I give ya this
-here pitchfork ta comp'n'sate ya fer yer milk.\"" CR CR>
-          <INCREMENT-SCORE 5>
+here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
           <REMOVE ,MILK>
           <MOVE ,PITCHFORK ,PLAYER>
           <THIS-IS-IT ,PITCHFORK>
@@ -332,20 +327,21 @@ climb something." CR>)>>
 <GLOBAL PAINTED <>>
 
 <ROUTINE PURPLE-COW-R ()
+  <INCREMENT-SCORE 1>
   <REMOVE ,PURPLE-PAINT>
   <SETG PAINTED T>
   <TELL
 "You spread the purple paint on yourself.  Suddenly Farmer Zeke bursts into
-song!" CR>
+song!" CR CR>
   <TELL "\"">
   <ITALICIZE 
 "I never saw a purple cow, and I never hope to see one; but I can tell you
 anyhow, I'd rather see than be one!">
-  <TELL "\"" CR>
+  <TELL "\"" CR CR>
   <TELL
 "Wonderful!  You have just activated the scenario's secret feature!  That's it. 
 Return to your home.  There's nothing more to do here." CR>
-  <INCREMENT-SCORE 15>>
+>
 
 
 ;" ************************* KOWW'S CHASM ***************************************"
@@ -528,6 +524,7 @@ for a while." CR>)>)
 <ROUTINE OPEN-STATUE-CAVE-R ()
   <COND
     (<HELD? ,PITCHFORK>
+      <INCREMENT-SCORE 40>
       <TELL
 "You stab the pitchfork into the haystack.  Lo and behold, the pitchfork breaks,
 and the haystack falls down into a hole in the ground!  Inside the hole is a
@@ -537,7 +534,7 @@ jade statuette, which you take." CR>
       <MOVE ,JADE-STATUETTE ,PLAYER>
       <FSET ,JADE-STATUETTE ,TOUCHBIT>
       <THIS-IS-IT ,JADE-STATUETTE>
-      <INCREMENT-SCORE 15>)
+    )
     (<FSET? ,JADE-STATUETTE ,TOUCHBIT>
       <TELL
 "You've already done that bit." CR>)
@@ -580,18 +577,22 @@ grazing." CR>)
       <TELL "It smells like pond water and duck turds." CR>)
     (<VERB? THINK-ABOUT>
       <TELL 
-"You've always gotten a kick out of putting something into ponds like this..." CR>)>>
+"You've always gotten a kick out of putting something into ponds like this..." CR>)
+    (<VERB? OPEN CLOSE>
+      <TELL "Funny." CR>
+    )>>
 
 
 <ROUTINE GET-DUCK-TURD-R ()
+  <INCREMENT-SCORE 40>
   <TELL
 "You throw the something into the pond.  The ducks swarm around it in curiosity. 
 You take the opportunity to grab a duck turd without being noticed!" CR>
   <REMOVE ,SOMETHING-ITEM>
   <MOVE ,DUCK-TURD, PLAYER>
   <THIS-IS-IT ,DUCK-TURD>
-  <INCREMENT-SCORE 10>>
-  
+>
+
 <OBJECT DUCKS
   (DESC "ducks")
   (LDESC "About what you'd expect ducks to look like.")
@@ -617,6 +618,13 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
 "You're inside Farmer Zeke's rather cramped home.  No one's here at the
 moment.  Perhaps you should go away.||There is a ">
     <BOLDIZE "table">
+    <COND
+      (<NOT <FSET? ,TREASURE-CHEST ,NDESCBIT>>
+        <TELL " (on which there is a ">
+        <BOLDIZE "treasure chest">
+        <TELL ")">
+      )
+    >
     <TELL " here.||">)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
@@ -626,18 +634,32 @@ moment.  Perhaps you should go away.||There is a ">
 <OBJECT TABLE
   (IN ZEKES-FARMHOUSE)
   (DESC "the table")
-  (FDESC "Hmmm, what's a table doing here?  Cool!  It has a TREASURE CHEST on it!")
   (SYNONYM TABLE)
   (FLAGS CONTBIT SURFACEBIT NDESCBIT NARTICLEBIT)
   (ACTION TABLE-R)>
 
-<GLOBAL EXAMINED-TABLE <>>
 
 <ROUTINE TABLE-R ()
   <COND
     (<VERB? TAKE>
       <TELL
-"Farmer Zeke took the wise precaution of bolting his table to the floor." CR>)>>
+"Farmer Zeke took the wise precaution of bolting his table to the floor.">
+      <AND <FSET? ,TREASURE-CHEST ,NDESCBIT>
+        <TELL " Cool!  It has a TREASURE CHEST on it!">
+        <FCLEAR ,TREASURE-CHEST ,NDESCBIT>
+      >
+      <CRLF>
+    )
+    (<VERB? EXAMINE>
+      <TELL "Hmmm, what's a table doing here?">
+      <AND <FSET? ,TREASURE-CHEST ,NDESCBIT>
+        <TELL " Cool!  It has a TREASURE CHEST on it!">
+        <FCLEAR ,TREASURE-CHEST ,NDESCBIT>
+      >
+      <CRLF>
+    )
+  >
+>
 
 <OBJECT TREASURE-CHEST
   (DESC "treasure chest")
@@ -650,31 +672,45 @@ moment.  Perhaps you should go away.||There is a ">
 
 <ROUTINE TREASURE-CHEST-R ()
   <COND
+    (<FSET? ,TREASURE-CHEST ,NDESCBIT>
+      <FCLEAR ,TREASURE-CHEST ,NDESCBIT>
+    )
+  >
+  <COND
     (<VERB? OPEN>
-      <CALL GET-NOTHING-R>)
+      <CALL GET-NOTHING-R>
+    )
     (<VERB? CLOSE>
       <COND
         (<FSET? ,TREASURE-CHEST ,OPENBIT>
-          <TELL "It appears to be stuck open, but that's okay. We're done with it now." CR>)
+          <TELL "It appears to be stuck open, but that's okay. We're done with it now." CR>
+        )
         (ELSE
-          <TELL "It's already closed." CR>)>)
+          <TELL "It's already closed." CR>
+        )
+      >
+    )
     (<VERB? TAKE>
-      <TELL
-"It's too big.">
+      <TELL "It's too big.">
       <COND
         (<NOT <FSET? ,TREASURE-CHEST ,OPENBIT>>
-          <TELL " You could open it instead...">)>
-      <CRLF>)>>
+          <TELL " You could open it instead...">
+        )
+      >
+      <CRLF>
+    )
+  >
+>
 
 <ROUTINE GET-NOTHING-R ()
   <COND
     (<NOT <FSET? ,NOTHING-ITEM ,TOUCHBIT>>
-        <TELL
+      <INCREMENT-SCORE 40>
+      <TELL
 "Ooooo!  There's nothing inside!  Told ya you should have gone away." CR>
       <MOVE ,NOTHING-ITEM ,PLAYER>
       <FSET ,NOTHING-ITEM ,TOUCHBIT>
       <THIS-IS-IT ,NOTHING-ITEM>
-  <INCREMENT-SCORE 5>
       <FSET ,TREASURE-CHEST ,OPENBIT>
       <RTRUE>)
     (ELSE
@@ -690,12 +726,14 @@ moment.  Perhaps you should go away.||There is a ">
   (DESC "Zeke's Silo")
   (FLAGS LIGHTBIT)
   (OUT TO ZEKES-FARM)
-  (ACTION ZEKES-SILO-R)>
+  (ACTION ZEKES-SILO-R)
+>
 
 <ROUTINE ZEKES-SILO-R (RARG)
   <COND
     (<==? .RARG ,M-LOOK>
-      <TELL "Gee, this place smells just like rotting feed.  ">)
+      <TELL "Gee, this place smells just like rotting feed.  ">
+    )
     (<==? .RARG ,M-FLASH>
       <TELL 
 "Standing in the silo, grinning like the idiot that he is, is Farmer ">
@@ -703,7 +741,14 @@ moment.  Perhaps you should go away.||There is a ">
       <TELL "." CR CR>
       <TELL "You can go ">
       <BOLDIZE "out">
-      <TELL "." CR>)>>
+      <TELL "." CR>
+    )
+    (<AND <==? .RARG ,M-BEG><VERB? SMELL>>
+      ;<TELL "It smells just like rotting feed!" CR>
+      <TELL "FUCK YOU." CR>
+    )
+  >
+>
 
 <OBJECT ZEKE
   (DESC "Zeke")
@@ -762,17 +807,22 @@ creatures who like to fight anyone who looks weak.  Fortunately, you don't look
 weak." CR CR>
     )
     (<==? .RARG ,M-FLASH>
-      <TELL "You can go ">
+      <TELL "The ">
+      <BOLDIZE "road">
+      <TELL " leads ">
       <BOLDIZE "north">
       <TELL " or ">
       <BOLDIZE "south">
-      <TELL "." CR>)>>
+      <TELL "." CR>
+    )
+  >
+>
 
 <OBJECT ROAD
   (DESC "the road")
   (SYNONYM ROAD)
   (IN GOBLIN-TRAIL)
-  (FLAGS NARTICLEBIT)
+  (FLAGS NARTICLEBIT NDESCBIT)
   (ACTION ROAD-R)>
 
 <ROUTINE ROAD-R ()
@@ -810,26 +860,6 @@ them." CR CR>
       <BOLDIZE "north">
       <TELL "." CR>)>>
 
-<OBJECT CLIFF
-  (DESC "cliff")
-  (SYNONYM CLIFF)
-  (IN GOBLIN-TRAIL)
-  (ACTION CLIFF-R)>
-
-<ROUTINE CLIFF-R ()
-  <COND
-    (<VERB? EXAMINE>
-      <TELL
-"It's a cliff; you could climb it, but it might be a difficult climb." CR>)
-    (<VERB? TAKE>
-      <TELL
-"If you want to climb the cliff, say so!" CR>)
-    (<VERB? CLIMB>
-      <TELL
-"After a difficult climb, you reach the top.  You're very pleased with yourself.
- Unfortunately, the ledge crumbles beneath you and you plummet back to the
-ground." CR>)>>
-
 <OBJECT INSIDE-GOBLIN-LAIR-ENTRANCE
   (IN GOBLIN-LAIR)
   (ACTION INSIDE-GOBLIN-LAIR-ENTRANCE-R)
@@ -853,7 +883,7 @@ ground." CR>)>>
 <OBJECT GOBLIN-GUARD
   (IN GOBLIN-LAIR)
   (DESC "the Goblin Guard")
-  (FDESC "A Goblin Guard is here.")
+  (FDESC "A Goblin guard stands nearby.")
   (SYNONYM GOBLIN GUARD)
   (ADJECTIVE GOBLIN)
   (FLAGS PERSONBIT NARTICLEBIT)
@@ -874,13 +904,14 @@ from the smell." CR>)
       <TELL "He seems to want nothing." CR>)>>
 
 <ROUTINE SECRET-ONE-R ()
+  <INCREMENT-SCORE 40>
   <TELL
 "\"Ooooo!  Nuthing!  Jus wut I all ways want'd!  Inn ex chaynge, I giv yu summ
 thing!\"" CR>
   <REMOVE NOTHING-ITEM>
   <MOVE ,SOMETHING-ITEM ,PLAYER>
   <THIS-IS-IT ,SOMETHING-ITEM>
-  <INCREMENT-SCORE 10>>
+>
   
 
 
@@ -956,15 +987,17 @@ us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!">)>
     )>>
 
 <ROUTINE GIFT-OF-KING-R ()
+  <INCREMENT-SCORE 40>
   <REMOVE ,JADE-STATUETTE>
   <MOVE ,GOBLIN-SPIT ,PLAYER>
   <FSET ,GOBLIN-SPIT ,TOUCHBIT>
   <THIS-IS-IT ,GOBLIN-SPIT>
   <TELL
 "\"Ooooo!  You find goblinn lost statyoo!  We giv yu wun jar of spit!\"" CR>
-  <INCREMENT-SCORE 5>>
+>
 
 <ROUTINE OTHER-GIFT-R ()
+  <INCREMENT-SCORE 40>
   <REMOVE ,DUCK-TURD>
   <MOVE ,GRAPPLING-HOOK ,PLAYER>
   <FSET ,GRAPPLING-HOOK ,TOUCHBIT>
@@ -972,7 +1005,7 @@ us angree!  If yu hav tiny statyoo of jade, we giv yu nice thing!">)>
   <TELL
 "\"Ooooo!  GIMME GIMME GIMME!  Duck turd favorite goblin food!  We giv yu
 grapple hook!\"" CR>
-  <INCREMENT-SCORE 5>>
+>
 
 ;" ************************** LAND OF THE NECROYAKS *****************************"
 
@@ -1062,6 +1095,7 @@ to continue, you'll have to ">
   <JIGS-UP ,LOSE-TEXT>>
 
 <ROUTINE YAKS-LOVE-R ()
+  <INCREMENT-SCORE 40>
   <TELL 
 "The NecroYaks jump out and search you for acid.  They find your goblin spit,
 take it, and run off.  But one of them drops a phoenix feather, and you scoop it
@@ -1070,7 +1104,7 @@ yak." CR>
   <REMOVE ,GOBLIN-SPIT>
   <MOVE ,WING-FEATHER ,PLAYER>
   <THIS-IS-IT ,WING-FEATHER>
-  <INCREMENT-SCORE 10>>
+>
 
 <SYNTAX SEARCH = V-SEARCH-THE-ROOM>
 
@@ -1084,6 +1118,39 @@ yak." CR>
           <YAKS-KILL-R>)>)
     (T
       <V-SEARCH>)>>
+
+<OBJECT CLIFF-FACE
+  (DESC "cliff face")
+  (SYNONYM CLIFF FACE)
+  (ARTICLE "the")
+  (IN AMBUSH-POINT)
+  (ACTION CLIFF-R)
+  (FLAGS NDESCBIT)
+>
+
+<ROUTINE CLIFF-R ()
+  <COND
+    (<VERB? EXAMINE>
+      <TELL
+"It's a cliff; you could climb it, but it might be a difficult climb." CR>
+    )
+    (<VERB? TAKE>
+      <TELL
+"If you want to climb the cliff, say so!" CR>
+    )
+    (<VERB? CLIMB>
+      <TELL
+"After a difficult climb, you reach the top.  You're very pleased with yourself.
+ Unfortunately, the ledge crumbles beneath you and you plummet back to the
+ground." CR>
+    )
+    (<VERB? SEARCH>
+      <V-SEARCH-THE-ROOM>
+      <RTRUE>
+    )
+  >
+>
+
 
 ;" ************************** PHOENIX MOUNTAIN PASS *****************************"
 
@@ -1137,13 +1204,14 @@ below." CR>)
 <ROUTINE CLIMB-THEM-R ()
   <COND
     (<HELD? ,GRAPPLING-HOOK>
+      <INCREMENT-SCORE 19>
       <REMOVE ,GRAPPLING-HOOK>
       <MOVE ,PURPLE-PAINT ,PLAYER>
       <THIS-IS-IT ,PURPLE-PAINT>
       <TELL 
 "On top of the mountain, you find a bunch of purple paint, which you take. 
 After descending again, you ditch your grappling hook." CR>
-      <INCREMENT-SCORE 10>)
+    )
     (T
       <TELL 
 "Those particular mountains are too steep." CR>)>>
@@ -1182,13 +1250,15 @@ Here, in all its glory, sits the ">
     (<VERB? EXAMINE>
       <TELL
 "The Resplendent Magnificent Phoenix's visage is so brilliant that it hurts to
-look at it." CR>)
+look at it." CR>
+    )
     (<VERB? SPEAK>
       <TELL
 "The Resplendent Magnificent Phoenix ">
       <COND
         (<HELD? ,FLY-SCROLL>
-          <TELL "does not reply." CR>)
+          <TELL "does not reply." CR>
+        )
         (T
           <TELL "demands to know ">
           <ITALICIZE "why">
@@ -1207,17 +1277,38 @@ with you, I'm afraid I must ask you to leave ">
               <CRLF>
               <COND
                 (<HELD? WING-FEATHER>
-                  <PHOENIX-PROC-R>)
+                  <PHOENIX-PROC-R>
+                )
                 (T
-                  <PHOENIX-KILL-R>)>)
+                  <PHOENIX-KILL-R>
+                )
+              >
+            )
             (T
               <CRLF>
               <TELL
-"\"Then leave me immediately, as I do not appreciate company.\"" CR>)>)>)
-      (<VERB? THINK-ABOUT>
-        <TELL "Just speak to him." CR>)>>
+"\"Then leave me immediately, as I do not appreciate company.\"" CR>
+            )
+          >
+        )
+      >
+    )
+    (<VERB? THINK-ABOUT>
+      <TELL "Just speak to him." CR>
+    )
+    (<VERB? GIVE>
+      <COND
+        (<==? ,PRSO ,WING-FEATHER>
+          <PHOENIX-PROC-R>
+          <RTRUE>
+        )
+      >
+    )
+  >
+>
 
 <ROUTINE PHOENIX-PROC-R ()
+  <INCREMENT-SCORE 40>
   <TELL 
 "\"Thank you; you have found my wing feather.  In the wrong hands, that could
 have been very dangerous.  I will give you this 'fly' scroll to compensate you
@@ -1227,7 +1318,7 @@ for your hard work.  ">
   <MOVE ,FLY-SCROLL ,PLAYER>
   <THIS-IS-IT ,FLY-SCROLL>
   <REMOVE ,WING-FEATHER>
-  <INCREMENT-SCORE 10>>
+>
 
 <ROUTINE PHOENIX-KILL-R ()
   <TELL 
@@ -1258,10 +1349,10 @@ for \"The Adventures of Koww the Magician II -- Escape from the NecroYaks!\"">
 stupid cow." CR>)>>
 
 <ROUTINE END-R ()
-  <INCREMENT-SCORE 20>
+  <INCREMENT-SCORE 40>
   <TELL "You fly up and over the chasm!" CR CR>
   <TELL ,WIN-TEXT CR>
-  <TELL "[PRESS RETURN OR ENTER TO VIEW YOUR SCORE.]">
+  <TELL "|[PRESS RETURN OR ENTER TO VIEW YOUR SCORE.]">
   <READLINE>
   <CRLF>
   <TELL "You scored ">
@@ -1272,17 +1363,16 @@ stupid cow." CR>)>>
   <COND
     (<==? ,SCORE 0>
       <BOLDIZE "MOO-ZER">)
-    (<L? ,SCORE 42>
+    (<L? ,SCORE 100>
       <BOLDIZE "BABY KALF">)
-    (<L? ,SCORE 69>
+    (<L? ,SCORE 200>
       <BOLDIZE "MOO-STLY HARMLESS">)
-    (<L? ,SCORE 110>
+    (<L? ,SCORE 420>
       <BOLDIZE "MAGICIAN">)
     (T
       <BOLDIZE "GRAND MOO-STER WIZARD">)>
   <TELL ".">
   <CRLF>
-  <TELL "PRESS ENTER TO QUIT.">
   <QUIT>>
 
 ; *** TEXT ROUTINES ***

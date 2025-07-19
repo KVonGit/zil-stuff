@@ -345,10 +345,13 @@ the cursor and text"
 			<LTABLE 3
 				"What do I do with the haystack?"
 				"Did you try eating it?"
-				"You need to use the pitchfork on it.">
+				"You need to stab it with the pitchfork."
+        "You will get a jade statuette after stabbing the haystack with the pitchfork.">
 			<LTABLE 3
 				"What about the pond?"
-				"Try throwing something into it.">
+				"Try throwing something into it."
+        "You can get something for nothing from the Goblin guard."
+        "If you throw something into the pond, you will acquire a duck turd.">
 			<LTABLE 3
 				"How do I get into the farmhouse or the silo?"
 				"Try ENTER FARMHOUSE or ENTER SILO.">>
@@ -376,7 +379,10 @@ the cursor and text"
             "GOBLIN LAIR"
             <LTABLE 3
                 "What do I do with the Goblin guard?"
-                "He wants nothing.">
+                "Have you tried talking to him?"
+                "He wants nothing."
+                "Give him nothing."
+                "He'll give you something in exchange for nothing.">
             <LTABLE 3
               "How do I get into the complex?"
               "ENTER CAVE">>
@@ -407,34 +413,36 @@ the cursor and text"
           "PHOENIX PEAK"
           <LTABLE 3
             "What does the Resplendent Magnificent Phoenix want from me?"
-            "SPEAK TO HIM to find out!">>
+            "SPEAK TO HIM to find out!"
+            "He wants is wing feather."
+            "Give him his wing feather, and he'll give you the Fly Scroll.">>
         <PLTABLE
-			"MISCELLANEOUS"
-			<LTABLE 3
-				"HOW ALL THE POINTS ARE SCORED"
-				"This section should only be used as a last resort, or for your own interest after you've completed the game."
-				"  SCORE   ACTION"
-	  	  "      5   Giving some milk to Zeke"                                          ;D
-	  		"     5   Using the pitchfork on the haystack"                                ;D
-				"     10   Throwing something into the pond"                               ;D
-				"     5   Getting nothing from the treasure chest"                         ;D
-				"     10   Giving nothing to the Goblin guard"                                       ;D
-				"     5   Giving the jade statuette to the Goblin King"                                             ;D
-				"     5   Giving the duck turd to the Goblin King"                                    ;D
-				"     10   Searching while Deep in NecroYak territory without getting killed"                             ;D
-				"     10   Successfully climbing the mountains"                                    ;D
-        "     10   Giving the Resplendent Magnificent Phoenix his wing feather"                           ;D
-        "     20   Using the Fly Scroll"                                ;D
-        "     15   Using the purple paint"                                     ;D
-        "    110   TOTAL POINTS">
-			<LTABLE 3
-				"FOR YOUR AMUSEMENT"
-				"You shouldn't develop anything in this section until you've finished the game. Things in the
-section will invariably give away the answers to puzzles in the game."
-				"Have you tried..."
-				"splashing milk on Zeke"
-        "taking the sign"
-        "taking the road">>
+          "MISCELLANEOUS"
+            <LTABLE 3
+              "HOW ALL THE POINTS ARE SCORED"
+              "This section should only be used as a last resort, or for your own interest after you've completed the game."
+              "  SCORE   ACTION"
+              "     40   Giving some milk to Zeke"                                          ;D
+              "    40   Using the pitchfork on the haystack"                                ;D
+              "     40   Throwing something into the pond"                               ;D
+              "    40   Getting nothing from the treasure chest"                         ;D
+              "     40   Giving nothing to the Goblin guard"                                       ;D
+              "    40   Giving the jade statuette to the Goblin King"                                             ;D
+              "    40   Giving the duck turd to the Goblin King"                                    ;D
+              "     40   Searching while Deep in NecroYak territory without getting killed"                             ;D
+              "     19   Successfully climbing the mountains"                                    ;D
+              "     40   Giving the Resplendent Magnificent Phoenix his wing feather"                           ;D
+              "     40   Using the Fly Scroll"                                ;D
+              "      1   Using the purple paint"                                     ;D
+              "    420   TOTAL POINTS">
+            <LTABLE 3
+              "FOR YOUR AMUSEMENT"
+              "You shouldn't develop anything in this section until you've finished the game. Things in the
+      section will invariably give away the answers to puzzles in the game."
+              "Have you tried..."
+              "splashing milk on Zeke"
+              "taking the sign"
+              "taking the road">>
 		<PLTABLE
 			"GENERAL COMMANDS"
 			<LTABLE 3
