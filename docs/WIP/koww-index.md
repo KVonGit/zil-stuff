@@ -3,7 +3,7 @@
 [View the ZIL file in the KVonGit/zil-stuff repo](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/koww.zil)
 
 ---
-[Play the Alpha pre-release in Parchment (in your browser)](https://iplayif.com/?story=https://raw.githubusercontent.com/KVonGit/zil-stuff/refs/heads/main/projects/koww/KOWW.z5)
+[Play in Parchment (in your browser)](https://iplayif.com/?story=https://raw.githubusercontent.com/KVonGit/zil-stuff/refs/heads/main/projects/koww/KOWW.z5)
 
 ---
 [Download the story file](https://github.com/KVonGit/zil-stuff/raw/refs/heads/main/projects/koww/KOWW.z5)
