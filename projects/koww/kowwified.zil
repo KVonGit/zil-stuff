@@ -473,7 +473,7 @@
 >
 
 <ROUTINE V-LOOK-UNDER ()
-  <TELL "You don't need to look under anything in this game." CR>
+  <POINTLESS "Attempting to look under">
 >
 
 <OBJECT PLAYER

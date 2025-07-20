@@ -27,8 +27,7 @@ the ones owned by the Great Phoenix -- you could do so." CR>)>>
 <SYNTAX USE OBJECT WITH OBJECT = V-USE-ON>
 
 <CONSTANT NO-QUEST-USE-LIE 
-"That command doesn't work here. Be more specific about what you wish to do
-with">
+"Be more specific about what you wish to do with">
 
 <ROUTINE V-USE ()
   <TELL ,NO-QUEST-USE-LIE " " T, PRSO "." CR>>
@@ -63,7 +62,7 @@ with">
 
 <ROUTINE V-DIG ()
   <TELL 
-"You can't dig " T, PRSI " with " T, PRSO ".">>
+"You can't dig " T, PRSI " with " T, PRSO "." CR>>
 
 <SYNTAX CLIMB = V-CLIMB-MOD>
 
@@ -385,9 +384,6 @@ from the east." CR>)
            <TELL 
 "You contemplate " T ,PRSO " for a bit, but nothing helpful comes to mind." CR>)>>
 
-<ROUTINE V-LOOK-UNDER ()
-  <TELL "That was a waste of a good turn." CR>
->
 
 <SYNONYM IN INTO>
 

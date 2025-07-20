@@ -7,7 +7,7 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.1.2 beta
+|v0.1.3 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
@@ -146,6 +146,9 @@ Zeke sometimes uses it." CR>)>>
     )
     (<VERB? THINK-ABOUT>
       <TELL "You should probably find its original owner." CR>
+    )
+    (<VERB? USE>
+      <TELL "You can't use it. You should probably return it to its owner." CR>
     )>>
 
 <OBJECT JADE-STATUETTE
@@ -407,7 +410,10 @@ it just doesn't fit.  Frustrated, you put it back." CR>
     (<VERB? EXAMINE>
       <TELL 
 "That's the chasm you simply MUST cross!  Surely the only way to cross it is to
-FLY!" CR>)>>
+FLY!" CR>)
+    (<VERB? SEARCH>
+      <TELL "That is not possible from your current location." CR>
+    )>>
 
 ;" ************************* ZEKE'S FARM ****************************************"
 
@@ -503,8 +509,11 @@ for a while." CR>)>)
     (<VERB? DRINK>
       <TELL
 "What, drink THAT?!?!?  You loony." CR>)
-    (<VERB? STAB ATTACK>
+    (<VERB? STAB ATTACK SEARCH LOOK-UNDER>
       <OPEN-STATUE-CAVE-R>)
+    (<AND <VERB? DIG><PRSI? ,PITCHFORK>>
+      <OPEN-STATUE-CAVE-R>
+    )
     (<VERB? THINK-ABOUT>
       <COND
         (<FSET? ,JADE-STATUETTE ,TOUCHBIT>
@@ -742,10 +751,6 @@ moment.  Perhaps you should go away.||There is a ">
       <TELL "You can go ">
       <BOLDIZE "out">
       <TELL "." CR>
-    )
-    (<AND <==? .RARG ,M-BEG><VERB? SMELL>>
-      ;<TELL "It smells just like rotting feed!" CR>
-      <TELL "FUCK YOU." CR>
     )
   >
 >
