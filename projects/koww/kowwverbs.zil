@@ -108,7 +108,7 @@ the ones owned by the Great Phoenix -- you could do so." CR>)>>
 "Farmer Zeke is the only singer in this game! (Besides, you didn't even bring a
 Koww bell!)" CR>>
 
-<ROUTINE V-DANCE ()
+;<ROUTINE V-DANCE ()
   <SILLY>>
   
 <SYNTAX HELP = V-HELP>
@@ -361,7 +361,7 @@ from the east." CR>)
     ;"check for light first"
     <COND (,HERE-LIT
            <COND (<FIRST? ,WINNER>
-                  <TELL "You have:" CR>
+                  <TELL "Items:" CR>
                   <MAP-CONTENTS (I ,WINNER)
                       <TELL "  " A .I>
                       <AND <FSET? .I ,WORNBIT> <TELL " (worn)">>

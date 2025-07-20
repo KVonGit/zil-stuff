@@ -7,7 +7,7 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.1.3 beta
+|v0.1.4 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
@@ -59,7 +59,7 @@
 
 <OBJECT MILK
   (IN PLAYER)
-  (DESC "milk")
+  (DESC "your milk")
   (SYNONYM MILK)
   (ADJECTIVE MY MAGICAL MAGIC)
   (ACTION MILK-R)
@@ -69,7 +69,7 @@
   <COND
     (<VERB? EXAMINE>
       <TELL
-"Why would you do that?  You are more than familiar with your own magical milk." CR>)
+"You are more than familiar with your own magical milk." CR>)
     (<VERB? DROP PUT-IN PUT-ON>
       <TELL 
 "Why would you do that?  Awful waste of milk." CR>)
@@ -379,12 +379,12 @@ greener on the other side of the ">
   (SYNONYM SIGN)
   (ADJECTIVE VERY UNDRAMATIC)
   (IN KOWWS-CHASM)
-  (FLAGS NDESCBIT)
+  (FLAGS NDESCBIT TAKEBIT TRYTAKEBIT)
   (ACTION CHASM-SIGN-R)>
 
 <OBJECT CHASM
   (DESC "chasm")
-  (FLAGS NDESCBIT)
+  (FLAGS NDESCBIT TAKEBIT)
   (SYNONYM CHASM)
   (IN KOWWS-CHASM)
   (ACTION CHASM-R)>
@@ -456,11 +456,20 @@ FLY!" CR>)
       <BOLDIZE "Zeke's Farmhouse">
       <TELL ", or ">
       <BOLDIZE "Zeke's Silo">
-      <TELL "." CR>)>>
+      <TELL "." CR>
+    )
+    (<AND <==? .RARG ,M-BEG><VERB? SWIM>>
+      <TELL "The pond is not deep enough. Besides, you'd scare the ducks." CR>
+    )
+    (<AND <==? .RARG ,M-BEG><VERB? MOO>>
+      <TELL "You moo. The little ducks quack." CR>
+    )
+  >
+>
 
 <OBJECT ZEKES-FARMHOUSE-ENTRANCE
   (IN ZEKES-FARM)
-  (SYNONYM FARMHO FARMHOUSE HOUSE)
+  (SYNONYM FARMHO FARMHOUSE FARM HOUSE)
   (ADJECTIVE ZEKE\'S ZEKES)
   (DESC "Zeke's Farmhouse")
   (FLAGS NARTICLEBIT NDESCBIT)
@@ -608,7 +617,16 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
   (SYNONYM DUCK DUCKS DUCKIE DUCKIES)
   (ADJECTIVE LITTLE TINY)
   (IN ZEKES-FARM)
-  (FLAGS NDESCBIT NPREFIXBIT PLURALBIT)>
+  (FLAGS NDESCBIT NPREFIXBIT PLURALBIT)
+  (ACTION DUCKS-R)>
+
+<ROUTINE DUCKS-R ()
+  <COND
+    (<VERB? SPEAK>
+      <TELL "They quack back at you." CR>
+    )
+  >
+>
 
 ;" ************************* ZEKE'S FARMHOUSE ***********************************"
 
@@ -752,6 +770,9 @@ moment.  Perhaps you should go away.||There is a ">
       <BOLDIZE "out">
       <TELL "." CR>
     )
+    (<AND <==? .RARG ,M-BEG><VERB? MOO>>
+      <TELL "You moo. Zeke tips his hat." CR>
+    )
   >
 >
 
@@ -819,6 +840,9 @@ weak." CR CR>
       <TELL " or ">
       <BOLDIZE "south">
       <TELL "." CR>
+    )
+    (<AND <==? .RARG ,M-BEG><VERB? MOO>>
+      <TELL "You moo. The Goblin guard laughs." CR>
     )
   >
 >
@@ -941,7 +965,10 @@ with ">
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
       <BOLDIZE "out">
-      <TELL "." CR>)>>
+      <TELL "." CR>)
+    (<AND <==? .RARG ,M-BEG><VERB? MOO>>
+      <TELL "You moo. The Goblin King nods." CR>
+    )>>
 
 <OBJECT STATUES
   (DESC "statues")
@@ -1240,7 +1267,13 @@ Here, in all its glory, sits the ">
       <TELL "." CR CR>
       <TELL "You can go ">
       <BOLDIZE "west">
-      <TELL "." CR>)>>
+      <TELL "." CR>)
+    (
+      <AND <==? .RARG ,M-BEG><VERB? MOO>>
+        <TELL "You moo..." CR CR>
+        <PERFORM ,V?SPEAK ,PHOENIX>
+        <RTRUE>
+    )>>
 
 <OBJECT PHOENIX
   (DESC "the Resplendent Magnificent Phoenix")
@@ -1434,17 +1467,19 @@ stupid cow." CR>)>>
       <TELL
         <PICK-ONE-R
           <PLTABLE
-            "You don't have a KOWW-pack."
+            "You don't have your KOWW-pack."
             "There is no KOWW-pack in this game."
-            "You don't have a KOWW-pack."
+            "You didn't bring a KOWW-pack."
           >
         >
       >
-      <TELL
-        <PICK-ONE-R
-          <PLTABLE
-            " I was just kidding about that."
-            " That was just a joke."
+      <AND <NOT <FSET ,KOWW-PACK ,INVISIBLE>>
+        <TELL
+          <PICK-ONE-R
+            <PLTABLE
+              " I was just kidding about that."
+              " That was just a joke."
+            >
           >
         >
       >
