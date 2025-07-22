@@ -20,6 +20,13 @@
   <CRLF>
   <V-VERSION>
   <CRLF>
+  <HLIGHT ,H-ITALIC>
+  <TELL "[YOU CAN ENTER 'HINTS' TO ACCESS THE INVISICLUES HINTS MENU]">
+  <HLIGHT ,H-NORMAL>
+  <CRLF>
+  <CRLF>
+  <CRLF>
+  <TELL "<script>var kowwVar = true;</script>" CR>
   <SETG HERE ,KOWWS-CHASM>
   <MOVE ,PLAYER ,HERE>
   <V-LOOK>
@@ -32,7 +39,7 @@
 ;<COMPILATION-FLAG DEBUGGING-VERBS T>
 ;<COMPILATION-FLAG DEBUG T>
 
-<SETG EXTRA-FLAGS (NALLBIT)>
+;<SETG EXTRA-FLAGS (NALLBIT)>
 
 <INSERT-FILE "parser">
 
@@ -74,10 +81,12 @@
   <COND
     (<VERB? EXAMINE>
       <TELL
-"You are more than familiar with your own magical milk." CR>)
+"You are more than familiar with your own magical milk." CR>
+    )
     (<VERB? DROP PUT-IN PUT-ON>
       <TELL 
-"Why would you do that?  Awful waste of milk." CR>)
+"Why would you do that?  Awful waste of milk." CR>
+    )
     (<VERB? GIVE>
       <COND
         (<PRSI? ZEKE>
@@ -88,9 +97,15 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
           <REMOVE ,MILK>
           <MOVE ,PITCHFORK ,PLAYER>
           <THIS-IS-IT ,PITCHFORK>
-          <RTRUE>)>)
+          <RTRUE>
+        )
+      >
+    )
     (<VERB? THINK-ABOUT>
-      <TELL "Zeke is quite fond of your magic milk, but you can only GIVE so much each day." CR>)>>
+      <TELL "Zeke is quite fond of your magic milk, but you can only GIVE so much each day." CR>
+    )
+  >
+>
 
 <OBJECT PITCHFORK
   (DESC "pitchfork")
@@ -559,9 +574,11 @@ for a while." CR>)>)
       <TELL
 "What, drink THAT?!?!?  You loony." CR>)
     (<VERB? STAB ATTACK SEARCH LOOK-UNDER>
-      <OPEN-STATUE-CAVE-R>)
+      <OPEN-STATUE-CAVE-R>
+      <RTRUE>)
     (<AND <VERB? DIG><PRSI? ,PITCHFORK>>
       <OPEN-STATUE-CAVE-R>
+      <RTRUE>
     )
     (<VERB? THINK-ABOUT>
       <COND
@@ -745,7 +762,12 @@ moment.  Perhaps you should go away.||There is a ">
   >
   <COND
     (<VERB? OPEN>
-      <CALL GET-NOTHING-R>
+      <COND
+        (<NOT <FSET? ,NOTHING-ITEM ,TOUCHBIT>>
+          <GET-NOTHING-R>
+          <RTRUE>
+        )
+      >
     )
     (<VERB? CLOSE>
       <COND
@@ -770,18 +792,15 @@ moment.  Perhaps you should go away.||There is a ">
 >
 
 <ROUTINE GET-NOTHING-R ()
-  <COND
-    (<NOT <FSET? ,NOTHING-ITEM ,TOUCHBIT>>
-      <INCREMENT-SCORE 40>
-      <TELL
+  <INCREMENT-SCORE 40>
+  <TELL
 "Ooooo!  There's nothing inside!  Told ya you should have gone away." CR>
-      <MOVE ,NOTHING-ITEM ,PLAYER>
-      <FSET ,NOTHING-ITEM ,TOUCHBIT>
-      <THIS-IS-IT ,NOTHING-ITEM>
-      <FSET ,TREASURE-CHEST ,OPENBIT>
-      <RTRUE>)
-    (ELSE
-      <RFALSE>)>>
+  <MOVE ,NOTHING-ITEM ,PLAYER>
+  <FSET ,NOTHING-ITEM ,TOUCHBIT>
+  <THIS-IS-IT ,NOTHING-ITEM>
+  <FSET ,TREASURE-CHEST ,OPENBIT>
+  <RTRUE>
+>
 
 
 ;"************************** ZEKE'S SILO ***************************************"

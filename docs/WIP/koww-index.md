@@ -3,10 +3,10 @@
 [View the ZIL file in the KVonGit/zil-stuff repo](https://github.com/KVonGit/zil-stuff/blob/main/projects/koww/koww.zil)
 
 ---
-[Play in Parchment (in your browser)](https://iplayif.com/?story=https://raw.githubusercontent.com/KVonGit/zil-stuff/refs/heads/main/projects/koww/koww.v015.z5)
+[Play in Parchment (in your browser)](https://iplayif.com/?story=https://raw.githubusercontent.com/KVonGit/zil-stuff/refs/heads/main/projects/koww/koww.v016.z5)
 
 ---
-[Download the story file](https://github.com/KVonGit/zil-stuff/raw/refs/heads/main/projects/koww/koww.v015.z5)
+[Download the story file](https://github.com/KVonGit/zil-stuff/raw/refs/heads/main/projects/koww/koww.v016.z5)
 
 ---
 [View the Manual](KOWW%20Manual.html)
