@@ -60,7 +60,7 @@
 .exit-link:not(.disabled) {
 	text-decoration:underline;
 }
-@media screen and (width < 900px) {#toolbar{width:100% !important;}}`;
+@media screen and (width < 900px) {#toolbar{width:100% !important;} #exit-buttons{display:none !important;}}`;
 
 $('head').append('<style>' + parchmentYonkCss + '</style>');
 
@@ -173,7 +173,7 @@ window.onload = function(){
   processNewLines();
   
   setTimeout(function(){
-    var toolbar = `<div id="toolbar" style="position:fixed;width:inherit;background:black;border-top:.5px solid slategray;bottom:0;width:900px;"><center><div id="exit-buttonsuttons"></div><button onclick="sendCmd('inventory')">INVENTORY</button><button onclick="sendCmd('undo')">UNDO</button><button onclick="sendCmd('save')">SAVE</button><button onclick="sendCmd('hints')">HINTS</button></center></div>`;
+    var toolbar = `<div id="toolbar" style="position:fixed;width:inherit;background:black;border-top:.5px solid slategray;bottom:0;width:900px;"><center><span id="exit-buttons"><button onclick="sendCmd('e')">E</button></span><button onclick="sendCmd('inventory')">INV</button><button onclick="sendCmd('undo')">UNDO</button><button onclick="sendCmd('save')">SAVE</button></center></div>`;
     $(toolbar).insertAfter($('#window2'));
     $('#window2').css('height', $('#window2').height()-$('#toolbar').height());
   },500)
@@ -184,11 +184,11 @@ function removeLastCommandEcho(){
 }
 
 function updateExits(exits){
-  console.log(exits);
+  //console.log(exits);
   zilJs.exits = exits;
   var exitLinks = '';
-  for (var exit in exits){
-    exitLinks += `<button onclick="sendCmd('${exit}')">${exit.charAt(0).toUpperCase()}</button>`;
+  for (var exit of exits){
+    exitLinks += `<button onclick="sendCmd('${exit}')">${exit.toUpperCase()}</button>`;
   }
   $('#exit-buttons').html(exitLinks)
 }

@@ -7,12 +7,12 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.2.3 beta
+|v0.2.4 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
   <SETG MODE ,VERBOSE>
-  ;<SETG SHOW-LINKS T>
+  <SETG SHOW-LINKS T>
   <CRLF>
   <CRLF>
   <ITALICIZE 
@@ -159,7 +159,8 @@ Zeke sometimes uses it." CR>)>>
       <QUEST-TWO-R>
     )
     (<VERB? USE CAST>
-      <CALL FINISH-R>)
+      <CALL FINISH-R>
+      <RTRUE>)
     (<VERB? THINK-ABOUT>
       <TELL "You need to be in the proper location to use it." CR>)>>
 
@@ -184,6 +185,7 @@ Zeke sometimes uses it." CR>)>>
     )
     (<VERB? USE>
       <TELL "You can't use it. You should probably return it to its owner." CR>
+      <RTRUE>
     )>>
 
 <OBJECT JADE-STATUETTE
@@ -203,7 +205,8 @@ Zeke sometimes uses it." CR>)>>
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-KING>
-          <GIFT-OF-KING-R>)>)
+          <GIFT-OF-KING-R>
+          <RTRUE>)>)
     (<VERB? THINK-ABOUT>
       <TELL "It seems like a gift fit for a king!" CR>)>>
 
@@ -252,7 +255,8 @@ Zeke sometimes uses it." CR>)>>
     (<VERB? USE-ON PUT-IN>
       <COND
         (<PRSI? ,POND>
-          <CALL GET-DUCK-TURD-R>)>)
+          <CALL GET-DUCK-TURD-R>
+          <RTRUE>)>)
     (<AND <VERB? USE><==? ,HERE ,ZEKES-FARM>>
       <SETG PRSA ,V?USE-ON>
       <SETG PRSI ,POND>
@@ -281,7 +285,8 @@ something in the pond!" CR>)>>
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-GUARD>
-          <CALL SECRET-ONE-R>)>)
+          <CALL SECRET-ONE-R>
+          <RTRUE>)>)
     (<VERB? THINK-ABOUT>
       <TELL 
 "Perhaps you can find someone who'll give you something for nothing?" CR>)>>
@@ -303,7 +308,8 @@ something in the pond!" CR>)>>
     (<VERB? GIVE>
       <COND
         (<PRSI? ,GOBLIN-KING>
-          <OTHER-GIFT-R>)>)
+          <OTHER-GIFT-R>
+          <RTRUE>)>)
     (<VERB? SMELL>
       <SILLY>)
     (<VERB? THINK-ABOUT>
@@ -326,11 +332,13 @@ something in the pond!" CR>)>>
     (<VERB? USE>
       <COND
         (<==? <LOC ,PLAYER> ,MOUNTAINS>
-          <CLIMB-THEM-R>)>)
+          <CLIMB-THEM-R>
+          <RTRUE>)>)
     (<VERB? USE-ON>
       <COND
         (<PRSO? ,MOUNTAINS>
-          <CLIMB-THEM-R>)>)
+          <CLIMB-THEM-R>
+          <RTRUE>)>)
     (<VERB? THINK-ABOUT>
       <TELL 
 "It doesn't even take you the full turn to realize that this needs to be used to
@@ -353,9 +361,11 @@ climb something." CR>)>>
     (<VERB? USE>
       <COND
         (<==? <LOC ,PLAYER> ,ZEKES-SILO>
-          <PURPLE-USE-R>)>)
+          <PURPLE-USE-R>
+          <RTRUE>)>)
     (<VERB? WEAR>
-        <PURPLE-USE-R>)
+        <PURPLE-USE-R>
+        <RTRUE>)
     (<VERB? SMELL>
       <TELL "It smells like... about 15 points!" CR>)
     (<VERB? THINK-ABOUT>
@@ -1039,6 +1049,7 @@ thing!\"" CR>
   <REMOVE NOTHING-ITEM>
   <MOVE ,SOMETHING-ITEM ,PLAYER>
   <THIS-IS-IT ,SOMETHING-ITEM>
+  <RTRUE>
 >
   
 
