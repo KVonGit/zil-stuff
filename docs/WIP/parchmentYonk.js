@@ -62,22 +62,33 @@ var parchmentYonkCss = `.exit-link:not(.disabled), .object-link:not(.disabled){
 
 $('head').append('<style>' + parchmentYonkCss + '</style>');
 
-function sendCmd(cmd) {
-  $('.dropdown-content').hide();
-  $('.Input').val(cmd);
-  $('.Input').trigger(jQuery.Event('keypress', {
-    key: 'Enter',
-    keyCode: 13,
-    which: 13
-  }));
-}
 
 const itemLinks = {
   itemClick(el, event) {
     event.stopPropagation();
-    $(el).siblings('.dropdown-content').toggle();
+    const next = el.nextElementSibling;
+    const originallyShown = next.style.display === "block";
+
+    // Hide all dropdowns
+    for (const el of document.querySelectorAll(".dropdown-content")) {
+      el.style.display = "none";
+    }
+
+    if (!originallyShown) {
+      next.style.position = "fixed"; // Use fixed to match clientX/clientY
+      next.style.display = "block"; // Show it so we can measure
+      next.style.visibility = "hidden"; // Hide during measurement
+
+      const height = next.offsetHeight;
+
+      next.style.left = event.clientX + "px";
+      next.style.top = (event.clientY - height) + "px";
+
+      next.style.visibility = "visible"; // Finally make it visible
+    }
   }
 };
+
 
 function removeObjectLinks() {
   document.querySelectorAll('.object-link').forEach(el => {
@@ -95,9 +106,14 @@ function removeExitLinks() {
   });
 }
 
-const yonk = {};
+function removeAllLinks() {
+  removeObjectLinks();
+  removeExitLinks();
+}
 
-Object.defineProperty(yonk, 'currentRoom', {
+const zilJs = {};
+
+Object.defineProperty(zilJs, 'currentRoom', {
   set(val) {
     if (this._room !== val){
       this._room = val;
@@ -125,6 +141,17 @@ window.addEventListener('keydown', function () {
   });
 }, true);
 
+function sendCmd(cmd) {
+  $('.dropdown-content').hide();
+  $('.Input').val(cmd);
+  $('.LineInput').focus();
+  $('.Input').trigger(jQuery.Event('keypress', {
+    key: 'Enter',
+    keyCode: 13,
+    which: 13
+  }));
+}
+
 function processNewLines() {
   $('.Style_normal:not(.processed)').each(function () {
     $(this).html($(this).text()).addClass('processed');
@@ -143,3 +170,7 @@ window.onload = function(){
   // Optionally run it once on page load
   processNewLines();
 };
+
+function removeLastCommandEcho(){
+  $('.Style_input').last().parent().remove();
+}
