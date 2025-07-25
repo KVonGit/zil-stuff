@@ -7,7 +7,7 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.1.7 beta
+|v0.2.1 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
@@ -27,7 +27,8 @@
   <CRLF>
   <CRLF>
   <CRLF>
-  <ADD-JS-SCRIPT "yonk._room = 'KOWWS-CHASM';">
+  <ADD-JS-SCRIPT "zilJs._room = 'KOWWS-CHASM';">
+  <ADD-JS-SCRIPT "$('body').css('background-color','slategray');">
   <SETG HERE ,KOWWS-CHASM>
   <MOVE ,PLAYER ,HERE>
   <V-LOOK>
@@ -40,7 +41,7 @@
 ;<COMPILATION-FLAG DEBUGGING-VERBS T>
 ;<COMPILATION-FLAG DEBUG T>
 
-;<SETG EXTRA-FLAGS (NALLBIT)>
+<SETG EXTRA-FLAGS (USEBIT GIVEBIT)>
 
 <INSERT-FILE "parser">
 
@@ -74,10 +75,11 @@
 <OBJECT MILK
   (IN PLAYER)
   (DESC "your milk")
+  (SDESC "your milk")
   (SYNONYM MILK)
   (ADJECTIVE MY MAGICAL MAGIC)
   (ACTION MILK-R)
-  (FLAGS NARTICLEBIT)>
+  (FLAGS NARTICLEBIT GIVEBIT)>
 
 <ROUTINE MILK-R ()
   <COND
@@ -111,8 +113,11 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
 
 <OBJECT PITCHFORK
   (DESC "pitchfork")
+  (SDESC "pitchfork")
   (SYNONYM PITCHF PITCHFORK)
-  (ACTION PITCHFORK-R)>
+  (ACTION PITCHFORK-R)
+  (FLAGS USEBIT)
+>
 
 <ROUTINE PITCHFORK-R ()
   <COND
@@ -134,10 +139,11 @@ Zeke sometimes uses it." CR>)>>
 
 <OBJECT FLY-SCROLL
   (DESC "the Fly Scroll")
+  (SDESC "the Fly Scroll")
   (SYNONYM FLY SCROLL SPELL)
   (ADJECTIVE FLY)
   (ACTION FLY-SCROLL-R)
-  (FLAGS TAKEBIT NARTICLEBIT SPELLBIT)>
+  (FLAGS TAKEBIT NARTICLEBIT SPELLBIT USEBIT)>
 
 <ROUTINE FLY-SCROLL-R ()
   <COND
@@ -154,9 +160,10 @@ Zeke sometimes uses it." CR>)>>
 
 <OBJECT WING-FEATHER
   (DESC "wing feather")
+  (SDESC "wing feather")
   (SYNONYM WING FEATHER)
   (ADJECTIVE WING PHOENI PHOENIX)
-  (FLAGS TAKEBIT)
+  (FLAGS TAKEBIT GIVEBIT)
   (ACTION WING-FEATHER-R)>
 
 <ROUTINE WING-FEATHER-R ()
@@ -175,9 +182,10 @@ Zeke sometimes uses it." CR>)>>
 
 <OBJECT JADE-STATUETTE
   (DESC "jade statuette")
+  (SDESC "jade statuette")
   (SYNONYM JADE STATUETTE STATUE)
   (ADJECTIVE JADE)
-  (FLAGS TAKEBIT)
+  (FLAGS TAKEBIT GIVEBIT)
   (ACTION JADE-STATUETTE-R)>
 
 <ROUTINE JADE-STATUETTE-R ()
@@ -195,6 +203,7 @@ Zeke sometimes uses it." CR>)>>
 
 <OBJECT GOBLIN-SPIT
   (DESC "goblin spit")
+  (SDESC "goblin spit")
   (SYNONYM SPIT)
   (ADJECTIVE GOBLIN)
   (FLAGS TAKEBIT NARTICLEBIT)
@@ -223,8 +232,9 @@ Zeke sometimes uses it." CR>)>>
 
 <OBJECT SOMETHING-ITEM
   (DESC "something")
+  (SDESC "something")
   (SYNONYM SOMETHING)
-  (FLAGS TAKEBIT NARTICLEBIT)
+  (FLAGS TAKEBIT NARTICLEBIT USEBIT)
   (ACTION SOMETHING-ITEM-R)>
 
 <ROUTINE SOMETHING-ITEM-R ()
@@ -244,8 +254,9 @@ something in the pond!" CR>)>>
 
 <OBJECT NOTHING-ITEM
   (DESC "nothing")
+  (SDESC "nothing")
   (SYNONYM NOTHING)
-  (FLAGS TAKEBIT NARTICLEBIT)
+  (FLAGS TAKEBIT NARTICLEBIT GIVEBIT)
   (ACTION NOTHING-ITEM-R)>
 
 <ROUTINE NOTHING-ITEM-R ()
@@ -266,9 +277,10 @@ something in the pond!" CR>)>>
 
 <OBJECT DUCK-TURD
   (DESC "duck turd")
+  (SDESC "duck turd")
   (SYNONYM TURD)
   (ADJECTIVE DUCK)
-  (FLAGS TAKEBIT)
+  (FLAGS TAKEBIT GIVEBIT)
   (ACTION DUCK-TURD-R)>
 
 <ROUTINE DUCK-TURD-R ()
@@ -288,9 +300,10 @@ something in the pond!" CR>)>>
 
 <OBJECT GRAPPLING-HOOK
   (DESC "grappling hook")
+  (SDESC "grappling hook")
   (SYNONYM HOOK)
   (ADJECTIVE GRAPPLING)
-  (FLAGS TAKEBIT)
+  (FLAGS TAKEBIT USEBIT)
   (ACTION GRAPPLING-HOOK-R)>
 
 <ROUTINE GRAPPLING-HOOK-R ()
@@ -314,9 +327,10 @@ climb something." CR>)>>
 
 <OBJECT PURPLE-PAINT
   (DESC "purple paint")
+  (SDESC "purple paint")
   (SYNONYM PURPLE PAINT)
   (ADJECTIVE PURPLE)
-  (FLAGS TAKEBIT NARTICLEBIT WEARBIT)
+  (FLAGS TAKEBIT NARTICLEBIT WEARBIT USEBIT)
   (ACTION PURPLE-PAINT-R)>
 
 <ROUTINE PURPLE-PAINT-R ()
@@ -734,7 +748,9 @@ moment.  Perhaps you should go away.||There is a ">
       <TELL
 "Farmer Zeke took the wise precaution of bolting his table to the floor.">
       <AND <FSET? ,TREASURE-CHEST ,NDESCBIT>
-        <TELL " Cool!  It has a TREASURE CHEST on it!">
+        <TELL " Cool!  It has a ">
+        <OBJECT-LINK "treasure chest" "TREASURE CHEST">
+        <TELL " on it!">
         <FCLEAR ,TREASURE-CHEST ,NDESCBIT>
       >
       <CRLF>
@@ -742,7 +758,9 @@ moment.  Perhaps you should go away.||There is a ">
     (<VERB? EXAMINE>
       <TELL "Hmmm, what's a table doing here?">
       <AND <FSET? ,TREASURE-CHEST ,NDESCBIT>
-        <TELL " Cool!  It has a TREASURE CHEST on it!">
+        <TELL " Cool!  It has a ">
+        <OBJECT-LINK "treasure chest" "TREASURE CHEST">
+        <TELL " on it!">
         <FCLEAR ,TREASURE-CHEST ,NDESCBIT>
       >
       <CRLF>
@@ -1185,9 +1203,10 @@ sinister experiments, do not proceed on pain of Death!\"">
 <ROUTINE AMBUSH-POINT-R (RARG)
   <COND
     (<==? .RARG ,M-LOOK>
-      <TELL
-"A cliff face blocks your way here.  It's steep -- you can't climb.  If you want
-to continue, you'll have to ">
+      <TELL "A ">
+      <OBJECT-LINK "cliff face">
+      <TELL 
+" blocks your way here.  It's steep -- you can't climb.  If you want to continue, you'll have to ">
       <EXIT-LINK "search">
       <TELL " the face." CR CR>
     )
@@ -1333,7 +1352,7 @@ After descending again, you ditch your grappling hook." CR>
 <OBJECT PHOENIX-PEAK
   (PNAME "PHOENIX-PEAK")
   (IN ROOMS)
-  (DESC "Pheonix Peak")
+  (DESC "Phoenix Peak")
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (ACTION PHOENIX-PEAK-R)
   (WEST TO PHOENIX-MOUNTAIN-PASS)>
@@ -1492,6 +1511,7 @@ stupid cow." CR>)>>
       <BOLDIZE "GRAND MOO-STER WIZARD">)>
   <TELL ".">
   <CRLF>
+  <ADD-JS-SCRIPT "removeAllLinks();$('#toolbar').hide();">
   <QUIT>>
 
 ; *** TEXT ROUTINES ***
@@ -1644,3 +1664,24 @@ stupid cow." CR>)>>
                <PRINTR "You are covered in purple paint.">)
              (T
                <PRINTR "You look like you're up for an adventure.">)>)>>
+
+<ROUTINE GET-ARTICLE (OBJ "OPT" INDEF)
+  <COND
+    (<OR <FSET? .OBJ ,NARTICLEBIT><FSET? .OBJ ,PERSONBIT><FSET? .OBJ ,FEMALEBIT>>
+      <RETURN "">
+    )
+    (<==? .INDEF T>
+      <COND
+        (<FSET? .OBJ ,VOWELBIT>
+          <RETURN "an ">
+        )
+        (ELSE
+          <RETURN "a ">
+        )
+      >
+    )
+    (ELSE
+      <RETURN "the ">
+    )
+  >
+>

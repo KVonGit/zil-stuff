@@ -1,4 +1,5 @@
-var parchmentYonkCss = `.exit-link:not(.disabled), .object-link:not(.disabled){
+
+<script id="parchmentYonk.js">var parchmentYonkCss = `.exit-link:not(.disabled), .object-link:not(.disabled){
 	cursor: pointer;
 }
 .droplink{
@@ -169,8 +170,14 @@ window.onload = function(){
 
   // Optionally run it once on page load
   processNewLines();
+  
+  setTimeout(function(){
+    var toolbar = `<div id="toolbar" style="position:fixed;width:inherit;background:black;border-top:.5px solid slategray;bottom:0;width:900px;"><center><button onclick="sendCmd('inventory')">INVENTORY</button><button onclick="sendCmd('undo')">UNDO</button><button onclick="sendCmd('save')">SAVE</button><button onclick="sendCmd('hints')">HINTS</button></center></div>`;
+    $(toolbar).insertAfter($('#window2'));
+    $('#window2').css('height', $('#window2').height()-$('#toolbar').height());
+  },500)
 };
 
 function removeLastCommandEcho(){
   $('.Style_input').last().parent().remove();
-}
+}</script>

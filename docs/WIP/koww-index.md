@@ -6,7 +6,7 @@
 [Play in Parchment (in your browser)](https://iplayif.com/?story=https://raw.githubusercontent.com/KVonGit/zil-stuff/refs/heads/main/projects/koww/koww.v018.z5)
 
 ---
-[Play in Parchment with HYPERLINKS!!! (in your browser)](koww.v018.z5.with_links.html)
+[Play in Parchment with HYPERLINKS!!! (in your browser)](koww.v021.w_links.z5.html)
 
 ---
 [Download the story file](https://github.com/KVonGit/zil-stuff/raw/refs/heads/main/projects/koww/koww.v018.z5)
