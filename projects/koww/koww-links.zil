@@ -100,10 +100,7 @@
 >
 
 <ROUTINE GOTO (RM "AUX" WAS-LIT F (OWINNER <>))
-  <AND
-    <==? ,SHOW-LINKS T>
-    <TELL "<script>zilJs.currentRoom = \"" <GETP .RM ,P?PNAME> "\";</script>" CR>
-  >
+
     <COND (<ORDERING?>
            <SET OWINNER ,WINNER>
            <RESET-WINNER>)>
@@ -111,6 +108,11 @@
     <SETG HERE .RM>
     <MOVE ,WINNER ,HERE>
     <APPLY <GETP .RM ,P?ACTION> ,M-ENTER>
+    <AND
+      <==? ,SHOW-LINKS T>
+      <TELL "<script>zilJs.currentRoom = \"" <GETP .RM ,P?PNAME> "\";</script>" CR>
+      <UPDATE-EXITS-JS>
+    >
     ;"Call SEARCH-FOR-LIGHT down here in case M-ENTER adjusts the light."
     <SETG HERE-LIT <SEARCH-FOR-LIGHT>>
     ;"moved descriptors into GOTO so they'll be called when you call GOTO from a PER routine, etc"
@@ -271,3 +273,39 @@ hint now, indicate HINTS.]" CR>
 	<COND (<T? .THIRD>
 	      <LEFT-LINE 3 " RETURN = See topics">
 	      <RIGHT-LINE 3 "Q = Resume story" %<LENGTH "Q = Resume story">>)>>
+
+<ROUTINE UPDATE-EXITS-JS ("AUX" FIRST)
+  <COND
+    (<NOT <==? ,SHOW-LINKS T>>
+      <RFALSE>
+    )
+  >
+  <SET FIRST T>
+  <TELL "<script>updateExits([">
+  <MAP-DIRECTIONS (D PT ,HERE)
+  <COND 
+    (<==? .FIRST T>
+      <SET FIRST <>>
+    )
+    (T
+      <TELL ",">
+    )
+  >
+  <PRINT-MATCHING-WORD-SINGLE-QUOTE .D ,PS?DIRECTION ,P1?DIRECTION>>
+  <TELL "]);</script>" CR>
+>
+
+<ROUTINE PRINT-MATCHING-WORD-SINGLE-QUOTE (V PS P1 "AUX" W CNT SIZE)
+             <COND (<0? .V> <TELL "---"> <RTRUE>)>
+             <SET W ,VOCAB>
+             <SET W <+ .W 1 <GETB .W 0>>>
+             <SET SIZE <GETB .W 0>>
+             <SET W <+ .W 1>>
+             <SET CNT <GET .W 0>>
+             <SET W <+ .W 2>>
+             <DO (I 1 .CNT)
+                 <COND (<=? <CHKWORD? .W .PS .P1> .V>
+                        <TELL "'" B .W "'">
+                        <RTRUE>)>
+                 <SET W <+ .W .SIZE>>>
+             <TELL "???">>

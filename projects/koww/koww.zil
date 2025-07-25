@@ -7,7 +7,7 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.2.1 beta
+|v0.2.3 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
@@ -31,6 +31,7 @@
   <ADD-JS-SCRIPT "$('body').css('background-color','slategray');">
   <SETG HERE ,KOWWS-CHASM>
   <MOVE ,PLAYER ,HERE>
+  <UPDATE-EXITS-JS>
   <V-LOOK>
   <SETG SCORING-ENABLED T>
   <MAIN-LOOP>
@@ -132,6 +133,11 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
           <AND <VERB? DIG><PRSO? ,HAYSTACK>>>
             <OPEN-STATUE-CAVE-R>
             <RTRUE>)>)
+    (<AND <VERB? USE><==? ,HERE ,ZEKES-FARM>>
+      <SETG PRSA ,V?USE-ON>
+      <SETG PRSI ,HAYSTACK>
+      <PERFORM ,PRSA ,PRSO ,PRSI>
+      <RTRUE>)
     (<VERB? THINK-ABOUT>
       <TELL
 "Hmm... You think there's probably something to use the pitchfork on, in much the same way Farmer
@@ -247,6 +253,11 @@ Zeke sometimes uses it." CR>)>>
       <COND
         (<PRSI? ,POND>
           <CALL GET-DUCK-TURD-R>)>)
+    (<AND <VERB? USE><==? ,HERE ,ZEKES-FARM>>
+      <SETG PRSA ,V?USE-ON>
+      <SETG PRSI ,POND>
+      <PERFORM ,PRSA ,PRSO ,PRSI>
+      <RTRUE>)
     (<VERB? THINK-ABOUT>
       <TELL 
 "You think about it for a complete turn, and you decide you should simply put
