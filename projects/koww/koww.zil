@@ -7,12 +7,12 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.2.6 beta
+|v0.2.7 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
   <SETG MODE ,VERBOSE>
-  ;<SETG SHOW-LINKS T>
+  <SETG SHOW-LINKS T>
   <CRLF>
   <CRLF>
   <ITALICIZE 

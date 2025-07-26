@@ -376,8 +376,8 @@ hint now, indicate HINTS.]" CR>
                           <SETG WINNER .OW>
                           <SETG HERE .OH>
                           <SETG HERE-LIT .OHL>
-                          <V-LOOK>
                           <FIX-LINKS-AFTER-UNDO>
+                          <V-LOOK>
                           <SETG P-CONT 0>
                           <AGAIN>)
                          (ELSE
