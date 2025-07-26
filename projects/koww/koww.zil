@@ -7,7 +7,7 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.2.4 beta
+|v0.2.5 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
@@ -527,7 +527,7 @@ FLY!" CR>)
 >
 
 <ROUTINE IN-FROM-FARM-R ("AUX" RESULT WORD-POS)
-  <TELL "Which do you mean, the farmhouse or the silo?||>">
+  <TELL "Which do you want to enter, the farmhouse or the silo?||>">
   <READLINE>
   <SET WORD-POS 1>
   <SET RESULT <GET ,LEXBUF .WORD-POS>>
@@ -547,8 +547,7 @@ FLY!" CR>)
       <RETURN 0>
     )
     (T
-      <TELL "I don't understand that choice." CR>
-      <RFALSE>
+      <PARSER>
     )
   >
 >
@@ -809,6 +808,7 @@ moment.  Perhaps you should go away.||There is a ">
       <COND
         (<NOT <FSET? ,NOTHING-ITEM ,TOUCHBIT>>
           <GET-NOTHING-R>
+          <ADD-JS-SCRIPT "$('.chest-verbs-list-holder').html(`<span class=\"chest-verbs-list-holder\"><a href=\"#\" onclick=\"sendCmd('examine treasure chest')\">Examine</a><br><a href=\"#\" onclick=\"sendCmd('take treasure chest')\">Take</a><br><a href=\"#\" onclick=\"sendCmd('close treasure chest')\">Close</a><br>`); ">
           <RTRUE>
         )
       >

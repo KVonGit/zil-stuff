@@ -13,7 +13,7 @@
       <TELL "<span class=\"object-link dropdown\" data-objname=\"" .NM "\">">
       <TELL "<span onclick=\"itemLinks.itemClick(this, event)\" obj=\"" .NM "\" class=\"droplink\">" .AL "</span>">
       <TELL "<span obj=\"" .NM "\" class=\"dropdown-content\">">
-      <TELL "<span obj=\"" .NM "-verbs-list-holder\">">
+      <TELL "<span class=\"" .NM "-verbs-list-holder\">">
       <TELL "<a href=\"#\" onclick=\"sendCmd('examine " .AL "')\">Examine</a><br>">
       <TELL "<a href=\"#\" onclick=\"sendCmd('take " .AL "')\">Take</a>">
       <COND
@@ -283,29 +283,37 @@ hint now, indicate HINTS.]" CR>
   <SET FIRST T>
   <TELL "<script>updateExits([">
   <MAP-DIRECTIONS (D PT ,HERE)
-  <COND 
-    (<==? .FIRST T>
-      <SET FIRST <>>
-    )
-    (T
-      <TELL ",">
-    )
+    <COND
+      (<=? <PTSIZE .PT> ,NEXIT>
+        ;"do nothing"
+      )
+      (<==? .FIRST T>
+        <SET FIRST <>>
+      )
+      (T
+        <TELL ",">
+      )
+    >
+    <COND
+      (<N=? <PTSIZE .PT> ,NEXIT>
+        <PRINT-MATCHING-WORD-SINGLE-QUOTE .D ,PS?DIRECTION ,P1?DIRECTION>
+      )
+    >
   >
-  <PRINT-MATCHING-WORD-SINGLE-QUOTE .D ,PS?DIRECTION ,P1?DIRECTION>>
   <TELL "]);</script>" CR>
 >
 
 <ROUTINE PRINT-MATCHING-WORD-SINGLE-QUOTE (V PS P1 "AUX" W CNT SIZE)
-             <COND (<0? .V> <TELL "---"> <RTRUE>)>
-             <SET W ,VOCAB>
-             <SET W <+ .W 1 <GETB .W 0>>>
-             <SET SIZE <GETB .W 0>>
-             <SET W <+ .W 1>>
-             <SET CNT <GET .W 0>>
-             <SET W <+ .W 2>>
-             <DO (I 1 .CNT)
-                 <COND (<=? <CHKWORD? .W .PS .P1> .V>
-                        <TELL "'" B .W "'">
-                        <RTRUE>)>
-                 <SET W <+ .W .SIZE>>>
-             <TELL "???">>
+  <COND (<0? .V> <TELL "---"> <RTRUE>)>
+  <SET W ,VOCAB>
+  <SET W <+ .W 1 <GETB .W 0>>>
+  <SET SIZE <GETB .W 0>>
+  <SET W <+ .W 1>>
+  <SET CNT <GET .W 0>>
+  <SET W <+ .W 2>>
+  <DO (I 1 .CNT)
+     <COND (<=? <CHKWORD? .W .PS .P1> .V>
+            <TELL "'" B .W "'">
+            <RTRUE>)>
+     <SET W <+ .W .SIZE>>>
+  <TELL "???">>
