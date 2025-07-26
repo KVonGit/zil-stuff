@@ -7,12 +7,12 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.2.5 beta
+|v0.2.6 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
   <SETG MODE ,VERBOSE>
-  <SETG SHOW-LINKS T>
+  ;<SETG SHOW-LINKS T>
   <CRLF>
   <CRLF>
   <ITALICIZE 
@@ -527,12 +527,16 @@ FLY!" CR>)
 >
 
 <ROUTINE IN-FROM-FARM-R ("AUX" RESULT WORD-POS)
-  <TELL "Which do you want to enter, the farmhouse or the silo?||>">
+  <TELL "Which do you want to enter, the ">
+  <EXIT-LINK "enter farmhouse" "farmhouse">
+  <TELL " or the ">
+  <EXIT-LINK "enter silo" "silo">
+  <TELL "?||>">
   <READLINE>
   <SET WORD-POS 1>
   <SET RESULT <GET ,LEXBUF .WORD-POS>>
   <COND
-    (<OR <==? .RESULT ,W?THE><==? .RESULT ,W?ZEKE\'S><==? .RESULT ,W?ZEKES>>
+    (<OR <==? .RESULT ,W?THE><==? .RESULT ,W?ZEKE\'S><==? .RESULT ,W?ZEKES><==? .RESULT ,W?ENTER>>
       <SET WORD-POS <+ .WORD-POS 2>>
       <SET RESULT <GET ,LEXBUF .WORD-POS>>
     )
@@ -547,7 +551,8 @@ FLY!" CR>)
       <RETURN 0>
     )
     (T
-      <PARSER>
+      <TELL "I don't understand that choice." CR>
+      <RFALSE>
     )
   >
 >
