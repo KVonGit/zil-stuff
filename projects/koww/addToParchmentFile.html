@@ -173,7 +173,7 @@ window.onload = function(){
   processNewLines();
   
   setTimeout(function(){
-    var toolbar = `<div id="toolbar" style="position:fixed;width:inherit;background:black;border-top:.5px solid slategray;bottom:0;width:900px;"><center><span id="exit-buttons"><button onclick="sendCmd('e')">E</button></span><button onclick="sendCmd('inventory')">INV</button><button onclick="sendCmd('undo')">UNDO</button><button onclick="sendCmd('save')">SAVE</button></center></div>`;
+    var toolbar = `<div id="toolbar" style="position:fixed;width:inherit;background:black;border-top:.5px solid slategray;bottom:0;width:900px;"><center><span id="exit-buttons"><button class="n-direction" onclick="sendCmd('N')" disabled="">N</button><button class="s-direction" onclick="sendCmd('S')" disabled="">S</button><button class="e-direction" onclick="sendCmd('E')">E</button><button class="w-direction" onclick="sendCmd('W')" disabled="">W</button><button class="in-direction" onclick="sendCmd('IN')" disabled="">IN</button><button class="out-direction" onclick="sendCmd('OUT')" disabled="">OUT</button></span><button onclick="sendCmd('inventory')">INV</button><button onclick="sendCmd('undo')">UNDO</button><button onclick="sendCmd('save')">SAVE</button></center></div>`;
     $(toolbar).insertAfter($('#window2'));
     $('#window2').css('height', $('#window2').height()-$('#toolbar').height());
   },500)
@@ -183,13 +183,17 @@ function removeLastCommandEcho(){
   $('.Style_input').last().parent().remove();
 }
 
+const zilDirections = ['n','s','e','w','in','out'];
+
+
 function updateExits(exits){
   //console.log(exits);
   zilJs.exits = exits;
-  var exitLinks = '';
-  for (var exit of exits){
-    exitLinks += `<button onclick="sendCmd('${exit}')">${exit.toUpperCase()}</button>`;
+  for (var dir of zilDirections){
+    $(`.${dir}-direction`).attr("disabled", true);
   }
-  $('#exit-buttons').html(exitLinks)
+  for (var exit of exits){
+    $(`.${exit}-direction`).attr("disabled", false);
+  }
 }
 </script>
