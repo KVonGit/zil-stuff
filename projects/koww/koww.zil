@@ -7,12 +7,12 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.2.8 beta
+|v0.2.9 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
   <SETG MODE ,VERBOSE>
-  ;<SETG SHOW-LINKS T>
+  <SETG SHOW-LINKS T>
   <CRLF>
   <CRLF>
   <ITALICIZE 
@@ -115,7 +115,7 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
 <OBJECT PITCHFORK
   (DESC "pitchfork")
   (SDESC "pitchfork")
-  (SYNONYM PITCHF PITCHFORK)
+  (SYNONYM PITCHF PITCHFORK FORK)
   (ACTION PITCHFORK-R)
   (FLAGS USEBIT)
 >
@@ -347,7 +347,7 @@ climb something." CR>)>>
 <OBJECT PURPLE-PAINT
   (DESC "purple paint")
   (SDESC "purple paint")
-  (SYNONYM PURPLE PAINT)
+  (SYNONYM PAINT)
   (ADJECTIVE PURPLE)
   (FLAGS TAKEBIT NARTICLEBIT WEARBIT USEBIT)
   (ACTION PURPLE-PAINT-R)>
@@ -1010,7 +1010,7 @@ them." CR CR>
   (IN GOBLIN-LAIR)
   (ACTION INSIDE-GOBLIN-LAIR-ENTRANCE-R)
   (DESC "cave")
-  (SYNONYM LAIR CAVE)
+  (SYNONYM LAIR CAVE COMPLEX)
   (ADJECTIVE GOBLIN)
   (FLAGS DOORBIT NDESCBIT)>
 
@@ -1279,6 +1279,7 @@ yak." CR>
 <OBJECT CLIFF-FACE
   (DESC "cliff face")
   (SYNONYM CLIFF FACE)
+  (ADJECTIVE CLIFF)
   (ARTICLE "the")
   (IN AMBUSH-POINT)
   (ACTION CLIFF-R)
@@ -1624,7 +1625,7 @@ stupid cow." CR>)>>
   (FLAGS PLURALBIT NDESCBIT)
   (ACTION GOBLINS-R)
   (SYNONYM GOBLINS)
-  (ADJECTIVE twenty)>
+  (ADJECTIVE TWENTY)>
 
 <ROUTINE GOBLINS-R ()
   <COND
