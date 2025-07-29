@@ -7,12 +7,11 @@
 "The Adventures of Koww the Magician
 |Based upon the original Quest 2 game by Brian the Great
 |Copyright (c) 1999-2025 Brian the Great
-|v0.2.9 beta
+|v0.3 beta
 |IFID: BC868ACA-5C70-4EBD-8E87-7DC9C3C3E5F1">
 
 <ROUTINE GO ()
   <SETG MODE ,VERBOSE>
-  <SETG SHOW-LINKS T>
   <CRLF>
   <CRLF>
   <ITALICIZE 
@@ -27,12 +26,10 @@
   <CRLF>
   <CRLF>
   <CRLF>
-  <ADD-JS-SCRIPT "zilJs._room = 'KOWWS-CHASM';">
-  <ADD-JS-SCRIPT "$('body').css('background-color','slategray');">
   <SETG HERE ,KOWWS-CHASM>
   <MOVE ,PLAYER ,HERE>
-  <UPDATE-EXITS-JS>
   <V-LOOK>
+  <CRLF>
   <SETG SCORING-ENABLED T>
   <MAIN-LOOP>
 >
@@ -42,7 +39,7 @@
 ;<COMPILATION-FLAG DEBUGGING-VERBS T>
 ;<COMPILATION-FLAG DEBUG T>
 
-<SETG EXTRA-FLAGS (USEBIT GIVEBIT)>
+;<SETG EXTRA-FLAGS (NALLBIT)>
 
 <INSERT-FILE "parser">
 
@@ -51,7 +48,6 @@
 <INSERT-FILE "kowwverbs">
 <INSERT-FILE "kowwified">
 <INSERT-FILE "hints">
-<INSERT-FILE "koww-links">
 
 <CONSTANT MAX-SCORE 420>
 
@@ -80,7 +76,7 @@
   (SYNONYM MILK)
   (ADJECTIVE MY MAGICAL MAGIC)
   (ACTION MILK-R)
-  (FLAGS NARTICLEBIT GIVEBIT)>
+  (FLAGS NARTICLEBIT)>
 
 <ROUTINE MILK-R ()
   <COND
@@ -117,7 +113,6 @@ here pitchfork ta comp'n'sate ya fer yer milk.\"" CR>
   (SDESC "pitchfork")
   (SYNONYM PITCHF PITCHFORK FORK)
   (ACTION PITCHFORK-R)
-  (FLAGS USEBIT)
 >
 
 <ROUTINE PITCHFORK-R ()
@@ -146,10 +141,10 @@ Zeke sometimes uses it." CR>)>>
 <OBJECT FLY-SCROLL
   (DESC "the Fly Scroll")
   (SDESC "the Fly Scroll")
-  (SYNONYM FLY SCROLL SPELL)
+  (SYNONYM SCROLL SPELL)
   (ADJECTIVE FLY)
   (ACTION FLY-SCROLL-R)
-  (FLAGS TAKEBIT NARTICLEBIT SPELLBIT USEBIT)>
+  (FLAGS TAKEBIT NARTICLEBIT SPELLBIT)>
 
 <ROUTINE FLY-SCROLL-R ()
   <COND
@@ -168,9 +163,9 @@ Zeke sometimes uses it." CR>)>>
 <OBJECT WING-FEATHER
   (DESC "wing feather")
   (SDESC "wing feather")
-  (SYNONYM WING FEATHER)
+  (SYNONYM FEATHER)
   (ADJECTIVE WING PHOENI PHOENIX)
-  (FLAGS TAKEBIT GIVEBIT)
+  (FLAGS TAKEBIT)
   (ACTION WING-FEATHER-R)>
 
 <ROUTINE WING-FEATHER-R ()
@@ -191,9 +186,9 @@ Zeke sometimes uses it." CR>)>>
 <OBJECT JADE-STATUETTE
   (DESC "jade statuette")
   (SDESC "jade statuette")
-  (SYNONYM JADE STATUETTE STATUE)
+  (SYNONYM STATUETTE STATUE)
   (ADJECTIVE JADE)
-  (FLAGS TAKEBIT GIVEBIT)
+  (FLAGS TAKEBIT)
   (ACTION JADE-STATUETTE-R)>
 
 <ROUTINE JADE-STATUETTE-R ()
@@ -214,7 +209,7 @@ Zeke sometimes uses it." CR>)>>
   (DESC "goblin spit")
   (SDESC "goblin spit")
   (SYNONYM SPIT)
-  (ADJECTIVE GOBLIN)
+  (ADJECTIVE JAR GOBLIN)
   (FLAGS TAKEBIT NARTICLEBIT)
   (ACTION GOBLIN-SPIT-R)>
 
@@ -243,7 +238,7 @@ Zeke sometimes uses it." CR>)>>
   (DESC "something")
   (SDESC "something")
   (SYNONYM SOMETHING)
-  (FLAGS TAKEBIT NARTICLEBIT USEBIT)
+  (FLAGS TAKEBIT NARTICLEBIT)
   (ACTION SOMETHING-ITEM-R)>
 
 <ROUTINE SOMETHING-ITEM-R ()
@@ -271,7 +266,7 @@ something in the pond!" CR>)>>
   (DESC "nothing")
   (SDESC "nothing")
   (SYNONYM NOTHING)
-  (FLAGS TAKEBIT NARTICLEBIT GIVEBIT)
+  (FLAGS TAKEBIT NARTICLEBIT)
   (ACTION NOTHING-ITEM-R)>
 
 <ROUTINE NOTHING-ITEM-R ()
@@ -296,7 +291,7 @@ something in the pond!" CR>)>>
   (SDESC "duck turd")
   (SYNONYM TURD)
   (ADJECTIVE DUCK)
-  (FLAGS TAKEBIT GIVEBIT)
+  (FLAGS TAKEBIT)
   (ACTION DUCK-TURD-R)>
 
 <ROUTINE DUCK-TURD-R ()
@@ -320,7 +315,7 @@ something in the pond!" CR>)>>
   (SDESC "grappling hook")
   (SYNONYM HOOK)
   (ADJECTIVE GRAPPLING)
-  (FLAGS TAKEBIT USEBIT)
+  (FLAGS TAKEBIT)
   (ACTION GRAPPLING-HOOK-R)>
 
 <ROUTINE GRAPPLING-HOOK-R ()
@@ -349,7 +344,7 @@ climb something." CR>)>>
   (SDESC "purple paint")
   (SYNONYM PAINT)
   (ADJECTIVE PURPLE)
-  (FLAGS TAKEBIT NARTICLEBIT WEARBIT USEBIT)
+  (FLAGS TAKEBIT NARTICLEBIT WEARBIT)
   (ACTION PURPLE-PAINT-R)>
 
 <ROUTINE PURPLE-PAINT-R ()
@@ -406,11 +401,9 @@ Return to your home.  There's nothing more to do here." CR>
 
 ;" ************************* KOWW'S CHASM ***************************************"
 
-<OBJECT KOWWS-CHASM
-  (PNAME "KOWWS-CHASM")
+<ROOM KOWWS-CHASM
   (IN ROOMS)
   (DESC "Koww's Chasm")
-  (FLAGS LIGHTBIT)
   (ACTION KOWWS-CHASM-R)
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (THINGS (PURE GREEN) (PASTURE GRASS) "It's very, very green.")
@@ -423,19 +416,18 @@ Return to your home.  There's nothing more to do here." CR>
 "You are outside in a pasture of pure, pure green.  Green as far as the eye can
 see.  But you, Koww the Magician, are not satisfied.  The grass may be even
 greener on the other side of the ">
-      <OBJECT-LINK "chasm">
+      <BOLDIZE "chasm">
       <TELL "... you must know!  Also in the area is a very undramatic ">
-      <OBJECT-LINK "sign">
+      <BOLDIZE "sign">
       <TELL "." CR CR>)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
-      <EXIT-LINK "east">
+      <BOLDIZE "east">
       <TELL "." CR>)>>
 
 <OBJECT CHASM-SIGN
   (DESC "sign")
   (SYNONYM SIGN)
-  (ADJECTIVE VERY UNDRAMATIC)
   (IN KOWWS-CHASM)
   (FLAGS NDESCBIT TAKEBIT TRYTAKEBIT)
   (ACTION CHASM-SIGN-R)>
@@ -475,8 +467,7 @@ FLY!" CR>)
 
 ;" ************************* ZEKE'S FARM ****************************************"
 
-<OBJECT ZEKES-FARM
-  (PNAME "ZEKES-FARM")
+<ROOM ZEKES-FARM
   (IN ROOMS)
   (DESC "Zeke's Farm")
   (ACTION ZEKES-FARM-R)
@@ -496,25 +487,25 @@ FLY!" CR>)
       <TELL " with a ">
       <BOLDIZE "silo">
       <TELL " beside it.  There is a ">
-      <OBJECT-LINK "haystack">
+      <BOLDIZE "haystack">
       <TELL " and a ">
-      <OBJECT-LINK "pond">
+      <BOLDIZE "pond">
       <TELL " here." CR CR>
       <TELL "You can go ">
-      <EXIT-LINK "west">
+      <BOLDIZE "west">
       <TELL ", ">
-      <EXIT-LINK "south">
+      <BOLDIZE "south">
       <TELL ", ">
-      <EXIT-LINK "east">
+      <BOLDIZE "east">
       <TELL ", or ">
-      <EXIT-LINK "north">
+      <BOLDIZE "north">
       <TELL "." CR>
       <CRLF>
       <TELL
 "You can go to ">
-      <EXIT-LINK "enter Zeke\\\'s Farmhouse" "Zeke\'s Farmhouse">
+      <BOLDIZE "Zeke's Farmhouse">
       <TELL ", or ">
-      <EXIT-LINK "enter Zeke\\\'s Silo" "Zeke\'s Silo">
+      <BOLDIZE "Zeke's Silo">
       <TELL "." CR>
     )
     (<AND <==? .RARG ,M-BEG><VERB? SWIM>>
@@ -528,9 +519,9 @@ FLY!" CR>)
 
 <ROUTINE IN-FROM-FARM-R ("AUX" RESULT WORD-POS)
   <TELL "Which do you want to enter, the ">
-  <EXIT-LINK "enter farmhouse" "farmhouse">
+  <BOLDIZE "farmhouse">
   <TELL " or the ">
-  <EXIT-LINK "enter silo" "silo">
+  <BOLDIZE "silo">
   <TELL "?||>">
   <READLINE>
   <SET WORD-POS 1>
@@ -730,8 +721,7 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
 
 ;" ************************* ZEKE'S FARMHOUSE ***********************************"
 
-<OBJECT ZEKES-FARMHOUSE
-  (PNAME "ZEKES-FARMHOUSE")
+<ROOM ZEKES-FARMHOUSE
   (IN ROOMS)
   (DESC "Zeke's Farmhouse")
   (FLAGS LIGHTBIT)
@@ -745,18 +735,18 @@ You take the opportunity to grab a duck turd without being noticed!" CR>
       <TELL
 "You're inside Farmer Zeke's rather cramped home.  No one's here at the
 moment.  Perhaps you should go away.||There is a ">
-    <OBJECT-LINK "table">
+    <BOLDIZE "table">
     <COND
       (<NOT <FSET? ,TREASURE-CHEST ,NDESCBIT>>
         <TELL " (on which there is a ">
-        <OBJECT-LINK "treasure chest">
+        <BOLDIZE "treasure chest">
         <TELL ")">
       )
     >
     <TELL " here.||">)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
-      <EXIT-LINK "out">
+      <BOLDIZE "out">
       <TELL "." CR>)>>
 
 <OBJECT TABLE
@@ -774,7 +764,7 @@ moment.  Perhaps you should go away.||There is a ">
 "Farmer Zeke took the wise precaution of bolting his table to the floor.">
       <AND <FSET? ,TREASURE-CHEST ,NDESCBIT>
         <TELL " Cool!  It has a ">
-        <OBJECT-LINK "treasure chest" "TREASURE CHEST">
+        <BOLDIZE "TREASURE CHEST">
         <TELL " on it!">
         <FCLEAR ,TREASURE-CHEST ,NDESCBIT>
       >
@@ -784,7 +774,7 @@ moment.  Perhaps you should go away.||There is a ">
       <TELL "Hmmm, what's a table doing here?">
       <AND <FSET? ,TREASURE-CHEST ,NDESCBIT>
         <TELL " Cool!  It has a ">
-        <OBJECT-LINK "treasure chest" "TREASURE CHEST">
+        <BOLDIZE "TREASURE CHEST">
         <TELL " on it!">
         <FCLEAR ,TREASURE-CHEST ,NDESCBIT>
       >
@@ -813,7 +803,6 @@ moment.  Perhaps you should go away.||There is a ">
       <COND
         (<NOT <FSET? ,NOTHING-ITEM ,TOUCHBIT>>
           <GET-NOTHING-R>
-          <ADD-JS-SCRIPT "$('.chest-verbs-list-holder').html(`<span class=\"chest-verbs-list-holder\"><a href=\"#\" onclick=\"sendCmd('examine treasure chest')\">Examine</a><br><a href=\"#\" onclick=\"sendCmd('take treasure chest')\">Take</a><br><a href=\"#\" onclick=\"sendCmd('close treasure chest')\">Close</a><br>`); ">
           <RTRUE>
         )
       >
@@ -854,11 +843,8 @@ moment.  Perhaps you should go away.||There is a ">
 
 ;"************************** ZEKE'S SILO ***************************************"
 
-<OBJECT ZEKES-SILO
-  (PNAME "ZEKES-SILO")
+<ROOM ZEKES-SILO
   (IN ROOMS)
-  (SYNONYM SILO)
-  (ADJECTIVE ZEKE'S ZEKES)
   (DESC "Zeke's Silo")
   (FLAGS LIGHTBIT)
   (OUT TO ZEKES-FARM)
@@ -873,10 +859,10 @@ moment.  Perhaps you should go away.||There is a ">
     (<==? .RARG ,M-FLASH>
       <TELL 
 "Standing in the silo, grinning like the idiot that he is, is Farmer ">
-      <NPC-LINK "Zeke">
+      <BOLDIZE "Zeke">
       <TELL "." CR CR>
       <TELL "You can go ">
-      <EXIT-LINK "out">
+      <BOLDIZE "out">
       <TELL "." CR>
     )
     (<AND <==? .RARG ,M-BEG><VERB? MOO>>
@@ -888,7 +874,7 @@ moment.  Perhaps you should go away.||There is a ">
 <OBJECT ZEKE
   (DESC "Zeke")
   (IN ZEKES-SILO)
-  (SYNONYM FARMER ZEKE)
+  (SYNONYM ZEKE)
   (ADJECTIVE FARMER)
   (FLAGS PERSONBIT NARTICLEBIT NDESCBIT)
   (ACTION ZEKE-R)>
@@ -922,8 +908,7 @@ guess there's a limit!\"" CR>
 
 ;"************************** GOBLIN TRAIL **************************************"
 
-<OBJECT GOBLIN-TRAIL
-  (PNAME "GOBLIN-TRAIL")
+<ROOM GOBLIN-TRAIL
   (IN ROOMS)
   (DESC "Goblin Trail")
   (FLAGS LIGHTBIT OUTSIDEBIT)
@@ -944,11 +929,11 @@ weak." CR CR>
     )
     (<==? .RARG ,M-FLASH>
       <TELL "The ">
-      <OBJECT-LINK "road">
+      <BOLDIZE "road">
       <TELL " leads ">
-      <EXIT-LINK "north">
+      <BOLDIZE "north">
       <TELL " or ">
-      <EXIT-LINK "south">
+      <BOLDIZE "south">
       <TELL "." CR>
     )
     (<AND <==? .RARG ,M-BEG><VERB? MOO>>
@@ -977,8 +962,7 @@ driveway!" CR>)>>
 
 ;"************************** GOBLIN LAIR ***************************************"
 
-<OBJECT GOBLIN-LAIR
-  (PNAME "GOBLIN-LAIR")
+<ROOM GOBLIN-LAIR
   (IN ROOMS)
   (DESC "Goblin Lair")
   (FLAGS LIGHTBIT OUTSIDEBIT)
@@ -997,13 +981,13 @@ them." CR CR>
     )
     (<==? .RARG ,M-FLASH>
       <TELL "A ">
-      <NPC-LINK "Goblin guard">
+      <BOLDIZE "Goblin guard">
       <TELL " stands nearby.|" CR>
       <TELL "You can go ">
-      <EXIT-LINK "north">
+      <BOLDIZE "north">
       <TELL "." CR CR>
       <TELL "You can ">
-      <EXIT-LINK "enter the Cave">
+      <BOLDIZE "enter the Cave">
       <TELL "." CR>)>>
 
 <OBJECT INSIDE-GOBLIN-LAIR-ENTRANCE
@@ -1027,7 +1011,7 @@ them." CR CR>
 <OBJECT GOBLIN-GUARD
   (IN GOBLIN-LAIR)
   (DESC "the Goblin Guard")
-  (SYNONYM GOBLIN GUARD)
+  (SYNONYM GUARD)
   (ADJECTIVE GOBLIN)
   (FLAGS PERSONBIT NARTICLEBIT NDESCBIT)
   (ACTION GOBLIN-GUARD-R)>
@@ -1061,13 +1045,11 @@ thing!\"" CR>
 
 ;" ************************** INSIDE THE GOBLIN LAIR ****************************"
 
-<OBJECT INSIDE-GOBLIN-LAIR
-  (PNAME "INSIDE-GOBLIN-LAIR")
+<ROOM INSIDE-GOBLIN-LAIR
   (IN ROOMS)
   (DESC "Inside the Goblin Lair")
-  (LDESC "You can go Inside the Goblin Lair.")
   (ACTION INSIDE-GOBLIN-LAIR-R)
-  (FLAGS LIGHTBIT NDESCBIT NARTICLEBIT)
+  (FLAGS LIGHTBIT NARTICLEBIT)
   (OUT TO GOBLIN-LAIR)>
 
 <ROUTINE INSIDE-GOBLIN-LAIR-R (RARG)
@@ -1076,14 +1058,14 @@ thing!\"" CR>
       <TELL
 "You are escorted to the Goblin King's throne room, a large chamber ornamented
 with ">
-      <OBJECT-LINK "statues">
+      <BOLDIZE "statues">
       <TELL " of nude female goblins.  You try hard to avoid puking." CR CR>)
     (<==? .RARG ,M-FLASH>
       <TELL "The ">
-      <NPC-LINK "Goblin King">
+      <BOLDIZE "Goblin King">
       <TELL " is here." CR CR>
       <TELL "You can go ">
-      <EXIT-LINK "out">
+      <BOLDIZE "out">
       <TELL "." CR>)
     (<AND <==? .RARG ,M-BEG><VERB? MOO>>
       <TELL "You moo. The Goblin King nods." CR>
@@ -1110,7 +1092,7 @@ goblins." CR>)>>
 
 <OBJECT GOBLIN-KING
   (DESC "the Goblin King")
-  (SYNONYM GOBLIN KING)
+  (SYNONYM KING)
   (ADJECTIVE GOBLIN)
   (IN INSIDE-GOBLIN-LAIR)
   (FLAGS PERSONBIT NARTICLEBIT NDESCBIT)
@@ -1160,8 +1142,7 @@ grapple hook!\"" CR>
 
 ;" ************************** LAND OF THE NECROYAKS *****************************"
 
-<OBJECT LAND-OF-NECROYAKS
-  (PNAME "LAND-OF-NECROYAKS")
+<ROOM LAND-OF-NECROYAKS
   (IN ROOMS)
   (DESC "Land of the Necroyaks")
   (LDESC 
@@ -1177,12 +1158,12 @@ stay on your toes!|")
   <COND
     (<==? .RARG ,M-FLASH>
       <TELL "There is a ">
-      <OBJECT-LINK "sign">
+      <BOLDIZE "sign">
       <TELL " here.|" CR>
       <TELL "You can go ">
-      <EXIT-LINK "north">
+      <BOLDIZE "north">
       <TELL " or ">
-      <EXIT-LINK "south">
+      <BOLDIZE "south">
       <TELL "." CR>)>>
 
 <OBJECT NECROYAKS-SIGN
@@ -1208,38 +1189,41 @@ sinister experiments, do not proceed on pain of Death!\"">
 
 ;" ************************** AMBUSH POINT **************************************"
 
-<GLOBAL CLIFF-FACE-BLOCKS "The cliff face blocks your way.">
-<OBJECT AMBUSH-POINT
-  (PNAME "AMBUSH-POINT")
+<ROUTINE CLIFF-FACE-BLOCKS ()
+  <TELL "The cliff face blocks your way." CR>
+  <RETURN 0>
+>
+
+<ROOM AMBUSH-POINT
   (IN ROOMS)
   (DESC "Deep in NecroYak Territory")
   (FLAGS LIGHTBIT OUTSIDEBIT)
   (ACTION AMBUSH-POINT-R)
   (SOUTH TO LAND-OF-NECROYAKS)
-  (NORTH "The cliff face blocks your way.")
-  (NE "The cliff face blocks your way.")
-  (NW "The cliff face blocks your way.")
-  (SW "The cliff face blocks your way.")
-  (SE "The cliff face blocks your way.")
-  (EAST "The cliff face blocks your way.")
-  (WEST "The cliff face blocks your way.")
-  (UP "It's steep -- you can't climb.")
-  (DOWN "It's steep -- you can't climb.")
+  (NORTH PER CLIFF-FACE-BLOCKS)
+  (NE PER CLIFF-FACE-BLOCKS)
+  (NW PER CLIFF-FACE-BLOCKS)
+  (SW PER CLIFF-FACE-BLOCKS)
+  (SE PER CLIFF-FACE-BLOCKS)
+  (EAST PER CLIFF-FACE-BLOCKS)
+  (WEST PER CLIFF-FACE-BLOCKS)
+  (UP PER CLIFF-FACE-BLOCKS)
+  (DOWN PER CLIFF-FACE-BLOCKS)
 >
 
 <ROUTINE AMBUSH-POINT-R (RARG)
   <COND
     (<==? .RARG ,M-LOOK>
       <TELL "A ">
-      <OBJECT-LINK "cliff face">
+      <BOLDIZE "cliff face">
       <TELL 
 " blocks your way here.  It's steep -- you can't climb.  If you want to continue, you'll have to ">
-      <EXIT-LINK "search">
+      <BOLDIZE "search">
       <TELL " the face." CR CR>
     )
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
-      <EXIT-LINK "south">
+      <BOLDIZE "south">
       <TELL "." CR>
     )
     (<AND <==? .RARG ,M-BEG> <VERB? CLIMB-MOD> >
@@ -1278,7 +1262,7 @@ yak." CR>
 
 <OBJECT CLIFF-FACE
   (DESC "cliff face")
-  (SYNONYM CLIFF FACE)
+  (SYNONYM FACE)
   (ADJECTIVE CLIFF)
   (ARTICLE "the")
   (IN AMBUSH-POINT)
@@ -1312,8 +1296,7 @@ ground." CR>
 
 ;" ************************** PHOENIX MOUNTAIN PASS *****************************"
 
-<OBJECT PHOENIX-MOUNTAIN-PASS
-  (PNAME "PHOENIX-MOUNTAIN-PASS")
+<ROOM PHOENIX-MOUNTAIN-PASS
   (IN ROOMS)
   (DESC "Phoenix Mountain Pass")
   (FLAGS LIGHTBIT OUTSIDEBIT)
@@ -1326,14 +1309,14 @@ ground." CR>
   <COND
     (<==? .RARG ,M-LOOK>
       <TELL
-"The towering "><OBJECT-LINK "mountains"><TELL " surround you on all sides but back to your west. 
+"The towering "><BOLDIZE "mountains"><TELL " surround you on all sides but back to your west. 
 Passage farther east is remotely possible, should you be brave or foolhardy
 enough to try it." CR CR>)
     (<==? .RARG ,M-FLASH>
       <TELL "You can go ">
-      <EXIT-LINK "west">
+      <BOLDIZE "west">
       <TELL " or ">
-      <EXIT-LINK "east">
+      <BOLDIZE "east">
       <TELL "." CR>)>>
 
 <OBJECT MOUNTAINS
@@ -1377,8 +1360,7 @@ After descending again, you ditch your grappling hook." CR>
 
 ;" ************************** PHOENIX PEAK **************************************"
 
-<OBJECT PHOENIX-PEAK
-  (PNAME "PHOENIX-PEAK")
+<ROOM PHOENIX-PEAK
   (IN ROOMS)
   (DESC "Phoenix Peak")
   (FLAGS LIGHTBIT OUTSIDEBIT)
@@ -1391,10 +1373,10 @@ After descending again, you ditch your grappling hook." CR>
       <TELL
 "After hard hours of climbing, you finally reach the summit of Phoenix Peak. 
 Here, in all its glory, sits the ">
-      <NPC-LINK "Resplendent Magnificent Phoenix">
+      <BOLDIZE "Resplendent Magnificent Phoenix">
       <TELL "." CR CR>
       <TELL "You can go ">
-      <EXIT-LINK "west">
+      <BOLDIZE "west">
       <TELL "." CR>)
     (
       <AND <==? .RARG ,M-BEG><VERB? MOO>>
@@ -1539,10 +1521,9 @@ stupid cow." CR>)>>
       <BOLDIZE "GRAND MOO-STER WIZARD">)>
   <TELL ".">
   <CRLF>
-  <ADD-JS-SCRIPT "removeAllLinks();$('#toolbar').hide();">
   <QUIT>>
 
-; *** TEXT ROUTINES ***
+;" *** TEXT ROUTINES ***"
 
 <ROUTINE BOLDIZE (TEXT)
   <HLIGHT 2>
@@ -1692,24 +1673,3 @@ stupid cow." CR>)>>
                <PRINTR "You are covered in purple paint.">)
              (T
                <PRINTR "You look like you're up for an adventure.">)>)>>
-
-<ROUTINE GET-ARTICLE (OBJ "OPT" INDEF)
-  <COND
-    (<OR <FSET? .OBJ ,NARTICLEBIT><FSET? .OBJ ,PERSONBIT><FSET? .OBJ ,FEMALEBIT>>
-      <RETURN "">
-    )
-    (<==? .INDEF T>
-      <COND
-        (<FSET? .OBJ ,VOWELBIT>
-          <RETURN "an ">
-        )
-        (ELSE
-          <RETURN "a ">
-        )
-      >
-    )
-    (ELSE
-      <RETURN "the ">
-    )
-  >
->
