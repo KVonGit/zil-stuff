@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
+    <story>
+        <identification>
+            <format>zcode</format>
+        </identification>   
+        <bibliographic>
+            <title>imagetest</title>
+            <author>KV</author>
+            <language>en-US</language>
+            <headline>Just a test game</headline>
+            <firstpublished>2025</firstpublished>
+            <genre>Testing</genre>
+            <group>ZILF</group>
+            <description>Just testing out images and sounds.
+            </description>
+        </bibliographic>
+        <zcode>
+            <release>1</release>
+            <compiler>ZILF 0.9</compiler>
+            <coverpicture>1</coverpicture>
+        </zcode>
+        <releases>
+            <history>
+                <release>
+                    <version>1</version>
+                    <releasedate>2025-08-05</releasedate>
+                    <compiler>ZILF</compiler>
+                    <compilerversion>0.9</compilerversion>
+                </release>
+            </history>
+        </releases>
+    </story>
+</ifindex>

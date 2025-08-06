@@ -1,0 +1,26 @@
+
+FROTZ V2.40 - interpreter for all Infocom games. Complies with standard
+1.0 of Graham Nelson's specification. Written by Stefan Jokisch in 1995-7
+
+Syntax: frotz [options] story-file
+
+  -a   watch attribute setting  	 -o   watch object movement
+  -A   watch attribute testing  	 -O   watch object locating
+  -b # background colour        	 -p   alter piracy opcode
+  -B # reverse background colour	 -r # right margin
+  -c # context lines            	 -R   save/restore in old Frotz format
+  -d # display mode (see below) 	 -s # random number seed value
+  -e # emphasis colour [mode 1] 	 -S # transscript width
+  -f # foreground colour        	 -t   set Tandy bit
+  -F # reverse foreground colour	 -T   bold typing [modes 2+4+5]
+  -g # font [mode 5] (see below)	 -u # slots for multiple undo
+  -h # screen height            	 -w # screen width
+  -i   ignore runtime errors    	 -x   expand abbreviations g/x/z
+  -l # left margin              	 -Z # error checking (see below)
+
+Fonts are 0 (fixed), 1 (sans serif), 2 (comic), 3 (times), 4 (serif).
+
+Display modes are 0 (mono), 1 (text), 2 (CGA), 3 (MCGA), 4 (EGA), 5 (Amiga).
+
+Error checking is 0 (none), 1 (report first error (default)),
+  2 (report all errors), 3 (exit after any error).

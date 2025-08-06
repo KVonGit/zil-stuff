@@ -1,0 +1,4 @@
+copyright "KV 2025"
+release "1"
+storyfile "audiotest.z5" include
+sound 3 "audiotest03.ogg"
